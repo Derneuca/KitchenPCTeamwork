@@ -1,40 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using KitchenPC.DB.Models;
-using KitchenPC.NLP;
-
-namespace KitchenPC.DB
+﻿namespace KitchenPC.DB
 {
-   public class PrepLoader : ISynonymLoader<PrepNode>
-   {
-      readonly DatabaseAdapter adapter;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Models;
+    using NLP;
 
-      public PrepLoader(DatabaseAdapter adapter)
-      {
-         this.adapter = adapter;
-      }
+    public class PrepLoader : ISynonymLoader<PrepNode>
+    {
+        private readonly DatabaseAdapter adapter;
 
-      public IEnumerable<PrepNode> LoadSynonyms()
-      {
-         using (var session = adapter.GetStatelessSession())
-         {
-            var forms = session.QueryOver<NlpFormSynonyms>().Select(p => p.Name).List<String>();
-            var preps = session.QueryOver<NlpPrepNotes>().Select(p => p.Name).List<String>();
+        public PrepLoader(DatabaseAdapter adapter)
+        {
+            this.adapter = adapter;
+        }
 
-            var ret = forms
-               .Concat(preps)
-               .Distinct()
-               .Select(p => new PrepNode(p))
-               .ToList();
+        public IEnumerable<PrepNode> LoadSynonyms()
+        {
+            using (var session = this.adapter.GetStatelessSession())
+            {
+                var forms = session.QueryOver<NlpFormSynonyms>().Select(p => p.Name).List<string>();
+                var preps = session.QueryOver<NlpPrepNotes>().Select(p => p.Name).List<string>();
 
-            return ret;
-         }
-      }
+                var ret = forms
+                   .Concat(preps)
+                   .Distinct()
+                   .Select(p => new PrepNode(p))
+                   .ToList();
 
-      public Pairings LoadFormPairings()
-      {
-         throw new NotImplementedException();
-      }
-   }
+                return ret;
+            }
+        }
+
+        public Pairings LoadFormPairings()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

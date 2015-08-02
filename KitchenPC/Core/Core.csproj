@@ -318,6 +318,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="license.md" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,51 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentNHibernate.Mapping;
-using KitchenPC.ShoppingLists;
-
-namespace KitchenPC.DB.Models
+﻿namespace KitchenPC.DB.Models
 {
-   public class ShoppingLists
-   {
-      public virtual Guid ShoppingListId { get; set; }
-      public virtual Guid UserId { get; set; }
-      public virtual String Title { get; set; }
+    using System;
+    using System.Collections.Generic;
+    using FluentNHibernate.Mapping;
+    using KitchenPC.ShoppingLists;
 
-      public virtual IList<ShoppingListItems> Items { get; set; }
+    public class ShoppingLists
+    {
+        public virtual Guid ShoppingListId { get; set; }
 
-      public static ShoppingLists FromId(Guid id)
-      {
-         return new ShoppingLists
-         {
-            ShoppingListId = id
-         };
-      }
+        public virtual Guid UserId { get; set; }
 
-      public virtual ShoppingList AsShoppingList()
-      {
-         return new ShoppingList
-         {
-            Id = ShoppingListId,
-            Title = Title
-         };
-      }
-   }
+        public virtual String Title { get; set; }
 
-   public class ShoppingListsMap : ClassMap<ShoppingLists>
-   {
-      public ShoppingListsMap()
-      {
-         Id(x => x.ShoppingListId)
-            .GeneratedBy.GuidComb()
-            .UnsavedValue(Guid.Empty);
+        public virtual IList<ShoppingListItems> Items { get; set; }
 
-         Map(x => x.UserId).Not.Nullable().Index("IDX_ShoppingLists_UserId").UniqueKey("UniqueTitle");
-         Map(x => x.Title).Not.Nullable().UniqueKey("UniqueTitle");
+        public static ShoppingLists FromId(Guid id)
+        {
+            return new ShoppingLists
+            {
+                ShoppingListId = id
+            };
+        }
 
-         HasMany(x => x.Items)
-            .KeyColumn("ShoppingListId")
-            .Inverse()
-            .Cascade.All();
-      }
-   }
+        public virtual ShoppingList AsShoppingList()
+        {
+            return new ShoppingList
+            {
+                Id = this.ShoppingListId,
+                Title = this.Title
+            };
+        }
+    }
+
+    public class ShoppingListsMap : ClassMap<ShoppingLists>
+    {
+        public ShoppingListsMap()
+        {
+            this.Id(x => x.ShoppingListId)
+               .GeneratedBy.GuidComb()
+               .UnsavedValue(Guid.Empty);
+
+            this.Map(x => x.UserId).Not.Nullable().Index("IDX_ShoppingLists_UserId").UniqueKey("UniqueTitle");
+            this.Map(x => x.Title).Not.Nullable().UniqueKey("UniqueTitle");
+
+            this.HasMany(x => x.Items)
+               .KeyColumn("ShoppingListId")
+               .Inverse()
+               .Cascade.All();
+        }
+    }
 }

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
-using KitchenPC.Modeler;
-using NHibernate.Transform;
-
-namespace KitchenPC.DB
+﻿namespace KitchenPC.DB
 {
-   public class IngredientGraphTransformer : IResultTransformer
-   {
-      public static IngredientGraphTransformer Create()
-      {
-         return new IngredientGraphTransformer();
-      }
+    using System;
+    using System.Collections;
+    using Modeler;
+    using NHibernate.Transform;
 
-      IngredientGraphTransformer()
+    public class IngredientGraphTransformer : IResultTransformer
+   {
+      public IngredientGraphTransformer()
       {
       }
 
@@ -21,7 +16,12 @@ namespace KitchenPC.DB
          return collection;
       }
 
-      public object TransformTuple(object[] tuple, string[] aliases)
+        public static IngredientGraphTransformer Create()
+        {
+            return new IngredientGraphTransformer();
+        }
+
+        public object TransformTuple(object[] tuple, string[] aliases)
       {
          return IngredientBinding.Create
             (
@@ -31,7 +31,6 @@ namespace KitchenPC.DB
                (Units) tuple[3], //R.Unit
                (UnitType) tuple[4], //I.ConversionType
                (int) tuple[5], //I.UnitWeight
-
                (Units) tuple[6], //F.UnitType
                (float) tuple[7], //F.FormAmount
                (Units) tuple[8] //F.FormUnit

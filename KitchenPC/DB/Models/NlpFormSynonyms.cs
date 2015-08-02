@@ -1,13 +1,16 @@
-using System;
-using FluentNHibernate.Mapping;
-
 namespace KitchenPC.DB.Models
 {
-   public class NlpFormSynonyms
+    using System;
+    using FluentNHibernate.Mapping;
+
+    public class NlpFormSynonyms
    {
       public virtual Guid FormSynonymId { get; set; }
+
       public virtual Ingredients Ingredient { get; set; }
+
       public virtual IngredientForms Form { get; set; }
+
       public virtual string Name { get; set; }
    }
 
@@ -15,14 +18,14 @@ namespace KitchenPC.DB.Models
    {
       public NlpFormSynonymsMap()
       {
-         Id(x => x.FormSynonymId)
+          this.Id(x => x.FormSynonymId)
             .GeneratedBy.GuidComb()
             .UnsavedValue(Guid.Empty);
 
-         Map(x => x.Name).Length(50).UniqueKey("FormName");
+          this.Map(x => x.Name).Length(50).UniqueKey("FormName");
 
-         References(x => x.Ingredient).Not.Nullable().UniqueKey("FormName");
-         References(x => x.Form).Not.Nullable();
+          this.References(x => x.Ingredient).Not.Nullable().UniqueKey("FormName");
+          this.References(x => x.Form).Not.Nullable();
       }
    }
 }
