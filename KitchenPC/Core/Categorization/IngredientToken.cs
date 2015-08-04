@@ -1,30 +1,30 @@
-﻿using KitchenPC.Ingredients;
-
-namespace KitchenPC.Categorization
+﻿namespace KitchenPC.Categorization
 {
-   internal class IngredientToken : IToken
-   {
-      readonly Ingredient ing;
+    using KitchenPC.Ingredients;
 
-      public IngredientToken(Ingredient ing)
-      {
-         this.ing = ing;
-      }
+    internal class IngredientToken : IToken
+    {
+        readonly Ingredient ing;
 
-      public override bool Equals(object obj)
-      {
-         var t1 = obj as IngredientToken;
-         return (t1 != null && t1.ing.Id.Equals(ing.Id));
-      }
+        public IngredientToken(Ingredient ing)
+        {
+            this.ing = ing;
+        }
 
-      public override int GetHashCode()
-      {
-         return ing.Id.GetHashCode();
-      }
+        public override bool Equals(object obj)
+        {
+            var t1 = obj as IngredientToken;
+            return (t1 != null && t1.ing.Id.Equals(ing.Id));
+        }
 
-      public override string ToString()
-      {
-         return "[ING] - " + ing;
-      }
-   }
+        public override int GetHashCode()
+        {
+            return this.ing.Id.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return "[ING] - " + this.ing;
+        }
+    }
 }
