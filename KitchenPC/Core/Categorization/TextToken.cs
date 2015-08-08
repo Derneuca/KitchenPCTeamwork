@@ -2,27 +2,28 @@
 {
     internal class TextToken : IToken
     {
-        private readonly string Text;
+        private readonly string text;
 
         public TextToken(string text)
         {
-            this.Text = text.Trim().ToLower();
+            this.text = text.Trim().ToLower();
         }
 
         public override bool Equals(object obj)
         {
-            var t1 = obj as TextToken;
-            return t1 != null && t1.Text.Equals(this.Text);
+            var token = obj as TextToken;
+            bool result = token != null && token.text.Equals(this.text);
+            return result;
         }
 
         public override int GetHashCode()
         {
-            return this.Text.GetHashCode();
+            return this.text.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.Text;
+            return this.text;
         }
     }
 }

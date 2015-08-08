@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Categorization
 {
-   public interface IToken
-   {
-   }
+    public interface IToken
+    {
+    }
 }

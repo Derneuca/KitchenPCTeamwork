@@ -4,27 +4,28 @@
 
     internal class IngredientToken : IToken
     {
-        readonly Ingredient ing;
+        private readonly Ingredient ingredient;
 
-        public IngredientToken(Ingredient ing)
+        public IngredientToken(Ingredient ingredient)
         {
-            this.ing = ing;
+            this.ingredient = ingredient;
         }
 
         public override bool Equals(object obj)
         {
-            var t1 = obj as IngredientToken;
-            return (t1 != null && t1.ing.Id.Equals(ing.Id));
+            var token = obj as IngredientToken;
+            bool result = token != null && token.ingredient.Id.Equals(this.ingredient.Id);
+            return result;
         }
 
         public override int GetHashCode()
         {
-            return this.ing.Id.GetHashCode();
+            return this.ingredient.Id.GetHashCode();
         }
 
         public override string ToString()
         {
-            return "[ING] - " + this.ing;
+            return "[ING] - " + this.ingredient;
         }
     }
 }

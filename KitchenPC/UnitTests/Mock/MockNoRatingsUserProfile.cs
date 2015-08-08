@@ -5,7 +5,7 @@ using KitchenPC.UnitTests;
 
 namespace KPCServer.UnitTests
 {
-   /// <summary>Mock UserProfile object for user with no ratings or fav ing/tags</summary>
+   /// <summary>Mock UserProfile object for user with no ratings or fav ingredient/tags</summary>
    internal class MockNoRatingsUserProfile : IUserProfile
    {
       readonly RecipeRating[] ratings;

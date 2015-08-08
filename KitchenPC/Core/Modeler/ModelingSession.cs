@@ -220,7 +220,7 @@ namespace KitchenPC.Modeler
          float avgRating = 0; //Average rating for all recipes in the set (0-4)
          float tagPoints = 0; //Point for each tag that's one of our favorites
          float tagTotal = 0; //Total number of tags in all recipes
-         float ingPoints = 0; //Point for each ing that's one of our favorites
+         float ingPoints = 0; //Point for each ingredient that's one of our favorites
          float ingTotal = 0; //Total number of ingrediets in all recipes
 
          for (var i = 0; i < currentSet.Length; i++)
