@@ -1,168 +1,243 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace KitchenPC.Recipes
+﻿namespace KitchenPC.Recipes
 {
-   public class RecipeTags : IEnumerable<RecipeTag>
-   {
-      readonly int mask; //Bitmask value, where each bit indicates the tag in that ordinal position
-      readonly List<RecipeTag> tags; //Enumerable list of RecipeTag objects
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
 
-      public static RecipeTags None
-      {
-         get
-         {
-            return 0;
-         }
-      }
+    public class RecipeTags : IEnumerable<RecipeTag>
+    {
+        private readonly int mask; // Bitmask value, where each bit indicates the tag in that ordinal position
+        private readonly List<RecipeTag> tags; // Enumerable list of RecipeTag objects
+         
+        public RecipeTags()
+        {
+            this.tags = new List<RecipeTag>(13);
+            this.mask = 0;
+        }
 
-      public RecipeTags()
-      {
-         tags = new List<RecipeTag>(13);
-         mask = 0;
-      }
+        private RecipeTags(int mask)
+        {
+            this.mask = mask;
+            this.tags = new List<RecipeTag>(13);
 
-      public static RecipeTags Parse(string list)
-      {
-         var tags = from t in list.Split(',') select t.Trim();
+            this.AddTags();
+        }
 
-         var ret = new RecipeTags();
-         ret = tags.Aggregate(ret, (current, tag) => current | (RecipeTag) tag);
+        public static RecipeTags None
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-         return ret;
-      }
+        public int Length
+        {
+            get
+            {
+                return this.tags.Count;
+            }
+        }
 
-      public static RecipeTags From(params RecipeTag[] tags)
-      {
-         var ret = new RecipeTags();
-         ret.tags.AddRange(tags);
+        public RecipeTag this[int index]
+        {
+            get
+            {
+                return this.tags[index];
+            }
+        }
+        
+        public static RecipeTags Parse(string list)
+        {
+            var tags = from t in list.Split(',') 
+                       select t.Trim();
+            var result = new RecipeTags();
+            result = tags.Aggregate(result, (current, tag) => current | (RecipeTag)tag);
 
-         return ret;
-      }
+            return result;
+        }
+        
+        public static RecipeTags From(params RecipeTag[] tags)
+        {
+            var result = new RecipeTags();
+            result.tags.AddRange(tags);
 
-      public int Length
-      {
-         get
-         {
-            return tags.Count;
-         }
-      }
+            return result;
+        }
+        
+        public static RecipeTags operator |(RecipeTags firstTag, RecipeTag secondTag)
+        {
+            var result = firstTag.mask | secondTag.BitFlag;
+            return result;
+        }
 
-      public RecipeTag this[int index]
-      {
-         get
-         {
-            return tags[index];
-         }
-      }
+        public static int operator &(RecipeTags firstTag, RecipeTag secondTag)
+        {
+            int result = firstTag.mask & secondTag.BitFlag;
+            return result;
+        }
 
-      public bool HasTag(RecipeTag tag)
-      {
-         return (this & tag) > 0;
-      }
+        public static bool operator !=(RecipeTags firstTag, RecipeTags secondTag)
+        {
+            bool result = !(firstTag == secondTag);
+            return result;
+        }
 
-      public static RecipeTags operator |(RecipeTags x, RecipeTag y)
-      {
-         return x.mask | y.BitFlag;
-      }
+        public static bool operator ==(RecipeTags firstTag, RecipeTags secondTag)
+        {
+            if (ReferenceEquals(firstTag, secondTag))
+            {
+                return true;
+            }
 
-      public static int operator &(RecipeTags x, RecipeTag y)
-      {
-         return x.mask & y.BitFlag;
-      }
+            if ((object)firstTag == null || ((object)secondTag == null))
+            {
+                return false;
+            }
 
-      public static bool operator !=(RecipeTags x, RecipeTags y)
-      {
-         return !(x == y);
-      }
+            bool result = firstTag.mask == secondTag.mask;
+            return result;
+        }
 
-      public static bool operator ==(RecipeTags x, RecipeTags y)
-      {
-         if (ReferenceEquals(x, y))
-         {
-            return true;
-         }
+        public static implicit operator int(RecipeTags tags)
+        {
+            int result = tags.mask;
+            return result;
+        }
 
-         if ((object) x == null || ((object) y == null))
-         {
-            return false;
-         }
+        public static implicit operator RecipeTags(int value)
+        {
+            var result = new RecipeTags(value);
+            return result;
+        }
 
-         return x.mask == y.mask;
-      }
+        public bool HasTag(RecipeTag tag)
+        {
+            bool result = (this & tag) > 0;
+            return result;
+        }
 
-      public static implicit operator int(RecipeTags tags)
-      {
-         return tags.mask;
-      }
+        public override bool Equals(object obj)
+        {
+            var tags = obj as RecipeTags;
+            bool result = tags != null && this.mask == tags.mask;
+            return result;
+        }
+        
+        public override string ToString()
+        {
+            var labels = (from n in this.tags select n.ToString()).ToArray();
+            return string.Join(", ", labels);
+        }
 
-      public static implicit operator RecipeTags(int value)
-      {
-         return new RecipeTags(value);
-      }
+        public override int GetHashCode()
+        {
+            return this.mask;
+        }
 
-      RecipeTags(int mask)
-      {
-         this.mask = mask;
-         tags = new List<RecipeTag>(13);
+        public IEnumerator<RecipeTag> GetEnumerator()
+        {
+            return this.tags.GetEnumerator();
+        }
 
-         if ((this & RecipeTag.GlutenFree) > 0) tags.Add(RecipeTag.GlutenFree);
-         if ((this & RecipeTag.NoAnimals) > 0) tags.Add(RecipeTag.NoAnimals);
-         if ((this & RecipeTag.NoMeat) > 0) tags.Add(RecipeTag.NoMeat);
-         if ((this & RecipeTag.NoPork) > 0) tags.Add(RecipeTag.NoPork);
-         if ((this & RecipeTag.NoRedMeat) > 0) tags.Add(RecipeTag.NoRedMeat);
-         if ((this & RecipeTag.Breakfast) > 0) tags.Add(RecipeTag.Breakfast);
-         if ((this & RecipeTag.Dessert) > 0) tags.Add(RecipeTag.Dessert);
-         if ((this & RecipeTag.Dinner) > 0) tags.Add(RecipeTag.Dinner);
-         if ((this & RecipeTag.Lunch) > 0) tags.Add(RecipeTag.Lunch);
-         if ((this & RecipeTag.LowCalorie) > 0) tags.Add(RecipeTag.LowCalorie);
-         if ((this & RecipeTag.LowCarb) > 0) tags.Add(RecipeTag.LowCarb);
-         if ((this & RecipeTag.LowFat) > 0) tags.Add(RecipeTag.LowFat);
-         if ((this & RecipeTag.LowSodium) > 0) tags.Add(RecipeTag.LowSodium);
-         if ((this & RecipeTag.LowSugar) > 0) tags.Add(RecipeTag.LowSugar);
-         if ((this & RecipeTag.Common) > 0) tags.Add(RecipeTag.Common);
-         if ((this & RecipeTag.Easy) > 0) tags.Add(RecipeTag.Easy);
-         if ((this & RecipeTag.Quick) > 0) tags.Add(RecipeTag.Quick);
-      }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.tags.GetEnumerator();
+        }
 
-      public override bool Equals(object obj)
-      {
-         var t = obj as RecipeTags;
-         return (t != null && this.mask == t.mask);
-      }
+        //Required to serialize class
+        public void Add(object obj)
+        {
+            throw new NotImplementedException();
+        }
 
-      public override string ToString()
-      {
-         return ToString(", ");
-      }
+        private void AddTags()
+        {
+            if ((this & RecipeTag.GlutenFree) > 0)
+            {
+                this.tags.Add(RecipeTag.GlutenFree);
+            }
 
-      public string ToString(string delimiter)
-      {
-         var labels = (from n in tags select n.ToString()).ToArray();
-         return String.Join(delimiter, labels);
-      }
+            if ((this & RecipeTag.NoAnimals) > 0)
+            {
+                this.tags.Add(RecipeTag.NoAnimals);
+            }
 
-      public override int GetHashCode()
-      {
-         return mask;
-      }
+            if ((this & RecipeTag.NoMeat) > 0)
+            {
+                this.tags.Add(RecipeTag.NoMeat);
+            }
 
-      public IEnumerator<RecipeTag> GetEnumerator()
-      {
-         return tags.GetEnumerator();
-      }
+            if ((this & RecipeTag.NoPork) > 0)
+            {
+                this.tags.Add(RecipeTag.NoPork);
+            }
 
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return tags.GetEnumerator();
-      }
+            if ((this & RecipeTag.NoRedMeat) > 0)
+            {
+                this.tags.Add(RecipeTag.NoRedMeat);
+            }
 
-      //Required to serialize class
-      public void Add(object obj)
-      {
-         throw new NotImplementedException();
-      }
-   }
+            if ((this & RecipeTag.Breakfast) > 0)
+            {
+                this.tags.Add(RecipeTag.Breakfast);
+            }
+
+            if ((this & RecipeTag.Dessert) > 0)
+            {
+                this.tags.Add(RecipeTag.Dessert);
+            }
+
+            if ((this & RecipeTag.Dinner) > 0)
+            {
+                this.tags.Add(RecipeTag.Dinner);
+            }
+
+            if ((this & RecipeTag.Lunch) > 0)
+            {
+                this.tags.Add(RecipeTag.Lunch);
+            }
+
+            if ((this & RecipeTag.LowCalorie) > 0)
+            {
+                this.tags.Add(RecipeTag.LowCalorie);
+            }
+
+            if ((this & RecipeTag.LowCarb) > 0)
+            {
+                this.tags.Add(RecipeTag.LowCarb);
+            }
+
+            if ((this & RecipeTag.LowFat) > 0)
+            {
+                this.tags.Add(RecipeTag.LowFat);
+            }
+
+            if ((this & RecipeTag.LowSodium) > 0)
+            {
+                this.tags.Add(RecipeTag.LowSodium);
+            }
+
+            if ((this & RecipeTag.LowSugar) > 0)
+            {
+                this.tags.Add(RecipeTag.LowSugar);
+            }
+
+            if ((this & RecipeTag.Common) > 0)
+            {
+                this.tags.Add(RecipeTag.Common);
+            }
+
+            if ((this & RecipeTag.Easy) > 0)
+            {
+                this.tags.Add(RecipeTag.Easy);
+            }
+
+            if ((this & RecipeTag.Quick) > 0)
+            {
+                this.tags.Add(RecipeTag.Quick);
+            }
+        }
+    }
 }

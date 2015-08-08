@@ -30,8 +30,6 @@
             }
         }
 
-        
-
         public T InitializeContext()
         {
             Context.Initialize();

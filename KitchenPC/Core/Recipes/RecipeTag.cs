@@ -6,9 +6,9 @@ namespace KitchenPC.Recipes
    {
       public const int NUM_TAGS = 17;
 
-      readonly int value; //Ordinal value of tag
-      readonly int bitflag; //Bitmask value (power of 2)
-      readonly string label; //Name of tag
+      readonly int value; // Ordinal value of tag
+      readonly int bitflag; // Bitmask value (power of 2)
+      readonly string label; // Name of tag
 
       public int Value
       {
