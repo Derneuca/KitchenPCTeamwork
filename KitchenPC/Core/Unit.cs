@@ -100,7 +100,7 @@ namespace KitchenPC
 
          if (value == null || value == DBNull.Value)
          {
-            throw new ArgumentException("Cannot parse enum, value is null.");
+            throw new ArgumentException("Cannot parse enum, tagValue is null.");
          }
 
          if (value is String)

@@ -49,7 +49,7 @@ namespace KitchenPC.Modeler
          this.db = db;
          this.context = context;
          this.profile = profile;
-         this.favTags = new bool[RecipeTag.NUM_TAGS];
+         this.favTags = new bool[RecipeTag.NumberOfTags];
          this.favIngs = new int[profile.FavoriteIngredients.Length];
 
          if (profile.Pantry != null && profile.Pantry.Length == 0) //Empty pantries must be null, not zero items
@@ -442,7 +442,7 @@ namespace KitchenPC.Modeler
          if (pantryIngredients == null) //No pantry, fish through Recipe index
          {
             int rnd;
-            var tag = (AllowedTags == null) ? random.Next(RecipeTag.NUM_TAGS) : AllowedTags[random.Next(AllowedTags.Length)].Value;
+            var tag = (AllowedTags == null) ? random.Next(RecipeTag.NumberOfTags) : AllowedTags[random.Next(AllowedTags.Length)].Value;
             var recipesByTag = db.FindRecipesByTag(tag);
             if (recipesByTag == null || recipesByTag.Length == 0) //Nothing in that tag
                return Fish();

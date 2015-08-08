@@ -27,7 +27,7 @@ namespace KitchenPC.Modeler
             this.snapshot = snapshot;
             snapshot.recipeMap = new Dictionary<Guid, RecipeNode>();
             snapshot.ingredientMap = new Dictionary<Guid, IngredientNode>();
-            snapshot.recipeList = new IEnumerable<RecipeNode>[RecipeTag.NUM_TAGS];
+            snapshot.recipeList = new IEnumerable<RecipeNode>[RecipeTag.NumberOfTags];
          }
 
          public void Index(IKPCContext context)
@@ -120,7 +120,7 @@ namespace KitchenPC.Modeler
 
                if (!snapshot.ingredientMap.TryGetValue(ingid, out ingNode)) //New ingredient, create node for it
                {
-                  nodes = new List<RecipeNode>[RecipeTag.NUM_TAGS];
+                  nodes = new List<RecipeNode>[RecipeTag.NumberOfTags];
                   snapshot.ingredientMap.Add(ingid, ingNode = new IngredientNode()
                   {
                      IngredientId = ingid,
@@ -188,7 +188,7 @@ namespace KitchenPC.Modeler
                var temp = new List<RecipeNode[]>();
                var usedTags = 0;
 
-               for (var c = 0; c < RecipeTag.NUM_TAGS; c++)
+               for (var c = 0; c < RecipeTag.NumberOfTags; c++)
                {
                   RecipeNode[] nodes = null;
                   if (i.RecipesByTag[c] != null)

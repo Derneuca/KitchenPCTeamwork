@@ -1,127 +1,172 @@
-﻿using System;
-
-namespace KitchenPC.Recipes
+﻿namespace KitchenPC.Recipes
 {
-   public class RecipeTag
-   {
-      public const int NUM_TAGS = 17;
+    using System;
 
-      readonly int value; // Ordinal value of tag
-      readonly int bitflag; // Bitmask value (power of 2)
-      readonly string label; // Name of tag
+    public class RecipeTag
+    {
+        public const int NumberOfTags = 17;
 
-      public int Value
-      {
-         get
-         {
-            return value;
-         }
-      }
+        public static readonly RecipeTag GlutenFree = new RecipeTag(0, GlutenFreeLabel);
+        public static readonly RecipeTag NoAnimals = new RecipeTag(1, NoAnimalsLabel);
+        public static readonly RecipeTag NoMeat = new RecipeTag(2, NoMeatLabel);
+        public static readonly RecipeTag NoPork = new RecipeTag(3, NoPorkLabel);
+        public static readonly RecipeTag NoRedMeat = new RecipeTag(4, NoRedMeatLabel);
+        public static readonly RecipeTag Breakfast = new RecipeTag(5, BreakfastLabel);
+        public static readonly RecipeTag Dessert = new RecipeTag(6, DessertLabel);
+        public static readonly RecipeTag Dinner = new RecipeTag(7, DinnerLabel);
+        public static readonly RecipeTag Lunch = new RecipeTag(8, LunchLabel);
+        public static readonly RecipeTag LowCalorie = new RecipeTag(9, LowCalorieLabel);
+        public static readonly RecipeTag LowCarb = new RecipeTag(10, LowCarbLabel);
+        public static readonly RecipeTag LowFat = new RecipeTag(11, LowFatLabel);
+        public static readonly RecipeTag LowSodium = new RecipeTag(12, LowSodiumLabel);
+        public static readonly RecipeTag LowSugar = new RecipeTag(13, LowSugarLabel);
+        public static readonly RecipeTag CommonIngredients = new RecipeTag(14, CommonIngredientsLabel);
+        public static readonly RecipeTag EasyToMake = new RecipeTag(15, EasyToMakeLabel);
+        public static readonly RecipeTag Quick = new RecipeTag(16, QuickLabel);
 
-      public int BitFlag
-      {
-         get
-         {
-            return bitflag;
-         }
-      }
+        private const string GlutenFreeLabel = "Gluten Free";
+        private const string NoAnimalsLabel = "No Animals";
+        private const string NoMeatLabel = "No Meat";
+        private const string NoPorkLabel = "No Pork";
+        private const string NoRedMeatLabel = "No Red Meat";
+        private const string BreakfastLabel = "Breakfast";
+        private const string DessertLabel = "Dessert";
+        private const string DinnerLabel = "Dinner";
+        private const string LunchLabel = "Lunch";
+        private const string LowCalorieLabel = "Low Calorie";
+        private const string LowCarbLabel = "Low Carb";
+        private const string LowFatLabel = "Low Fat";
+        private const string LowSodiumLabel = "Low Sodium";
+        private const string LowSugarLabel = "Low Sugar";
+        private const string CommonIngredientsLabel = "Common Ingredients";
+        private const string EasyToMakeLabel = "Easy To Make";
+        private const string QuickLabel = "Quick";
 
-      public RecipeTag()
-      {
-      }
+        private readonly int tagValue; // Ordinal value of tag
+        private readonly int bitflag; // Bitmask value (power of 2)
+        private readonly string label; // Name of tag
 
-      RecipeTag(int value, string label)
-      {
-         this.value = value;
-         this.bitflag = 1 << value;
-         this.label = label;
-      }
+        public RecipeTag()
+        {
+        }
 
-      public static bool operator !=(RecipeTag x, RecipeTag y)
-      {
-         return !(x == y);
-      }
+        private RecipeTag(int value, string label)
+        {
+            this.tagValue = value;
+            this.bitflag = 1 << value;
+            this.label = label;
+        }
 
-      public static bool operator ==(RecipeTag x, RecipeTag y)
-      {
-         if (ReferenceEquals(x, y))
-         {
-            return true;
-         }
+        public int Value
+        {
+            get
+            {
+                return this.tagValue;
+            }
+        }
 
-         if ((object) x == null || ((object) y == null))
-         {
-            return false;
-         }
+        public int BitFlag
+        {
+            get
+            {
+                return this.bitflag;
+            }
+        }
 
-         return x.value == y.value;
-      }
+        public static bool operator !=(RecipeTag firstTag, RecipeTag secondTag)
+        {
+            bool result = !(firstTag == secondTag);
+            return result;
+        }
 
-      public static RecipeTags operator |(RecipeTag x, RecipeTag y)
-      {
-         return (RecipeTags) x.bitflag | y.bitflag;
-      }
+        public static bool operator ==(RecipeTag firstTag, RecipeTag secondTag)
+        {
+            if (ReferenceEquals(firstTag, secondTag))
+            {
+                return true;
+            }
 
-      public static implicit operator string(RecipeTag tags)
-      {
-         return tags.label;
-      }
+            if ((object)firstTag == null || ((object)secondTag == null))
+            {
+                return false;
+            }
 
-      public static implicit operator RecipeTag(string tag)
-      {
-         if (tag == GlutenFree.label) return GlutenFree;
-         if (tag == NoAnimals.label) return NoAnimals;
-         if (tag == NoMeat.label) return NoMeat;
-         if (tag == NoPork.label) return NoPork;
-         if (tag == NoRedMeat.label) return NoRedMeat;
-         if (tag == Breakfast.label) return Breakfast;
-         if (tag == Dessert.label) return Dessert;
-         if (tag == Dinner.label) return Dinner;
-         if (tag == Lunch.label) return Lunch;
-         if (tag == LowCalorie.label) return LowCalorie;
-         if (tag == LowCarb.label) return LowCarb;
-         if (tag == LowFat.label) return LowFat;
-         if (tag == LowSodium.label) return LowSodium;
-         if (tag == LowSugar.label) return LowSugar;
-         if (tag == Common.label) return Common;
-         if (tag == Easy.label) return Easy;
-         if (tag == Quick.label) return Quick;
+            bool result = firstTag.tagValue == secondTag.tagValue;
+            return result;
+        }
 
-         throw new ArgumentException("Cannot parse recipe tag: " + tag);
-      }
+        public static RecipeTags operator |(RecipeTag firstTag, RecipeTag secondTag)
+        {
+            var result = (RecipeTags)firstTag.bitflag | secondTag.bitflag;
+            return result;
+        }
 
-      public override int GetHashCode()
-      {
-         return this.value;
-      }
+        public static implicit operator string(RecipeTag tags)
+        {
+            string result = tags.label;
+            return result;
+        }
 
-      public override string ToString()
-      {
-         return this.label;
-      }
+        public static implicit operator RecipeTag(string tag)
+        {
+            switch (tag)
+            {
+                case GlutenFreeLabel:
+                    return GlutenFree;
+                case NoAnimalsLabel:
+                    return NoAnimals;
+                case NoMeatLabel:
+                    return NoMeat;
+                case NoPorkLabel:
+                    return NoPork;
+                case NoRedMeatLabel:
+                    return NoRedMeat;
+                case BreakfastLabel:
+                    return Breakfast;
+                case DessertLabel:
+                    return Dessert;
+                case DinnerLabel: 
+                    return Dinner;
+                case LunchLabel:
+                    return Lunch;
+                case LowCalorieLabel:
+                    return LowCalorie;
+                case LowCarbLabel:
+                    return LowCarb;
+                case LowFatLabel:
+                    return LowFat;
+                case LowSodiumLabel:
+                    return LowSodium;
+                case LowSugarLabel:
+                    return LowSugar;
+                case CommonIngredientsLabel:
+                    return CommonIngredients;
+                case EasyToMakeLabel:
+                    return EasyToMake;
+                case QuickLabel:
+                    return Quick;
+                default:
+                    throw new ArgumentException("Cannot parse recipe tag: " + tag);
+            }
+        }
 
-      public override bool Equals(object obj)
-      {
-         var tag = obj as RecipeTag;
-         return (tag != null && tag.value == this.value);
-      }
+        public override int GetHashCode()
+        {
+            int result = this.tagValue;
+            return result;
+        }
 
-      public static RecipeTag GlutenFree = new RecipeTag(0, "Gluten Free");
-      public static RecipeTag NoAnimals = new RecipeTag(1, "No Animals");
-      public static RecipeTag NoMeat = new RecipeTag(2, "No Meat");
-      public static RecipeTag NoPork = new RecipeTag(3, "No Pork");
-      public static RecipeTag NoRedMeat = new RecipeTag(4, "No Red Meat");
-      public static RecipeTag Breakfast = new RecipeTag(5, "Breakfast");
-      public static RecipeTag Dessert = new RecipeTag(6, "Dessert");
-      public static RecipeTag Dinner = new RecipeTag(7, "Dinner");
-      public static RecipeTag Lunch = new RecipeTag(8, "Lunch");
-      public static RecipeTag LowCalorie = new RecipeTag(9, "Low Calorie");
-      public static RecipeTag LowCarb = new RecipeTag(10, "Low Carb");
-      public static RecipeTag LowFat = new RecipeTag(11, "Low Fat");
-      public static RecipeTag LowSodium = new RecipeTag(12, "Low Sodium");
-      public static RecipeTag LowSugar = new RecipeTag(13, "Low Sugar");
-      public static RecipeTag Common = new RecipeTag(14, "Common Ingredients");
-      public static RecipeTag Easy = new RecipeTag(15, "Easy To Make");
-      public static RecipeTag Quick = new RecipeTag(16, "Quick");
-   }
+        public override string ToString()
+        {
+            string result = this.label;
+            return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var tag = obj as RecipeTag;
+            bool result = tag != null && tag.tagValue == this.tagValue;
+            return result;
+        }        
+    }
 }

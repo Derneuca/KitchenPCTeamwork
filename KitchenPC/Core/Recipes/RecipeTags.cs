@@ -20,7 +20,6 @@
         {
             this.mask = mask;
             this.tags = new List<RecipeTag>(13);
-
             this.AddTags();
         }
 
@@ -224,14 +223,14 @@
                 this.tags.Add(RecipeTag.LowSugar);
             }
 
-            if ((this & RecipeTag.Common) > 0)
+            if ((this & RecipeTag.CommonIngredients) > 0)
             {
-                this.tags.Add(RecipeTag.Common);
+                this.tags.Add(RecipeTag.CommonIngredients);
             }
 
-            if ((this & RecipeTag.Easy) > 0)
+            if ((this & RecipeTag.EasyToMake) > 0)
             {
-                this.tags.Add(RecipeTag.Easy);
+                this.tags.Add(RecipeTag.EasyToMake);
             }
 
             if ((this & RecipeTag.Quick) > 0)
