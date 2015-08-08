@@ -1,5 +1,6 @@
 ﻿namespace KitchenPC.Categorization
 {
+    using KitchenPC.Categorization.Interfaces;
     using KitchenPC.Ingredients;
 
     internal class IngredientToken : IToken

@@ -1,5 +1,7 @@
 ﻿namespace KitchenPC.Categorization
 {
+    using KitchenPC.Categorization.Interfaces;
+
     internal class TextToken : IToken
     {
         private readonly string text;

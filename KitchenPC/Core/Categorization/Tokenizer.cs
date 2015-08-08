@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+
+    using KitchenPC.Categorization.Interfaces;
     using KitchenPC.Recipes;
 
     // Takes a Recipe object and returns an enumeration of Token objects

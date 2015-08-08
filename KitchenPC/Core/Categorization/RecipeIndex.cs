@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
+    using KitchenPC.Categorization.Interfaces;
     using KitchenPC.Recipes;
 
     public class RecipeIndex

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using KitchenPC.Recipes;
+    using KitchenPC.Categorization.Interfaces;
 
     public class CategorizationEngine
     {

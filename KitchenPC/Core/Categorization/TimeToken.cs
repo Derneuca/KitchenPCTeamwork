@@ -1,5 +1,7 @@
 namespace KitchenPC.Categorization
 {
+    using KitchenPC.Categorization.Interfaces;
+
     internal class TimeToken : IToken
     {
         enum Classification
