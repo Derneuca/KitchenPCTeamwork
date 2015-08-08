@@ -1,40 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using KitchenPC.Recipes;
-
-namespace KitchenPC.Categorization
+﻿namespace KitchenPC.Categorization
 {
-   public class RecipeIndex
-   {
-      private readonly Dictionary<IToken, int> index = new Dictionary<IToken, int>();
+    using System.Collections.Generic;
+    using System.Linq;
+    using KitchenPC.Recipes;
 
-      public int EntryCount
-      {
-         get
-         {
-            return index.Values.Sum();
-         }
-      }
+    public class RecipeIndex
+    {
+        private readonly Dictionary<IToken, int> index = new Dictionary<IToken, int>();
 
-      public int GetTokenCount(IToken token)
-      {
-         return index.ContainsKey(token) ? index[token] : 0;
-      }
-
-      public void Add(Recipe recipe)
-      {
-         var tokens = Tokenizer.Tokenize(recipe);
-         foreach (var token in tokens)
-         {
-            if (index.ContainsKey(token))
+        public int EntryCount
+        {
+            get
             {
-               index[token]++;
+                return this.index.Values.Sum();
             }
-            else
+        }
+
+        public int GetTokenCount(IToken token)
+        {
+            return this.index.ContainsKey(token) ? this.index[token] : 0;
+        }
+
+        public void Add(Recipe recipe)
+        {
+            var tokens = Tokenizer.Tokenize(recipe);
+            foreach (var token in tokens)
             {
-               index.Add(token, 1);
+                if (this.index.ContainsKey(token))
+                {
+                    this.index[token]++;
+                }
+                else
+                {
+                    this.index.Add(token, 1);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }

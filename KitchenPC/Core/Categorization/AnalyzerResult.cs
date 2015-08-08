@@ -16,8 +16,8 @@
 
         public override string ToString()
         {
-            return this.SecondPlace == Category.None ? 
-                this.FirstPlace.ToString() : 
+            return this.SecondPlace == Category.None ?
+                this.FirstPlace.ToString() :
                 string.Format("{0}/{1}", this.FirstPlace, this.SecondPlace);
         }
     }
