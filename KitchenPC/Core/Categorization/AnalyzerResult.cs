@@ -2,6 +2,8 @@
 {
     using System;
 
+    using KitchenPC.Categorization.Enums;
+
     public class AnalyzerResult
     {
         public AnalyzerResult(Category firstPlace, Category secondPlace)

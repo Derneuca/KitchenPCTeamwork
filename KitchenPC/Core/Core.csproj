@@ -137,7 +137,8 @@
     <Compile Include="Categorization\AnalyzerResult.cs" />
     <Compile Include="Categorization\CategorizationResult.cs" />
     <Compile Include="Categorization\CategorizationEngine.cs" />
-    <Compile Include="Categorization\Category.cs" />
+    <Compile Include="Categorization\Enums\Category.cs" />
+    <Compile Include="Categorization\Enums\Classification.cs" />
     <Compile Include="Categorization\Interfaces\IDBLoader.cs" />
     <Compile Include="Categorization\Interfaces\IIngredientCommonality.cs" />
     <Compile Include="Categorization\IngredientToken.cs" />

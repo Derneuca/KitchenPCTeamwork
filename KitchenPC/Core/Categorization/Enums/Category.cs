@@ -1,4 +1,4 @@
-﻿namespace KitchenPC.Categorization
+﻿namespace KitchenPC.Categorization.Enums
 {
     public enum Category
     {

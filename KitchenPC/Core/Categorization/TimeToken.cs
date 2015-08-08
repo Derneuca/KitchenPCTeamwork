@@ -1,41 +1,47 @@
 namespace KitchenPC.Categorization
 {
+    using KitchenPC.Categorization.Enums;
     using KitchenPC.Categorization.Interfaces;
 
     internal class TimeToken : IToken
     {
-        enum Classification
-        {
-            Quick,
-            Medium,
-            Long,
-            SuperLong
-        };
-
-        readonly Classification classification;
+        private readonly Classification classification;
 
         public TimeToken(int minutes)
         {
-            if (minutes < 10) classification = Classification.Quick;
-            else if (minutes < 30) classification = Classification.Medium;
-            else if (minutes <= 60) classification = Classification.Long;
-            else classification = Classification.SuperLong;
+            if (minutes < 10)
+            {
+                this.classification = Classification.Quick;
+            }
+            else if (minutes < 30)
+            {
+                this.classification = Classification.Medium;
+            }
+            else if (minutes <= 60)
+            {
+                this.classification = Classification.Long;
+            }
+            else
+            {
+                this.classification = Classification.SuperLong;
+            }
         }
 
         public override bool Equals(object obj)
         {
-            var t1 = obj as TimeToken;
-            return (t1 != null && t1.classification.Equals(classification));
+            var token = obj as TimeToken;
+            bool result = token != null && token.classification.Equals(this.classification);
+            return result;
         }
 
         public override int GetHashCode()
         {
-            return classification.GetHashCode();
+            return this.classification.GetHashCode();
         }
 
         public override string ToString()
         {
-            return classification.ToString();
+            return this.classification.ToString();
         }
     }
 }

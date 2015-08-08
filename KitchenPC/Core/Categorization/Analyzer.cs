@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using KitchenPC.Recipes;
+    using KitchenPC.Categorization.Enums;
     using KitchenPC.Categorization.Interfaces;
+    using KitchenPC.Recipes;
 
     public class Analyzer
     {
@@ -131,12 +132,12 @@
 
             foreach (var token in tokens)
             {
-                var firstCount = firstIndex.GetTokenCount(token);
-                var secondCount = secondIndex.GetTokenCount(token);
+                int firstCount = firstIndex.GetTokenCount(token);
+                int secondCount = secondIndex.GetTokenCount(token);
                 this.CalculateProbability(firstCount, firstIndex.EntryCount, secondCount, secondIndex.EntryCount);
             }
 
-            var prediction = this.CombineProbability();
+            float prediction = this.CombineProbability();
             return prediction;
         }
 
@@ -145,11 +146,11 @@
             const float S = 1f;
             const float X = .5f;
 
-            var bw = firstCategoryCount / firstCategoryTotal;
-            var gw = secondCategoryCount / secondCategoryTotal;
-            var pw = bw / (bw + gw);
-            var n = firstCategoryCount + secondCategoryCount;
-            var fw = ((S * X) + (n * pw)) / (S + n);
+            float bw = firstCategoryCount / firstCategoryTotal;
+            float gw = secondCategoryCount / secondCategoryTotal;
+            float pw = bw / (bw + gw);
+            float n = firstCategoryCount + secondCategoryCount;
+            float fw = ((S * X) + (n * pw)) / (S + n);
 
             this.LogProbability(fw);
         }

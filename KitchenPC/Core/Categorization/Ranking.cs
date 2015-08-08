@@ -1,5 +1,7 @@
 namespace KitchenPC.Categorization
 {
+    using KitchenPC.Categorization.Enums;
+
     internal class Ranking
     {
         public Ranking(Category type)
