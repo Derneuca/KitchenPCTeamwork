@@ -119,12 +119,12 @@
                 winsDessert.Score += difference;
             }
         }
-        
+
         private float GetPrediction(Recipe recipe, RecipeIndex firstIndex, RecipeIndex secondIndex)
         {
             // Reset I and invI
             this.invI = 0;
-            this.i = 0; 
+            this.i = 0;
             var tokens = Tokenizer.Tokenize(recipe);
 
             foreach (var token in tokens)

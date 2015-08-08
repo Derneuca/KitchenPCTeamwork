@@ -9,7 +9,7 @@
     public static class Tokenizer
     {
         // All tokens have to have at least one letter in them
-        private static readonly Regex Valid = new Regex(@"[a-z]", RegexOptions.IgnoreCase); 
+        private static readonly Regex Valid = new Regex(@"[a-z]", RegexOptions.IgnoreCase);
 
         public static IEnumerable<IToken> Tokenize(Recipe recipe)
         {
@@ -19,7 +19,7 @@
             //tokens.AddRange(ParseText(recipe.Method ?? string.Empty));
             //tokens.Add(new TimeToken(recipe.CookTime.GetValueOrDefault() + recipe.PrepTime.GetValueOrDefault()));
             tokens.AddRange(
-                from i in recipe.Ingredients.NeverNull() 
+                from i in recipe.Ingredients.NeverNull()
                 select new IngredientToken(i.Ingredient) as IToken);
 
             return tokens;
