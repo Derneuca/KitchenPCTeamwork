@@ -12,17 +12,17 @@
       public override bool Equals(object obj)
       {
          var t1 = obj as TextToken;
-         return (t1 != null && t1.text.Equals(text));
+         return t1 != null && t1.text.Equals(this.text);
       }
 
       public override int GetHashCode()
       {
-         return text.GetHashCode();
+          return this.text.GetHashCode();
       }
 
       public override string ToString()
       {
-         return text;
+          return this.text;
       }
    }
 }
