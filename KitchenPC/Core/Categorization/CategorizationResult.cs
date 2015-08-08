@@ -2,32 +2,56 @@
 {
     public class CategorizationResult
     {
-        public bool DietGlutenFree;
-        public bool DietNoAnimals;
-        public bool DietNoMeat;
-        public bool DietNoPork;
-        public bool DietNoRedMeat;
-        public bool MealBreakfast;
-        public bool MealDessert;
-        public bool MealDinner;
-        public bool MealLunch;
-        public bool NutritionLowCalorie;
-        public bool NutritionLowCarb;
-        public bool NutritionLowFat;
-        public bool Nutrition_LowSodium;
-        public bool Nutrition_LowSugar;
-        public short Nutrition_TotalCalories;
-        public short Nutrition_TotalCarbs;
-        public short Nutrition_TotalFat;
-        public short Nutrition_TotalSodium;
-        public short Nutrition_TotalSugar;
-        public bool Skill_Easy;
-        public bool Skill_Quick;
-        public bool Skill_Common;
-        public byte Taste_MildToSpicy;
-        public byte Taste_SavoryToSweet;
-        public float Commonality;
+        public bool DietGlutenFree { get; set; }
 
-        public bool USDAMatch;
+        public bool DietNoAnimals { get; set; }
+
+        public bool DietNoMeat { get; set; }
+
+        public bool DietNoPork { get; set; }
+
+        public bool DietNoRedMeat { get; set; }
+
+        public bool MealBreakfast { get; set; }
+
+        public bool MealDessert { get; set; }
+
+        public bool MealDinner { get; set; }
+
+        public bool MealLunch { get; set; }
+
+        public bool NutritionLowCalorie { get; set; }
+
+        public bool NutritionLowCarb { get; set; }
+
+        public bool NutritionLowFat { get; set; }
+
+        public bool NutritionLowSodium { get; set; }
+
+        public bool NutritionLowSugar { get; set; }
+
+        public short NutritionTotalCalories { get; set; }
+
+        public short NutritionTotalCarbs { get; set; }
+
+        public short NutritionTotalFat { get; set; }
+
+        public short Nutrition_TotalSodium { get; set; }
+
+        public short Nutrition_TotalSugar { get; set; }
+
+        public bool SkillEasy { get; set; }
+
+        public bool SkillQuick { get; set; }
+
+        public bool SkillCommon { get; set; }
+
+        public byte TasteMildToSpicy { get; set; }
+
+        public byte TasteSavoryToSweet { get; set; }
+
+        public float Commonality { get; set; }
+
+        public bool USDAMatch { get; set; }
     }
 }
