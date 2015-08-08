@@ -36,9 +36,9 @@
 
         public short NutritionTotalFat { get; set; }
 
-        public short Nutrition_TotalSodium { get; set; }
+        public short NutritionTotalSodium { get; set; }
 
-        public short Nutrition_TotalSugar { get; set; }
+        public short NutritionTotalSugar { get; set; }
 
         public bool SkillEasy { get; set; }
 
