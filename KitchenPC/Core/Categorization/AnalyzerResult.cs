@@ -5,6 +5,7 @@
     public class AnalyzerResult
     {
         public Category FirstPlace { get; private set; }
+
         public Category SecondPlace { get; private set; }
 
         public AnalyzerResult(Category first, Category second)

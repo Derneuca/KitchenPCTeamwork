@@ -7,170 +7,165 @@
 
     public class Analyzer
     {
-        const float tolerance = .05f;
+        private const float Tolerance = .05f;
 
-        float I;  // TODO: Don't know correct name 
-        float invI; // TODO: Don't know correct name 
+        private float i;  // TODO: Don't know correct name 
+        private float invI; // TODO: Don't know correct name 
 
-        public RecipeIndex BreakfastIndex;
-        public RecipeIndex LunchIndex;
-        public RecipeIndex DinnerIndex;
-        public RecipeIndex DessertIndex;
-
-        Dictionary<Guid, IRecipeClassification> trainingData;
+        private RecipeIndex breakfastIndex;
+        private RecipeIndex lunchIndex;
+        private RecipeIndex dinnerIndex;
+        private RecipeIndex dessertIndex;
+        private Dictionary<Guid, IRecipeClassification> trainingData;
 
         public void LoadTrainingData(IDBLoader loader)
         {
-            trainingData = new Dictionary<Guid, IRecipeClassification>();
-
-            BreakfastIndex = new RecipeIndex();
-            LunchIndex = new RecipeIndex();
-            DinnerIndex = new RecipeIndex();
-            DessertIndex = new RecipeIndex();
-
+            this.trainingData = new Dictionary<Guid, IRecipeClassification>();
+            this.breakfastIndex = new RecipeIndex();
+            this.lunchIndex = new RecipeIndex();
+            this.dinnerIndex = new RecipeIndex();
+            this.dessertIndex = new RecipeIndex();
             var data = loader.LoadTrainingData();
 
             foreach (var recipe in data)
             {
-                trainingData.Add(recipe.Recipe.Id, recipe);
+                this.trainingData.Add(recipe.Recipe.Id, recipe);
 
                 if (recipe.IsBreakfast)
                 {
-                    BreakfastIndex.Add(recipe.Recipe);
+                    this.breakfastIndex.Add(recipe.Recipe);
                 }
 
                 if (recipe.IsLunch)
                 {
-                    LunchIndex.Add(recipe.Recipe);
+                    this.lunchIndex.Add(recipe.Recipe);
                 }
 
                 if (recipe.IsDinner)
                 {
-                    DinnerIndex.Add(recipe.Recipe);
+                    this.dinnerIndex.Add(recipe.Recipe);
                 }
 
                 if (recipe.IsDessert)
                 {
-                    DessertIndex.Add(recipe.Recipe);
+                    this.dessertIndex.Add(recipe.Recipe);
                 }
             }
         }
 
-        public bool CheckIfTrained(Guid recipeId, out IRecipeClassification ret)
+        public bool CheckIfTrained(Guid recipeId, out IRecipeClassification trainedRecipe)
         {
-            return trainingData.TryGetValue(recipeId, out ret);
+            return this.trainingData.TryGetValue(recipeId, out trainedRecipe);
         }
 
         public AnalyzerResult GetPrediction(Recipe recipe)
         {
-            var winsBr = new Ranking(Category.Breakfast);
-            var winsLu = new Ranking(Category.Lunch);
-            var winsDi = new Ranking(Category.Dinner);
-            var winsDe = new Ranking(Category.Dessert);
+            var winsBreakfast = new Ranking(Category.Breakfast);
+            var winsLunch = new Ranking(Category.Lunch);
+            var winsDinner = new Ranking(Category.Dinner);
+            var winsDessert = new Ranking(Category.Dessert);
 
-            //Setup Tournament
-            Compete(recipe, BreakfastIndex, LunchIndex, winsBr, winsLu, winsDi, winsDe);
-            Compete(recipe, BreakfastIndex, DinnerIndex, winsBr, winsLu, winsDi, winsDe);
-            Compete(recipe, BreakfastIndex, DessertIndex, winsBr, winsLu, winsDi, winsDe);
-            Compete(recipe, LunchIndex, DinnerIndex, winsBr, winsLu, winsDi, winsDe);
-            Compete(recipe, LunchIndex, DessertIndex, winsBr, winsLu, winsDi, winsDe);
-            Compete(recipe, DinnerIndex, DessertIndex, winsBr, winsLu, winsDi, winsDe);
+            // Setup Tournament
+            this.Compete(recipe, this.breakfastIndex, this.lunchIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
+            this.Compete(recipe, this.breakfastIndex, this.dinnerIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
+            this.Compete(recipe, this.breakfastIndex, this.dessertIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
+            this.Compete(recipe, this.lunchIndex, this.dinnerIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
+            this.Compete(recipe, this.lunchIndex, this.dessertIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
+            this.Compete(recipe, this.dinnerIndex, this.dessertIndex, winsBreakfast, winsLunch, winsDinner, winsDessert);
 
-            //Choose winner
-            Ranking tag1, tag2;
-            var result = GetWinner(winsBr, winsLu, winsDi, winsDe, out tag1, out tag2);
-
+            // Choose winner
+            var result = GetWinner(winsBreakfast, winsLunch, winsDinner, winsDessert);
             return result;
         }
 
-        void Compete(Recipe entry, RecipeIndex first, RecipeIndex second, Ranking winsBr, Ranking winsLu, Ranking winsDi, Ranking winsDe)
+        private static AnalyzerResult GetWinner(Ranking winsBreakfast, Ranking winsLunch, Ranking winsDinner, Ranking winsDessert)
         {
-            var res = GetPrediction(entry, first, second);
-            if (res > .5f - tolerance && res < .5f + tolerance)
-                return; //No winner
-
-            var diff = (float)Math.Abs(res - 0.5);
-            var winner = (res < 0.5 ? second : first);
-
-            if (winner == BreakfastIndex)
-            {
-                winsBr.Score += diff;
-            }
-
-            if (winner == LunchIndex)
-            {
-                winsLu.Score += diff;
-            }
-
-            if (winner == DinnerIndex)
-            {
-                winsDi.Score += diff;
-            }
-
-            if (winner == DessertIndex)
-            {
-                winsDe.Score += diff;
-            }
+            var meals = new Ranking[] { winsBreakfast, winsLunch, winsDinner, winsDessert };
+            var sortedMealsByScore = meals.OrderByDescending(meal => meal.Score).ToArray();
+            var firstPlace = sortedMealsByScore[0];
+            var secondPlace = (sortedMealsByScore[1].Score / sortedMealsByScore[0].Score > 0.8f) ? sortedMealsByScore[1] : null;
+            var result = new AnalyzerResult(firstPlace.Type, (secondPlace != null ? secondPlace.Type : Category.None));
+            return result;
         }
 
-        static AnalyzerResult GetWinner(Ranking winsBr, Ranking winsLu, Ranking winsDi, Ranking winsDe, out Ranking firstPlace, out Ranking secondPlace)
+        private void Compete(Recipe entryRecipe, RecipeIndex firstIndex, RecipeIndex secondIndex, Ranking winsBreakfast, Ranking winsLunch, Ranking winsDinner, Ranking winsDessert)
         {
-            var meals = new Ranking[] { winsBr, winsLu, winsDi, winsDe };
-            var sorted = (from m in meals orderby m.Score descending select m).ToArray();
+            var prediction = this.GetPrediction(entryRecipe, firstIndex, secondIndex);
+            if (.5f - Tolerance < prediction && prediction < .5f + Tolerance)
+            {
+                return; // No winner
+            }
 
-            firstPlace = sorted[0];
+            float difference = (float)Math.Abs(prediction - 0.5);
+            var winner = prediction >= 0.5 ? firstIndex : secondIndex;
 
-            secondPlace = sorted[1].Score / sorted[0].Score > 0.8f ? sorted[1] : null;
+            if (winner == this.breakfastIndex)
+            {
+                winsBreakfast.Score += difference;
+            }
 
-            var ret = new AnalyzerResult(firstPlace.Type, (secondPlace != null ? secondPlace.Type : Category.None));
-            return ret;
+            if (winner == this.lunchIndex)
+            {
+                winsLunch.Score += difference;
+            }
+
+            if (winner == this.dinnerIndex)
+            {
+                winsDinner.Score += difference;
+            }
+
+            if (winner == this.dessertIndex)
+            {
+                winsDessert.Score += difference;
+            }
         }
-
-        float GetPrediction(Recipe recipe, RecipeIndex first, RecipeIndex second)
+        
+        private float GetPrediction(Recipe recipe, RecipeIndex firstIndex, RecipeIndex secondIndex)
         {
-            invI = I = 0; //Reset I/invI
+            // Reset I and invI
+            this.invI = 0;
+            this.i = 0; 
             var tokens = Tokenizer.Tokenize(recipe);
 
             foreach (var token in tokens)
             {
-                var firstCount = first.GetTokenCount(token);
-                var secondCount = second.GetTokenCount(token);
-
-                CalcProbability(firstCount, first.EntryCount, secondCount, second.EntryCount);
+                var firstCount = firstIndex.GetTokenCount(token);
+                var secondCount = secondIndex.GetTokenCount(token);
+                this.CalculateProbability(firstCount, firstIndex.EntryCount, secondCount, secondIndex.EntryCount);
             }
 
-            var prediction = CombineProbability();
+            var prediction = this.CombineProbability();
             return prediction;
         }
 
-        void CalcProbability(float cat1count, float cat1total, float cat2count, float cat2total)
+        private void CalculateProbability(float firstCategoryCount, float firstCategoryTotal, float secondCategoryCount, float secondCategoryTotal)
         {
-            const float s = 1f;
-            const float x = .5f;
+            const float S = 1f;
+            const float X = .5f;
 
-            var bw = cat1count / cat1total;
-            var gw = cat2count / cat2total;
-            var pw = ((bw) / ((bw) + (gw)));
-            var n = cat1count + cat2count;
-            var fw = ((s * x) + (n * pw)) / (s + n);
+            var bw = firstCategoryCount / firstCategoryTotal;
+            var gw = secondCategoryCount / secondCategoryTotal;
+            var pw = bw / (bw + gw);
+            var n = firstCategoryCount + secondCategoryCount;
+            var fw = ((S * X) + (n * pw)) / (S + n);
 
-            LogProbability(fw);
+            this.LogProbability(fw);
         }
 
-        void LogProbability(float prob)
+        private void LogProbability(float probability)
         {
-            if (float.IsNaN(prob))
+            if (float.IsNaN(probability))
             {
                 return;
             }
 
-            I = I == 0 ? prob : I * prob;
-            invI = invI == 0 ? (1 - prob) : invI * (1 - prob);
+            this.i = this.i == 0 ? probability : this.i * probability;
+            this.invI = this.invI == 0 ? (1 - probability) : this.invI * (1 - probability);
         }
 
-        float CombineProbability()
+        private float CombineProbability()
         {
-            return I / (I + invI);
+            return this.i / (this.i + this.invI);
         }
     }
 }

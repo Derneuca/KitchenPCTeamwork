@@ -7,8 +7,11 @@
         Recipe Recipe { get; }
 
         bool IsBreakfast { get; }
+
         bool IsLunch { get; }
+
         bool IsDinner { get; }
+
         bool IsDessert { get; }
     }
 }

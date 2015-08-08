@@ -5,7 +5,7 @@ using KitchenPC.Recipes;
 
 namespace KitchenPC.Categorization
 {
-   //Takes a Recipe object and returns an enumeration of Token objects
+   // Takes a Recipe object and returns an enumeration of Token objects
    public static class Tokenizer
    {
       static readonly Regex valid = new Regex(@"[a-z]", RegexOptions.IgnoreCase); //All tokens have to have at least one letter in them

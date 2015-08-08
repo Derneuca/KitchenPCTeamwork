@@ -6,7 +6,7 @@ namespace KitchenPC.Categorization
 {
    public class RecipeIndex
    {
-      readonly Dictionary<IToken, int> index = new Dictionary<IToken, int>();
+      private readonly Dictionary<IToken, int> index = new Dictionary<IToken, int>();
 
       public int EntryCount
       {
