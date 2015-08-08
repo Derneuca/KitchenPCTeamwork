@@ -1,56 +1,63 @@
 ﻿namespace KitchenPC.Context
 {
-   public class AlphaTree
-   {
-      public Node Head;
+    public class AlphaTree
+    {
+        public AlphaTree()
+        {
+            this.Head = new Node();
+        }
 
-      public AlphaTree()
-      {
-         Head = new Node();
-      }
+        public Node Head { get; set; }
 
-      public class Node
-      {
-         readonly Node[] nodes;
-         public ConnectorVertex connections;
+        public class Node
+        {
+            private readonly Node[] nodes;
 
-         public Node()
-         {
-            nodes = new Node[26];
-         }
-
-         public Node AddLink(char c)
-         {
-            var index = c - 97;
-            return (nodes[index] = new Node());
-         }
-
-         public bool HasLink(char c)
-         {
-            var index = c - 97;
-            return (nodes[index] != null);
-         }
-
-         public Node GetLink(char c)
-         {
-            var index = c - 97;
-            return nodes[index];
-         }
-
-         public void AddConnection(IngredientNode node)
-         {
-            if (connections == null)
+            public Node()
             {
-               connections = new ConnectorVertex();
-            }
-            else
-            {
-               if (connections.HasConnection(node))
-                  return;
+                this.nodes = new Node[26];
             }
 
-            connections.AddConnection(node);
-         }
-      }
-   }
+            public ConnectorVertex Connections { get; set; }
+
+            public Node AddLink(char c)
+            {
+                int index = c - 97;
+                this.nodes[index] = new Node();
+                var result = this.nodes[index];
+                return result;
+            }
+
+            public bool HasLink(char c)
+            {
+                int index = c - 97;
+                bool result = this.nodes[index] != null;
+                return result;
+            }
+
+            public Node GetLink(char c)
+            {
+                int index = c - 97;
+                var result = this.nodes[index];
+                return result;
+            }
+
+            public void AddConnection(IngredientNode node)
+            {
+                if (this.Connections == null)
+                {
+                    this.Connections = new ConnectorVertex();
+                }
+                else
+                {
+                    if (this.Connections.HasConnection(node))
+                    {
+                        return;
+                    }
+                }
+
+                this.Connections.AddConnection(node);
+            }
+        }
+    }
 }

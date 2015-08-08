@@ -111,7 +111,7 @@ namespace KitchenPC.Context
             node = node.GetLink(substr[i]);
          }
 
-         connections = node.connections;
+         connections = node.Connections;
          return true;
       }
    }
