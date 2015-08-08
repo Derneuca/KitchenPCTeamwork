@@ -2,18 +2,18 @@
 {
     public class CategorizationResult
     {
-        public bool Diet_GlutenFree;
-        public bool Diet_NoAnimals;
-        public bool Diet_NoMeat;
-        public bool Diet_NoPork;
-        public bool Diet_NoRedMeat;
-        public bool Meal_Breakfast;
-        public bool Meal_Dessert;
-        public bool Meal_Dinner;
-        public bool Meal_Lunch;
-        public bool Nutrition_LowCalorie;
-        public bool Nutrition_LowCarb;
-        public bool Nutrition_LowFat;
+        public bool DietGlutenFree;
+        public bool DietNoAnimals;
+        public bool DietNoMeat;
+        public bool DietNoPork;
+        public bool DietNoRedMeat;
+        public bool MealBreakfast;
+        public bool MealDessert;
+        public bool MealDinner;
+        public bool MealLunch;
+        public bool NutritionLowCalorie;
+        public bool NutritionLowCarb;
+        public bool NutritionLowFat;
         public bool Nutrition_LowSodium;
         public bool Nutrition_LowSugar;
         public short Nutrition_TotalCalories;

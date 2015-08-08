@@ -119,9 +119,9 @@ namespace KitchenPC.UnitTests
          var dinner = engine.Categorize(Mock.Recipes.MockRecipe("turkey ribs meatloaf", "parmesan barbeque"));
          var dessert = engine.Categorize(Mock.Recipes.MockRecipe("cookies cake", "cookies and cake"));
 
-         Assert.IsTrue(breakfast.Meal_Breakfast, "Recipe should be classified as a breakfast.");
-         Assert.IsTrue(dinner.Meal_Dinner, "Recipe should be classified as a dinner.");
-         Assert.IsTrue(dessert.Meal_Dessert, "Recipe should be classified as a dessert.");
+         Assert.IsTrue(breakfast.MealBreakfast, "Recipe should be classified as a breakfast.");
+         Assert.IsTrue(dinner.MealDinner, "Recipe should be classified as a dinner.");
+         Assert.IsTrue(dessert.MealDessert, "Recipe should be classified as a dessert.");
       }
 
       [Test]

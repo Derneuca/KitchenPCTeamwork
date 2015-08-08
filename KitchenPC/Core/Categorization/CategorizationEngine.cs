@@ -35,20 +35,20 @@
             IRecipeClassification trainedRecipe;
             if (analyzer.CheckIfTrained(recipe.Id, out trainedRecipe))
             {
-                result.Meal_Breakfast = trainedRecipe.IsBreakfast;
-                result.Meal_Lunch = trainedRecipe.IsLunch;
-                result.Meal_Dinner = trainedRecipe.IsDinner;
-                result.Meal_Dessert = trainedRecipe.IsDessert;
+                result.MealBreakfast = trainedRecipe.IsBreakfast;
+                result.MealLunch = trainedRecipe.IsLunch;
+                result.MealDinner = trainedRecipe.IsDinner;
+                result.MealDessert = trainedRecipe.IsDessert;
             }
 
             else
             {
                 var analysis = analyzer.GetPrediction(recipe);
 
-                result.Meal_Breakfast = (analysis.FirstPlace.Equals(Category.Breakfast) || analysis.SecondPlace.Equals(Category.Breakfast));
-                result.Meal_Lunch = (analysis.FirstPlace.Equals(Category.Lunch) || analysis.SecondPlace.Equals(Category.Lunch));
-                result.Meal_Dinner = (analysis.FirstPlace.Equals(Category.Dinner) || analysis.SecondPlace.Equals(Category.Dinner));
-                result.Meal_Dessert = (analysis.FirstPlace.Equals(Category.Dessert) || analysis.SecondPlace.Equals(Category.Dessert));
+                result.MealBreakfast = (analysis.FirstPlace.Equals(Category.Breakfast) || analysis.SecondPlace.Equals(Category.Breakfast));
+                result.MealLunch = (analysis.FirstPlace.Equals(Category.Lunch) || analysis.SecondPlace.Equals(Category.Lunch));
+                result.MealDinner = (analysis.FirstPlace.Equals(Category.Dinner) || analysis.SecondPlace.Equals(Category.Dinner));
+                result.MealDessert = (analysis.FirstPlace.Equals(Category.Dessert) || analysis.SecondPlace.Equals(Category.Dessert));
             }
         }
 
@@ -62,11 +62,11 @@
             var noPork = ingmeta.All(ing => ing.HasPork == false);
             var noRed = ingmeta.All(ing => ing.HasRedMeat == false);
 
-            result.Diet_GlutenFree = glutenFree;
-            result.Diet_NoAnimals = noAnimals;
-            result.Diet_NoMeat = noMeat;
-            result.Diet_NoPork = noPork;
-            result.Diet_NoRedMeat = noRed;
+            result.DietGlutenFree = glutenFree;
+            result.DietNoAnimals = noAnimals;
+            result.DietNoMeat = noMeat;
+            result.DietNoPork = noPork;
+            result.DietNoRedMeat = noRed;
         }
 
         static void CategorizeNutrition(Recipe recipe, CategorizationResult result)
@@ -144,11 +144,11 @@
             //Flag RecipeMetadata depending on totals in recipe
             if (!noMatch)
             {
-                result.Nutrition_LowFat = totalFat <= (totalCal * .03); //Definition of Low Fat is 3g of fat per 100 Cal
+                result.NutritionLowFat = totalFat <= (totalCal * .03); //Definition of Low Fat is 3g of fat per 100 Cal
                 result.Nutrition_LowSugar = totalSugar <= (totalCal * .02); //There is no FDA definition of "Low Sugar" (Can estimate 2g of sugar per 100 Cal or less)
-                result.Nutrition_LowCalorie = totalCal <= (totalGrams * 1.2); //Definition of Low Calorie is 120 cal per 100g
+                result.NutritionLowCalorie = totalCal <= (totalGrams * 1.2); //Definition of Low Calorie is 120 cal per 100g
                 result.Nutrition_LowSodium = totalSodium <= (totalGrams * 1.4); //Definition of Low Sodium is 140mg per 100g
-                result.Nutrition_LowCarb = totalCarbs <= (totalCal * .05); //No definition for Low Carb, but we can use 5g per 100 Cal or less
+                result.NutritionLowCarb = totalCarbs <= (totalCal * .05); //No definition for Low Carb, but we can use 5g per 100 Cal or less
             }
         }
 
