@@ -11,17 +11,17 @@
             this.AvgRating = 0;
         }
 
-        public RecipeBrief(Recipe r)
+        public RecipeBrief(Recipe recipe)
         {
-            this.Id = r.Id;
-            this.OwnerId = r.OwnerId;
-            this.Title = r.Title;
-            this.Description = r.Description;
-            this.ImageUrl = r.ImageUrl;
-            this.Author = r.OwnerAlias;
-            this.PrepTime = r.PrepTime;
-            this.CookTime = r.CookTime;
-            this.AvgRating = r.AvgRating;
+            this.Id = recipe.Id;
+            this.OwnerId = recipe.OwnerId;
+            this.Title = recipe.Title;
+            this.Description = recipe.Description;
+            this.ImageUrl = recipe.ImageUrl;
+            this.Author = recipe.OwnerAlias;
+            this.PrepTime = recipe.PrepTime;
+            this.CookTime = recipe.CookTime;
+            this.AvgRating = recipe.AvgRating;
         }
 
         public Guid Id { get; set; }

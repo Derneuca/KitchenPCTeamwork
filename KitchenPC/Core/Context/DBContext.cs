@@ -296,7 +296,7 @@ namespace KitchenPC.Context
       /// <param name="recipe">Fully constructed Recipe object.</param>
       public RecipeResult CreateRecipe(Recipe recipe)
       {
-         Recipe.Validate(recipe);
+         // Recipe.Validate(recipe); ----> Validate() removed by PsychoSphere 
 
          return Adapter.CreateRecipe(Identity, recipe);
       }

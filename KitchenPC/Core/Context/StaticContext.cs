@@ -278,7 +278,7 @@ namespace KitchenPC.Context
       /// <param name="recipe">Fully constructed Recipe object.</param>
       public RecipeResult CreateRecipe(Recipe recipe)
       {
-         Recipe.Validate(recipe);
+          // Recipe.Validate(recipe); ----> Validate() removed by PsychoSphere 
          recipe.Id = Guid.NewGuid();
 
          // TODO: We should update indexes rather than clear them all out, however this context isn't designed for performance
