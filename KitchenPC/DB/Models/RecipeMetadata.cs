@@ -136,11 +136,11 @@ namespace KitchenPC.DB.Models
                 }
                 if (this.SkillCommon)
                 {
-                    t |= RecipeTag.Common;
+                    t |= RecipeTag.CommonIngredients;
                 }
                 if (this.SkillEasy)
                 {
-                    t |= RecipeTag.Easy;
+                    t |= RecipeTag.EasyToMake;
                 }
                 if (this.SkillQuick)
                 {

@@ -68,7 +68,7 @@ namespace KPCServer.UnitTests
       {
          get
          {
-            return RecipeTag.Dinner | RecipeTag.Easy;
+            return RecipeTag.Dinner | RecipeTag.EasyToMake;
          }
       } //Engine will tend to favor recipes with these tags
 

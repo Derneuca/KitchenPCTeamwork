@@ -76,7 +76,7 @@ namespace KitchenPC.UnitTests
 
          //Test ToString
          Assert.AreEqual("Gluten Free, No Animals, No Meat, No Pork", tags1.ToString());
-         Assert.AreEqual("Gluten Free No Animals No Meat No Pork", tags1.ToString(" "));
+         Assert.AreEqual("Gluten Free No Animals No Meat No Pork", tags1.ToString());
 
          //Test From
          Assert.AreEqual("No Pork", RecipeTags.From(RecipeTag.NoPork).ToString());

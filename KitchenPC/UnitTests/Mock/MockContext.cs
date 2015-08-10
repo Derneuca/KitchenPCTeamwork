@@ -14,7 +14,9 @@ using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
 
 namespace KPCServer.UnitTests
 {
-   internal class MockContext : IKPCContext
+    using KitchenPC.Recipes.Enums;
+
+    internal class MockContext : IKPCContext
    {
       public void Initialize()
       {
