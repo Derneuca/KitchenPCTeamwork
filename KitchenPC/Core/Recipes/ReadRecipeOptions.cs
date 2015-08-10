@@ -1,30 +1,18 @@
 ﻿namespace KitchenPC.Recipes
 {
-   public class ReadRecipeOptions
-   {
-      public bool ReturnCommentCount;
-      public bool ReturnUserRating;
-      public bool ReturnCookbookStatus;
-      public bool ReturnMethod;
-      public bool ReturnPermalink;
+    public class ReadRecipeOptions
+    {
+        public static readonly ReadRecipeOptions None = new ReadRecipeOptions();
+        public static readonly ReadRecipeOptions MethodOnly = new ReadRecipeOptions { ReturnMethod = true };
 
-      static readonly ReadRecipeOptions none = new ReadRecipeOptions();
-      static readonly ReadRecipeOptions methodonly = new ReadRecipeOptions {ReturnMethod = true};
+        public bool ReturnCommentCount { get; set; }
 
-      public static ReadRecipeOptions None
-      {
-         get
-         {
-            return none;
-         }
-      }
+        public bool ReturnUserRating { get; set; }
 
-      public static ReadRecipeOptions MethodOnly
-      {
-         get
-         {
-            return methodonly;
-         }
-      }
-   }
+        public bool ReturnCookbookStatus { get; set; }
+
+        public bool ReturnMethod { get; set; }
+
+        public bool ReturnPermalink { get; set; }
+    }
 }
