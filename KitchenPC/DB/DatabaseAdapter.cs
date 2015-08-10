@@ -2,45 +2,43 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-
+    using Context;
+    using Data;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using FluentNHibernate.Conventions;
     using FluentNHibernate.Conventions.Helpers;
-
-    using KitchenPC.Context;
-    using KitchenPC.Data;
-    using KitchenPC.DB.Models;
-    using KitchenPC.DB.Provisioning;
-    using KitchenPC.Ingredients;
-    using KitchenPC.Menus;
-    using KitchenPC.Modeler;
-    using KitchenPC.NLP;
-    using KitchenPC.Recipes;
-    using KitchenPC.Recipes.Enums;
-    using KitchenPC.ShoppingLists;
-
+    using Ingredients;
+    using Menus;
+    using Modeler;
+    using Models;
     using NHibernate;
     using NHibernate.Cfg;
     using NHibernate.Criterion;
     using NHibernate.Tool.hbm2ddl;
     using NHibernate.Transform;
-
-    using IngredientNode = KitchenPC.NLP.IngredientNode;
-    using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
+    using NLP;
+    using Provisioning;
+    using Recipes;
+    using Recipes.Enums;
+    using ShoppingLists;
+    using IngredientNode = NLP.IngredientNode;
+    using IngredientUsage = Ingredients.IngredientUsage;
 
     /// <summary>A database adapter that uses NHibernate to connect to an underlying database.</summary>
     public class DatabaseAdapter : IDBAdapter, IDisposable
     {
+        private readonly DatabaseAdapterBuilder builder;
+
         private ISessionFactory sessionFactory;
         private Configuration nhConfig;
-        private readonly DatabaseAdapterBuilder builder;
 
 
         private DatabaseAdapter()
         {
-            builder = new DatabaseAdapterBuilder(this);
+            this.builder = new DatabaseAdapterBuilder(this);
         }
 
 
@@ -53,8 +51,11 @@
         }
 
         public List<IConvention> DatabaseConventions { get; set; }
+
         public IPersistenceConfigurer DatabaseConfiguration { get; set; }
+
         public ISearchProvider SearchProvider { get; set; }
+
         public ISynonymLoader<IngredientNode> IngredientLoader
         {
             get
@@ -62,6 +63,7 @@
                 return new IngredientLoader(this);
             }
         }
+
         public ISynonymLoader<UnitNode> UnitLoader
         {
             get
@@ -69,6 +71,7 @@
                 return new UnitLoader(this);
             }
         }
+
         public ISynonymLoader<FormNode> FormLoader
         {
             get
@@ -76,6 +79,7 @@
                 return new FormLoader(this);
             }
         }
+
         public ISynonymLoader<PrepNode> PrepLoader
         {
             get
@@ -83,6 +87,7 @@
                 return new PrepLoader(this);
             }
         }
+
         public ISynonymLoader<AnomalousNode> AnomalyLoader
         {
             get
@@ -91,37 +96,38 @@
             }
         }
 
-
-
         public IEnumerable<IngredientSource> LoadIngredientsForIndex()
         {
-            using (var session = GetStatelessSession())
+            using (var session = this.GetStatelessSession())
             {
-                Models.Ingredients ing = null;
+                Ingredients ing = null;
                 int? count = null;
                 var popularity = QueryOver.Of<RecipeIngredients>()
                    .Where(p => p.Ingredient.IngredientId == ing.IngredientId)
                    .ToRowCountQuery();
 
-                var ingredients = session.QueryOver<Models.Ingredients>(() => ing)
-                   .SelectList(list => list
-                      .Select(p => p.IngredientId)
-                      .Select(p => p.DisplayName)
-                      .SelectSubQuery(popularity).WithAlias(() => count)
-                   )
-                   .OrderByAlias(() => count).Desc()
-                   .ThenBy(p => p.DisplayName).Asc()
-                   .List<Object[]>()
-                   .Select(i => new IngredientSource((Guid)i[0], (String)i[1]));
+                var ingredients = session
+                    .QueryOver(() => ing)
+                    .SelectList(list => list
+                    .Select(p => p.IngredientId)
+                    .Select(p => p.DisplayName)
+                    .SelectSubQuery(popularity)
+                    .WithAlias(() => count))
+                    .OrderByAlias(() => count)
+                    .Desc()
+                    .ThenBy(p => p.DisplayName).Asc()
+                    .List<object[]>()
+                    .Select(i => new IngredientSource((Guid)i[0], (string)i[1]));
 
                 return ingredients.ToList();
             }
         }
+
         public IEnumerable<RatingBinding> LoadRatingGraph()
         {
-            using (var session = GetStatelessSession())
+            using (var session = this.GetStatelessSession())
             {
-                //Load ratings
+                // Load ratings
                 var ratings = session.QueryOver<RecipeRatings>().List();
 
                 return new List<RatingBinding>(ratings.Select(s => new RatingBinding
@@ -134,32 +140,33 @@
         }
         public IEnumerable<RecipeBinding> LoadRecipeGraph()
         {
-            using (var session = GetStatelessSession())
+            using (var session = this.GetStatelessSession())
             {
                 RecipeMetadata metadata = null;
-                var recipes = session.QueryOver<Models.Recipes>()
-                   .JoinAlias(r => r.RecipeMetadata, () => metadata)
-                   .Select(
-                      p => p.RecipeId,
-                      p => p.Rating,
-                      p => metadata.DietGlutenFree,
-                      p => metadata.DietNoAnimals,
-                      p => metadata.DietNomeat,
-                      p => metadata.DietNoPork,
-                      p => metadata.DietNoRedMeat,
-                      p => metadata.MealBreakfast,
-                      p => metadata.MealDessert,
-                      p => metadata.MealDinner,
-                      p => metadata.MealLunch,
-                      p => metadata.NutritionLowCalorie,
-                      p => metadata.NutritionLowCarb,
-                      p => metadata.NutritionLowFat,
-                      p => metadata.NutritionLowSodium,
-                      p => metadata.NutritionLowSugar,
-                      p => metadata.SkillCommon,
-                      p => metadata.SkillEasy,
-                      p => metadata.SkillQuick)
-                   .List<Object[]>();
+                var recipes = session
+                    .QueryOver<Recipes>()
+                    .JoinAlias(r => r.RecipeMetadata, () => metadata)
+                    .Select(
+                        p => p.RecipeId,
+                        p => p.Rating,
+                        p => metadata.DietGlutenFree,
+                        p => metadata.DietNoAnimals,
+                        p => metadata.DietNomeat,
+                        p => metadata.DietNoPork,
+                        p => metadata.DietNoRedMeat,
+                        p => metadata.MealBreakfast,
+                        p => metadata.MealDessert,
+                        p => metadata.MealDinner,
+                        p => metadata.MealLunch,
+                        p => metadata.NutritionLowCalorie,
+                        p => metadata.NutritionLowCarb,
+                        p => metadata.NutritionLowFat,
+                        p => metadata.NutritionLowSodium,
+                        p => metadata.NutritionLowSugar,
+                        p => metadata.SkillCommon,
+                        p => metadata.SkillEasy,
+                        p => metadata.SkillQuick)
+                    .List<object[]>();
 
                 return recipes.Select(r => new RecipeBinding
                 {
@@ -185,29 +192,31 @@
                 }).ToList();
             }
         }
+
         public IEnumerable<IngredientBinding> LoadIngredientGraph()
         {
-            using (var session = GetStatelessSession())
+            using (var session = this.GetStatelessSession())
             {
                 IngredientForms joinForm = null;
-                Models.Ingredients joinIng = null;
+                Ingredients joinIng = null;
 
-                var recIngs = session.QueryOver<RecipeIngredients>()
-                   .JoinAlias(r => r.IngredientForm, () => joinForm)
-                   .JoinAlias(r => r.Ingredient, () => joinIng)
-                   .Where(p => joinIng.IngredientId != ShoppingList.GUID_WATER) // Ignore any usage for water
-                   .Select(
-                      p => joinIng.IngredientId,
-                      p => p.Recipe.RecipeId,
-                      p => p.Qty,
-                      p => p.Unit,
-                      p => joinIng.ConversionType,
-                      p => joinIng.UnitWeight,
-                      p => joinForm.UnitType,
-                      p => joinForm.FormAmount,
-                      p => joinForm.FormUnit)
-                   .TransformUsing(IngredientGraphTransformer.Create())
-                   .List<IngredientBinding>();
+                var recIngs = session
+                    .QueryOver<RecipeIngredients>()
+                    .JoinAlias(r => r.IngredientForm, () => joinForm)
+                    .JoinAlias(r => r.Ingredient, () => joinIng)
+                    .Where(p => joinIng.IngredientId != ShoppingList.GUID_WATER)
+                    .Select(
+                        p => joinIng.IngredientId,
+                        p => p.Recipe.RecipeId,
+                        p => p.Qty,
+                        p => p.Unit,
+                        p => joinIng.ConversionType,
+                        p => joinIng.UnitWeight,
+                        p => joinForm.UnitType,
+                        p => joinForm.FormAmount,
+                        p => joinForm.FormUnit)
+                    .TransformUsing(IngredientGraphTransformer.Create())
+                    .List<IngredientBinding>();
 
                 return recIngs;
             }
@@ -216,35 +225,41 @@
 
         public Ingredient ReadIngredient(string ingredient)
         {
-            using (var session = GetSession())
+            using (var session = this.GetSession())
             {
-                var dbIng = session.QueryOver<Models.Ingredients>()
-                   .Fetch(prop => prop.Metadata).Eager
-                   .Where(p => p.DisplayName == ingredient.Trim())
-                   .SingleOrDefault();
+                var dbIng = session
+                    .QueryOver<Ingredients>()
+                    .Fetch(prop => prop.Metadata).Eager
+                    .Where(p => p.DisplayName == ingredient.Trim())
+                    .SingleOrDefault();
 
                 if (dbIng == null)
+                {
                     throw new IngredientNotFoundException();
+                }
 
                 return dbIng.AsIngredient();
             }
         }
+
         public Ingredient ReadIngredient(Guid ingid)
         {
-            using (var session = GetSession())
+            using (var session = this.GetSession())
             {
-                var dbIng = session.QueryOver<Models.Ingredients>()
-                   .Fetch(prop => prop.Metadata).Eager
-                   .Where(p => p.IngredientId == ingid)
-                   .SingleOrDefault();
+                var dbIng = session
+                    .QueryOver<Ingredients>()
+                    .Fetch(prop => prop.Metadata).Eager
+                    .Where(p => p.IngredientId == ingid)
+                    .SingleOrDefault();
 
                 if (dbIng == null)
+                {
                     throw new IngredientNotFoundException();
+                }
 
                 return dbIng.AsIngredient();
             }
         }
-
 
         public ShoppingListResult CreateShoppingList(AuthIdentity identity, ShoppingList list)
         {
@@ -254,12 +269,12 @@
 
                 using (var transaction = session.BeginTransaction())
                 {
-                    var dbList = new Models.ShoppingLists();
+                    var dbList = new ShoppingLists();
                     dbList.Title = list.Title.Trim();
                     dbList.UserId = identity.UserId;
                     session.Save(dbList);
 
-                    if (list.Any()) // Create ShoppingListItems
+                    if (list.Any())
                     {
                         list.ToList().ForEach(i =>
                         {
@@ -279,10 +294,16 @@
                 return ret;
             }
         }
-        public ShoppingListResult UpdateShoppingList(AuthIdentity identity,
-            Guid? listId, Guid[] toRemove, ShoppingListModification[] toModify, IShoppingListSource[] toAdd, string newName = null)
+
+        public ShoppingListResult UpdateShoppingList(
+            AuthIdentity identity,
+            Guid? listId,
+            Guid[] toRemove,
+            ShoppingListModification[] toModify,
+            IShoppingListSource[] toAdd,
+            string newName = null)
         {
-            using (var session = GetSession())
+            using (var session = this.GetSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
@@ -292,30 +313,36 @@
                         var dbDeletes = session.QueryOver<ShoppingListItems>()
                            .Where(p => p.UserId == identity.UserId)
                            .Where(listId.HasValue
-                              ? Expression.Eq("ShoppingList", listId.Value)
-                              : Expression.IsNull("ShoppingList")
-                           ).AndRestrictionOn(p => p.ItemId).IsInG(toRemove)
-                           .List();
+                              ? Restrictions.Eq("ShoppingList", listId.Value)
+                                      : Restrictions.IsNull("ShoppingList"))
+                            .AndRestrictionOn(p => p.ItemId)
+                            .IsInG(toRemove)
+                            .List();
 
                         dbDeletes.ForEach(session.Delete);
                     }
 
                     // Updates
-                    Models.ShoppingLists dbList = null;
-                    IList<ShoppingListItems> dbItems = null;
+                    ShoppingLists dbList = null;
+                    IList<ShoppingListItems> dbItems;
+
                     if (listId.HasValue)
                     {
-                        dbList = session.QueryOver<Models.ShoppingLists>()
+                        dbList = session.QueryOver<ShoppingLists>()
                            .Fetch(prop => prop.Items).Eager
                            .Where(p => p.UserId == identity.UserId)
                            .Where(p => p.ShoppingListId == listId.Value)
                            .SingleOrDefault();
 
                         if (dbList == null)
+                        {
                             throw new ShoppingListNotFoundException();
+                        }
 
-                        if (!String.IsNullOrWhiteSpace(newName))
+                        if (!string.IsNullOrWhiteSpace(newName))
+                        {
                             dbList.Title = newName;
+                        }
 
                         dbItems = dbList.Items;
                     }
@@ -330,17 +357,26 @@
                     toModify.ForEach(item =>
                     {
                         var dbItem = dbItems.FirstOrDefault(i => i.ItemId == item.ModifiedItemId);
-                        if (dbItem == null) return;
+                        if (dbItem == null)
+                        {
+                            return;
+                        }
 
-                        if (item.CrossOut.HasValue) dbItem.CrossedOut = item.CrossOut.Value;
-                        if (item.NewAmount != null) dbItem.Amount = item.NewAmount;
+                        if (item.CrossOut.HasValue)
+                        {
+                            dbItem.CrossedOut = item.CrossOut.Value;
+                        }
+                        if (item.NewAmount != null)
+                        {
+                            dbItem.Amount = item.NewAmount;
+                        }
                     });
 
                     toAdd.ForEach(item =>
                     {
                         var source = item.GetItem();
 
-                        if (source.Ingredient == null && !String.IsNullOrWhiteSpace(source.Raw)) // Raw shopping list item
+                        if (source.Ingredient == null && !string.IsNullOrWhiteSpace(source.Raw)) // Raw shopping list item
                         {
                             if (!dbItems.Any(i => source.Raw.Equals(i.Raw, StringComparison.OrdinalIgnoreCase))) // Add it
                             {
@@ -358,23 +394,24 @@
                             return;
                         }
 
+                        // TODO: Extract unknow method... Name it somehow
                         if (source.Ingredient != null && source.Amount == null) // Raw ingredient without any amount
                         {
                             var existingItem = dbItems.FirstOrDefault(i => i.Ingredient != null && i.Ingredient.IngredientId == source.Ingredient.Id);
 
-                            if (existingItem == null) // Add it
+                            if (existingItem == null)
                             {
                                 var newItem = new ShoppingListItems
                                 {
                                     ShoppingList = dbList,
                                     UserId = identity.UserId,
-                                    Ingredient = Models.Ingredients.FromId(source.Ingredient.Id)
+                                    Ingredient = Ingredients.FromId(source.Ingredient.Id)
                                 };
 
                                 session.Save(newItem);
                                 dbItems.Add(newItem);
                             }
-                            else // Clear out existing amount
+                            else
                             {
                                 existingItem.Amount = null;
                             }
@@ -384,7 +421,7 @@
                         {
                             var existingItem = dbItems.FirstOrDefault(i => i.Ingredient != null && i.Ingredient.IngredientId == source.Ingredient.Id);
 
-                            if (existingItem == null) // Add it
+                            if (existingItem == null)
                             {
                                 var newItem = new ShoppingListItems
                                 {
@@ -420,19 +457,20 @@
 
         public MenuResult CreateMenu(AuthIdentity identity, Menu menu, params Guid[] recipeIds)
         {
-            using (var session = GetSession())
+            using (var session = this.GetSession())
             {
                 menu.Title = menu.Title.Trim();
                 var ret = new MenuResult();
 
                 using (var transaction = session.BeginTransaction())
                 {
-                    Models.Menus dbMenu;
-                    var dupes = session.QueryOver<Models.Menus>()
-                       .Where(p => p.UserId == identity.UserId)
-                       .Where(p => p.Title == menu.Title)
-                       .ToRowCountQuery()
-                       .RowCount();
+                    Menus dbMenu;
+                    var dupes = session
+                        .QueryOver<Menus>()
+                        .Where(p => p.UserId == identity.UserId)
+                        .Where(p => p.Title == menu.Title)
+                        .ToRowCountQuery()
+                        .RowCount();
 
                     if (dupes > 0)
                     {
@@ -467,55 +505,72 @@
                 return ret;
             }
         }
-        public MenuResult UpdateMenu(AuthIdentity identity,
-            Guid? menuId, Guid[] recipesAdd, Guid[] recipesRemove, MenuMove[] recipesMove, bool clear, string newName = null)
-        {
-            var ret = new MenuResult();
-            ret.MenuUpdated = true; // TODO: Verify actual changes were made before setting MenuUpdated to true
 
-            using (var session = GetSession())
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
+        public MenuResult UpdateMenu(
+            AuthIdentity identity,
+            Guid? menuId,
+            Guid[] recipesAdd,
+            Guid[] recipesRemove,
+            MenuMove[] recipesMove,
+            bool clear,
+            string newName = null)
+        {
+            var menuResult = new MenuResult();
+            menuResult.MenuUpdated = true; // TODO: Verify actual changes were made before setting MenuUpdated to true
+
+            using (var session = this.GetSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    Models.Menus dbMenu = null;
-                    IList<Favorites> dbRecipes = null;
+                    Menus dbMenu = null;
+                    IList<Favorites> dbRecipes;
                     if (menuId.HasValue)
                     {
-                        dbMenu = session.QueryOver<Models.Menus>()
-                           .Fetch(prop => prop.Recipes).Eager
-                           .Where(p => p.MenuId == menuId)
-                           .SingleOrDefault();
+                        dbMenu = session
+                            .QueryOver<Menus>()
+                            .Fetch(prop => prop.Recipes).Eager
+                            .Where(p => p.MenuId == menuId)
+                            .SingleOrDefault();
 
                         if (dbMenu == null)
+                        {
                             throw new MenuNotFoundException();
+                        }
 
-                        if (dbMenu.UserId != identity.UserId) // User does not have access to modify this menu
+                        if (dbMenu.UserId != identity.UserId)
+                        {
                             throw new UserDoesNotOwnMenuException();
+                        }
 
-                        if (!String.IsNullOrWhiteSpace(newName) && dbMenu != null) // Rename menu
+                        if (!string.IsNullOrWhiteSpace(newName))
+                        {
                             dbMenu.Title = newName.Trim();
+                        }
 
                         dbRecipes = dbMenu.Recipes;
                     }
                     else
                     {
-                        dbRecipes = session.QueryOver<Favorites>()
-                           .Where(p => p.UserId == identity.UserId)
-                           .Where(p => p.Menu == null)
-                           .List();
+                        dbRecipes = session
+                            .QueryOver<Favorites>()
+                            .Where(p => p.UserId == identity.UserId)
+                            .Where(p => p.Menu == null)
+                            .List();
                     }
 
-                    if (recipesAdd.Any()) // Add recipes to menu
+                    if (recipesAdd.Any())
                     {
-                        var existing = (from r in dbRecipes select r.Recipe.RecipeId);
-                        recipesAdd = recipesAdd.Except(existing).ToArray(); //Remove dupes
+                        var existing = from r in dbRecipes
+                                       select r.Recipe.RecipeId;
+                        recipesAdd = recipesAdd.Except(existing).ToArray();
 
                         foreach (var rid in recipesAdd)
                         {
                             var fav = new Favorites
                             {
                                 UserId = identity.UserId,
-                                Recipe = new Models.Recipes() { RecipeId = rid },
+                                Recipe = new Recipes { RecipeId = rid },
                                 Menu = dbMenu
                             };
 
@@ -523,36 +578,41 @@
                         }
                     }
 
-                    if (recipesRemove.Any()) // Remove recipes from menu
+                    if (recipesRemove.Any())
                     {
-                        var toDelete = (from r in dbRecipes where recipesRemove.Contains(r.Recipe.RecipeId) select r);
+                        var toDelete = from r in dbRecipes
+                                       where recipesRemove.Contains(r.Recipe.RecipeId)
+                                       select r;
                         toDelete.ForEach(session.Delete);
                     }
 
-                    if (clear) // Remove every recipe from menu
+                    if (clear)
                     {
                         dbRecipes.ForEach(session.Delete);
                     }
 
-                    if (recipesMove.Any()) // Move items to another menu
+                    if (recipesMove.Any())
                     {
                         foreach (var moveAction in recipesMove)
                         {
-                            Models.Menus dbTarget = null;
+                            Menus dbTarget = null;
                             if (moveAction.TargetMenu.HasValue)
                             {
-                                dbTarget = session.QueryOver<Models.Menus>()
-                                   .Where(p => p.MenuId == moveAction.TargetMenu.Value)
-                                   .Where(p => p.UserId == identity.UserId)
-                                   .SingleOrDefault();
+                                dbTarget = session
+                                    .QueryOver<Menus>()
+                                    .Where(p => p.MenuId == moveAction.TargetMenu.Value)
+                                    .Where(p => p.UserId == identity.UserId)
+                                    .SingleOrDefault();
 
                                 if (dbTarget == null)
+                                {
                                     throw new MenuNotFoundException(moveAction.TargetMenu.Value);
+                                }
                             }
 
-                            var rToMove = (moveAction.MoveAll
+                            var rToMove = moveAction.MoveAll
                                ? dbRecipes
-                               : dbRecipes.Where(r => moveAction.RecipesToMove.Contains(r.Recipe.RecipeId)));
+                               : dbRecipes.Where(r => moveAction.RecipesToMove.Contains(r.Recipe.RecipeId));
 
                             rToMove.ForEach(a => a.Menu = dbTarget);
                         }
@@ -562,24 +622,24 @@
                 }
             }
 
-            return ret;
+            return menuResult;
         }
-
 
         public ISession GetSession()
         {
             // For now, this will create a new session - However, eventually we could re-use sessions within threads, HTTP request context, etc
-
-            return sessionFactory.OpenSession();
+            return this.sessionFactory.OpenSession();
         }
+
         public IStatelessSession GetStatelessSession()
         {
-            return sessionFactory.OpenStatelessSession();
+            return this.sessionFactory.OpenStatelessSession();
         }
-        public DataStore Export()
+
+        public DataStore ExportStore()
         {
             var store = new DataStore();
-            using (var exporter = new DatabaseExporter(GetStatelessSession()))
+            using (var exporter = new DatabaseExporter(this.GetStatelessSession()))
             {
                 store.IngredientForms = exporter.IngredientForms();
                 store.IngredientMetadata = exporter.IngredientMetadata();
@@ -603,19 +663,24 @@
 
             return store;
         }
+
         public IngredientFormsCollection ReadFormsForIngredient(Guid ingredientId)
         {
-            using (var session = GetSession())
+            using (var session = this.GetSession())
             {
-                var dbIng = session.QueryOver<Models.Ingredients>()
+                var dbIng = session
+                   .QueryOver<Ingredients>()
                    .Fetch(prop => prop.Forms).Eager
                    .Where(p => p.IngredientId == ingredientId)
                    .SingleOrDefault();
 
                 if (dbIng == null)
+                {
                     throw new IngredientNotFoundException();
+                }
 
-                return new IngredientFormsCollection(from f in dbIng.Forms select f.AsIngredientForm());
+                return new IngredientFormsCollection(from f in dbIng.Forms
+                                                     select f.AsIngredientForm());
             }
         }
         public RecipeBrief[] GetRecipeQueue(AuthIdentity identity)
@@ -718,7 +783,7 @@
         {
             using (var session = GetSession())
             {
-                var dbRecipes = session.QueryOver<Models.Recipes>()
+                var dbRecipes = session.QueryOver<Recipes>()
                    .Fetch(prop => prop.RecipeMetadata).Eager
                    .Fetch(prop => prop.Ingredients).Eager
                    .Fetch(prop => prop.Ingredients[0].Ingredient).Eager
@@ -787,7 +852,7 @@
                 if (identity == null) throw new ArgumentNullException("identity");
 
                 var loadFav = true;
-                var query = session.QueryOver<Models.Menus>()
+                var query = session.QueryOver<Menus>()
                    .Where(p => p.UserId == identity.UserId);
 
                 if (menus != null) // Load individual menus
@@ -834,7 +899,7 @@
             using (var session = GetSession())
             {
                 var loadDef = true;
-                var query = session.QueryOver<Models.ShoppingLists>()
+                var query = session.QueryOver<ShoppingLists>()
                    .Where(p => p.UserId == identity.UserId);
 
                 if (lists != null) // Load individual lists
@@ -903,7 +968,7 @@
         {
             KPCContext.Log.DebugFormat("Importing data from {0} into DBContext.", source.GetType().Name);
 
-            var store = source.Export();
+            var store = source.ExportStore();
             if (store == null)
                 throw new DataStoreException("Given data source contains no data to import.");
 
@@ -941,7 +1006,7 @@
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var dbMenu = session.QueryOver<Models.Menus>()
+                    var dbMenu = session.QueryOver<Menus>()
                        .AndRestrictionOn(p => p.MenuId).IsInG(menuIds)
                        .Where(p => p.UserId == identity.UserId)
                        .Fetch(prop => prop.Recipes).Eager()
@@ -961,7 +1026,7 @@
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var dbLists = session.QueryOver<Models.ShoppingLists>()
+                    var dbLists = session.QueryOver<ShoppingLists>()
                        .AndRestrictionOn(p => p.ShoppingListId).IsInG(lists.Where(l => l.Id.HasValue).Select(l => l.Id.Value))
                        .Where(p => p.UserId == identity.UserId)
                        .List();
@@ -1071,7 +1136,7 @@
                     if (dbFavorite == null)
                         throw new RecipeNotFoundException();
 
-                    var dbToMenu = session.QueryOver<Models.Menus>()
+                    var dbToMenu = session.QueryOver<Menus>()
                        .Where(p => p.MenuId == toMenu.Id.Value)
                        .SingleOrDefault();
 

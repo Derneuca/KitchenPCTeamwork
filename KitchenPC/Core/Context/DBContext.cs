@@ -624,9 +624,9 @@ namespace KitchenPC.Context
             );
       }
 
-      public DataStore Export()
+      public DataStore ExportStore()
       {
-         return Adapter.Export();
+         return Adapter.ExportStore();
       }
 
       public void Import(IProvisionSource source)

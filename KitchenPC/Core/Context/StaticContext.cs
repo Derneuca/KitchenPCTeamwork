@@ -1167,8 +1167,8 @@ namespace KitchenPC.Context
          KPCContext.Log.DebugFormat("Importing data from {0} into StaticContext.", source.GetType().Name);
          InitializeStore();
 
-         // Call source.Export and populate local data store
-         var data = source.Export();
+         // Call source.ExportStore and populate local data store
+         var data = source.ExportStore();
          var serializer = new XmlSerializer(data.GetType());
 
          var file = CompressedStore ? "KPCData.gz" : "KPCData.xml";
@@ -1212,7 +1212,7 @@ namespace KitchenPC.Context
       /// Exports data from this context.  This is usually called automatically by the Import method of another context.
       /// </summary>
       /// <returns>A DataStore containing all data available to this context.</returns>
-      public DataStore Export()
+      public DataStore ExportStore()
       {
          return store;
       }
