@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Recipes.Filters
 {
-    public struct TimeFilter
+    public class TimeFilter
     {
         public short? MaxPrep { get; set; }
 

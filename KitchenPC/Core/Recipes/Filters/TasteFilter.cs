@@ -2,7 +2,7 @@
 {
     using KitchenPC.Recipes.Enums;
 
-    public struct TasteFilter
+    public class TasteFilter
     {
         private static readonly byte[] SpicyOffsets = { 0, 2, 0, 3, 10 };
         private static readonly byte[] SweetOffsets = { 3, 10, 0, 20, 30 };

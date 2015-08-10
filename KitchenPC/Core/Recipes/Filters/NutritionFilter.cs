@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Recipes.Filters
 {
-    public struct NutritionFilter
+    public class NutritionFilter
     {
         public bool LowCalorie { get; set; }
 

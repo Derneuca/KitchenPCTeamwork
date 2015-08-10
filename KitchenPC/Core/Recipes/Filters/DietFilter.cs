@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Recipes.Filters
 {
-    public struct DietFilter
+    public class DietFilter
     {
         public bool GlutenFree { get; set; }
 

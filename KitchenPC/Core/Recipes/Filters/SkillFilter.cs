@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Recipes.Filters
 {
-    public struct SkillFilter
+    public class SkillFilter
     {
         public bool Common { get; set; }
 

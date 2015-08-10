@@ -7,43 +7,62 @@
 
     public class RecipeQuery
     {
-
-
-
-        public string Keywords;
-        public MealFilter Meal;
-        public Rating? Rating;
-        public Guid[] Include;
-        public Guid[] Exclude;
-        public Int32 Offset; //Used for paging
-        public TimeFilter Time;
-        public DietFilter Diet;
-        public NutritionFilter Nutrition;
-        public SkillFilter Skill;
-        public TasteFilter Taste;
-        public PhotoFilter Photos;
-        public SortOrder Sort;
-        public SortDirection Direction; //True if sort order is descending
-
         public RecipeQuery()
         {
-            Taste.MildToSpicy = SpicinessLevel.Medium;
-            Taste.SavoryToSweet = SweetnessLevel.Medium;
-
-            Sort = SortOrder.Rating;
-            Direction = SortDirection.Descending;
+            this.Taste.MildToSpicy = SpicinessLevel.Medium;
+            this.Taste.SavoryToSweet = SweetnessLevel.Medium;
+            this.Sort = SortOrder.Rating;
+            this.Direction = SortDirection.Descending;
         }
 
         public RecipeQuery(RecipeQuery query)
         {
             this.Keywords = query.Keywords;
             this.Rating = query.Rating;
-            if (query.Include != null) this.Include = (Guid[])query.Include.Clone();
-            if (query.Exclude != null) this.Exclude = (Guid[])query.Exclude.Clone();
+            if (query.Include != null)
+            {
+                this.Include = (Guid[])query.Include.Clone();
+            }
+
+            if (query.Exclude != null)
+            {
+                this.Exclude = (Guid[])query.Exclude.Clone();
+            }
+
             this.Time = query.Time;
             this.Photos = query.Photos;
             this.Sort = query.Sort;
             this.Direction = query.Direction;
         }
+
+        public string Keywords { get; set; }
+
+        // Used for paging
+        public int Offset { get; set; }
+
+        public Guid[] Include { get; set; }
+
+        public Guid[] Exclude { get; set; }
+
+        public TimeFilter Time { get; set; }
+
+        public DietFilter Diet { get; set; }
+
+        public NutritionFilter Nutrition { get; set; }
+
+        public SkillFilter Skill { get; set; }
+
+        public TasteFilter Taste { get; }
+
+        public MealFilter Meal { get; set; }
+
+        public PhotoFilter Photos { get; set; }
+
+        public SortOrder Sort { get; set; }
+
+        // True if sort order is descending
+        public SortDirection Direction { get; set; }
+
+        public Rating? Rating { get; set; }
     }
 }
