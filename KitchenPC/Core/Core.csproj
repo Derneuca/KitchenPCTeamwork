@@ -291,6 +291,11 @@
     <Compile Include="Recipes\Enums\SortOrder.cs" />
     <Compile Include="Recipes\Enums\SpicinessLevel.cs" />
     <Compile Include="Recipes\Enums\SweetnessLevel.cs" />
+    <Compile Include="Recipes\Filters\DietFilter.cs" />
+    <Compile Include="Recipes\Filters\NutritionFilter.cs" />
+    <Compile Include="Recipes\Filters\SkillFilter.cs" />
+    <Compile Include="Recipes\Filters\TasteFilter.cs" />
+    <Compile Include="Recipes\Filters\TimeFilter.cs" />
     <Compile Include="Recipes\ReadRecipeOptions.cs" />
     <Compile Include="Recipes\Recipe.cs" />
     <Compile Include="Recipes\RecipeBrief.cs" />

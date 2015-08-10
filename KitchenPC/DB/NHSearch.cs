@@ -123,14 +123,14 @@
                     //Taste
                     if (query.Taste.MildToSpicy != SpicinessLevel.Medium)
                     {
-                        q = query.Taste.MildToSpicy < RecipeQuery.SpicinessLevel.Medium
+                        q = query.Taste.MildToSpicy < SpicinessLevel.Medium
                            ? q.Where(() => metadata.TasteMildToSpicy <= query.Taste.Spiciness).OrderBy(() => metadata.TasteMildToSpicy).Asc()
                            : q.Where(() => metadata.TasteMildToSpicy >= query.Taste.Spiciness).OrderBy(() => metadata.TasteMildToSpicy).Desc();
                     }
 
                     if (query.Taste.SavoryToSweet != SweetnessLevel.Medium)
                     {
-                        q = query.Taste.SavoryToSweet < RecipeQuery.SweetnessLevel.Medium
+                        q = query.Taste.SavoryToSweet < SweetnessLevel.Medium
                            ? q.Where(() => metadata.TasteSavoryToSweet <= query.Taste.Sweetness).OrderBy(() => metadata.TasteSavoryToSweet).Asc()
                            : q.Where(() => metadata.TasteSavoryToSweet >= query.Taste.Sweetness).OrderBy(() => metadata.TasteSavoryToSweet).Desc();
                     }
