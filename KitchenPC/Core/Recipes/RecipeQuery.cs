@@ -2,49 +2,9 @@
 
 namespace KitchenPC.Recipes
 {
+    using KitchenPC.Recipes.Enums;
    public class RecipeQuery
    {
-      public enum PhotoFilter
-      {
-         All,
-         Photo,
-         HighRes
-      }
-
-      public enum SortOrder
-      {
-         None,
-         Title,
-         PrepTime,
-         CookTime,
-         Rating,
-         Image
-      }
-
-      public enum SortDirection
-      {
-         Ascending,
-         Descending
-      }
-
-      public enum SpicinessLevel
-      {
-         Mild,
-         MildMedium,
-         Medium,
-         MediumSpicy,
-         Spicy
-      }
-
-      public enum SweetnessLevel
-      {
-         Savory,
-         SavoryMedium,
-         Medium,
-         MediumSweet,
-         Sweet
-      }
-
       public struct TimeFilter
       {
          public short? MaxPrep;

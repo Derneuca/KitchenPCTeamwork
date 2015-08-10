@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KitchenPC.Ingredients;
+using KitchenPC.Recipes.Enums;
 
 namespace KitchenPC.Recipes
 {

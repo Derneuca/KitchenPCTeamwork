@@ -13,6 +13,7 @@ using KitchenPC.Modeler;
 using KitchenPC.NLP;
 using KitchenPC.Provisioning;
 using KitchenPC.Recipes;
+using KitchenPC.Recipes.Enums;
 using KitchenPC.ShoppingLists;
 using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
 

@@ -6,5 +6,5 @@
         Medium,
         Long,
         SuperLong
-    };
+    }
 }

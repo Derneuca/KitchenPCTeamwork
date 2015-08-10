@@ -4,6 +4,7 @@ using System.Linq;
 using KitchenPC.Ingredients;
 using KitchenPC.NLP;
 using KitchenPC.Recipes;
+using KitchenPC.Recipes.Enums;
 
 namespace KitchenPC.Context.Fluent
 {
@@ -226,13 +227,13 @@ namespace KitchenPC.Context.Fluent
          return this;
       }
 
-      public RecipeQueryBuilder HasPhoto(RecipeQuery.PhotoFilter photoFilter)
+      public RecipeQueryBuilder HasPhoto(PhotoFilter photoFilter)
       {
          query.Photos = photoFilter;
          return this;
       }
 
-      public RecipeQueryBuilder SortBy(RecipeQuery.SortOrder sortOrder, RecipeQuery.SortDirection direction = RecipeQuery.SortDirection.Ascending)
+      public RecipeQueryBuilder SortBy(SortOrder sortOrder, SortDirection direction = SortDirection.Ascending)
       {
          query.Sort = sortOrder;
          query.Direction = direction;
@@ -251,13 +252,13 @@ namespace KitchenPC.Context.Fluent
          return this;
       }
 
-      public RecipeQueryBuilder MildToSpicy(RecipeQuery.SpicinessLevel scale)
+      public RecipeQueryBuilder MildToSpicy(SpicinessLevel scale)
       {
          query.Taste.MildToSpicy = scale;
          return this;
       }
 
-      public RecipeQueryBuilder SavoryToSweet(RecipeQuery.SweetnessLevel scale)
+      public RecipeQueryBuilder SavoryToSweet(SweetnessLevel scale)
       {
          query.Taste.SavoryToSweet = scale;
          return this;

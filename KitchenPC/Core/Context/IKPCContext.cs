@@ -7,6 +7,7 @@ using KitchenPC.Modeler;
 using KitchenPC.NLP;
 using KitchenPC.Recipes;
 using KitchenPC.ShoppingLists;
+using KitchenPC.Recipes.Enums;
 using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
 
 namespace KitchenPC.Context

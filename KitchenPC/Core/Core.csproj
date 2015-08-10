@@ -284,7 +284,13 @@
     <Compile Include="Provisioning\IProvisionSource.cs" />
     <Compile Include="Provisioning\IProvisioner.cs" />
     <Compile Include="Provisioning\IProvisionTarget.cs" />
-    <Compile Include="Recipes\Enums.cs" />
+    <Compile Include="Recipes\Enums\MealFilter.cs" />
+    <Compile Include="Recipes\Enums\PhotoFilter.cs" />
+    <Compile Include="Recipes\Enums\Rating.cs" />
+    <Compile Include="Recipes\Enums\SortDirection.cs" />
+    <Compile Include="Recipes\Enums\SortOrder.cs" />
+    <Compile Include="Recipes\Enums\SpicinessLevel.cs" />
+    <Compile Include="Recipes\Enums\SweetnessLevel.cs" />
     <Compile Include="Recipes\ReadRecipeOptions.cs" />
     <Compile Include="Recipes\Recipe.cs" />
     <Compile Include="Recipes\RecipeBrief.cs" />

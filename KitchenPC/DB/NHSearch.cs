@@ -5,6 +5,7 @@
     using KitchenPC.Context;
     using KitchenPC.DB.Models;
     using KitchenPC.Recipes;
+    using KitchenPC.Recipes.Enums;
     using NHibernate.Criterion;
     using NHibernate.Criterion.Lambda;
 
@@ -78,12 +79,12 @@
                           .Select(i => i.RecipeIngredientId).Take(1));
                 }
 
-                if (query.Photos == RecipeQuery.PhotoFilter.Photo || query.Photos == RecipeQuery.PhotoFilter.HighRes)
+                if (query.Photos == PhotoFilter.Photo || query.Photos == PhotoFilter.HighRes)
                 {
                     q = q.Where(Restrictions.IsNotNull("ImageUrl"));
                 }
 
-                if (query.Diet || query.Nutrition || query.Skill || query.Taste || (query.Meal != MealFilter.All) || (query.Photos == RecipeQuery.PhotoFilter.HighRes)) //Need to search in metadata
+                if (query.Diet || query.Nutrition || query.Skill || query.Taste || (query.Meal != MealFilter.All) || (query.Photos == PhotoFilter.HighRes)) //Need to search in metadata
                 {
                     RecipeMetadata metadata = null;
                     q = q.JoinAlias(r => r.RecipeMetadata, () => metadata);
@@ -98,7 +99,7 @@
                     }
 
                     //High-res photos
-                    if (query.Photos == RecipeQuery.PhotoFilter.HighRes) q = q.Where(() => metadata.PhotoRes >= 1024 * 768);
+                    if (query.Photos == PhotoFilter.HighRes) q = q.Where(() => metadata.PhotoRes >= 1024 * 768);
 
                     //Diet
                     if (query.Diet.GlutenFree) q = q.Where(() => metadata.DietGlutenFree);
@@ -120,14 +121,14 @@
                     if (query.Skill.Quick) q = q.Where(() => metadata.SkillQuick);
 
                     //Taste
-                    if (query.Taste.MildToSpicy != RecipeQuery.SpicinessLevel.Medium)
+                    if (query.Taste.MildToSpicy != SpicinessLevel.Medium)
                     {
                         q = query.Taste.MildToSpicy < RecipeQuery.SpicinessLevel.Medium
                            ? q.Where(() => metadata.TasteMildToSpicy <= query.Taste.Spiciness).OrderBy(() => metadata.TasteMildToSpicy).Asc()
                            : q.Where(() => metadata.TasteMildToSpicy >= query.Taste.Spiciness).OrderBy(() => metadata.TasteMildToSpicy).Desc();
                     }
 
-                    if (query.Taste.SavoryToSweet != RecipeQuery.SweetnessLevel.Medium)
+                    if (query.Taste.SavoryToSweet != SweetnessLevel.Medium)
                     {
                         q = query.Taste.SavoryToSweet < RecipeQuery.SweetnessLevel.Medium
                            ? q.Where(() => metadata.TasteSavoryToSweet <= query.Taste.Sweetness).OrderBy(() => metadata.TasteSavoryToSweet).Asc()
@@ -138,16 +139,16 @@
                 IQueryOverOrderBuilder<Models.Recipes, Models.Recipes> orderBy;
                 switch (query.Sort)
                 {
-                    case RecipeQuery.SortOrder.Title:
+                    case SortOrder.Title:
                         orderBy = q.OrderBy(p => p.Title);
                         break;
-                    case RecipeQuery.SortOrder.PrepTime:
+                    case SortOrder.PrepTime:
                         orderBy = q.OrderBy(p => p.PrepTime);
                         break;
-                    case RecipeQuery.SortOrder.CookTime:
+                    case SortOrder.CookTime:
                         orderBy = q.OrderBy(p => p.CookTime);
                         break;
-                    case RecipeQuery.SortOrder.Image:
+                    case SortOrder.Image:
                         orderBy = q.OrderBy(p => p.ImageUrl);
                         break;
                     default:
@@ -155,7 +156,7 @@
                         break;
                 }
 
-                var results = (query.Direction == RecipeQuery.SortDirection.Descending ? orderBy.Desc() : orderBy.Asc())
+                var results = (query.Direction == SortDirection.Descending ? orderBy.Desc() : orderBy.Asc())
                    .Skip(query.Offset)
                    .Take(100)
                    .List();
