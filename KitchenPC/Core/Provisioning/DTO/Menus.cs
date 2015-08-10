@@ -12,11 +12,7 @@ namespace KitchenPC.Data.DTO
 
       public static Menu ToMenu(Menus dtoMenu)
       {
-         return new Menu
-         {
-            Id = dtoMenu.MenuId,
-            Title = dtoMenu.Title
-         };
+         return new Menu(dtoMenu.MenuId, dtoMenu.Title);
       }
    }
 }

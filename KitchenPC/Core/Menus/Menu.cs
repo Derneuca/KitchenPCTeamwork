@@ -1,78 +1,77 @@
 ﻿namespace KitchenPC.Menus
 {
     using System;
+
     using KitchenPC.Recipes;
 
-    public struct Menu
+    public class Menu
     {
-        public Guid? Id;
-        public String Title;
-        public RecipeBrief[] Recipes; //Can be null
+        public static readonly Menu Favorites = new Menu(null, "Favorites");
 
-        public static Menu FromId(Guid menuId)
+        public Menu(Guid? id, string title)
         {
-            return new Menu(menuId, null);
-        }
-
-        static readonly Menu favorites = new Menu(null, "Favorites");
-
-        public static Menu Favorites
-        {
-            get
-            {
-                return favorites;
-            }
-        }
-
-        public Menu(Guid? id, String title)
-        {
-            Id = id;
-            Title = title;
-            Recipes = null;
+            this.Id = id;
+            this.Title = title;
+            this.Recipes = null;
         }
 
         public Menu(Menu menu)
+            : this(menu.Id, menu.Title)
         {
-            Id = menu.Id;
-            Title = menu.Title;
-            Recipes = null;
-
             if (menu.Recipes != null)
             {
-                Recipes = new RecipeBrief[menu.Recipes.Length];
-                menu.Recipes.CopyTo(Recipes, 0);
+                this.Recipes = new RecipeBrief[menu.Recipes.Length];
+                menu.Recipes.CopyTo(this.Recipes, 0);
             }
+        }
+
+        public Guid? Id { get; set; }
+
+        public string Title { get; set; }
+
+        public RecipeBrief[] Recipes { get; set; } // Can be null
+
+        public static Menu FromId(Guid menuId)
+        {
+            var result = new Menu(menuId, null);
+            return result;
         }
 
         public override string ToString()
         {
-            var count = (Recipes != null ? Recipes.Length : 0);
+            int count = this.Recipes != null ? this.Recipes.Length : 0;
 
-            return String.Format("{0} ({1} {2}",
-               Title,
-               count,
-               count != 1 ? "recipes" : "recipe");
+            return string.Format(
+                "{0} ({1} {2})",
+                this.Title,
+                count,
+                count != 1 ? "recipes" : "recipe");
         }
 
         public override bool Equals(object obj)
         {
+            bool result;
             if (!(obj is Menu))
             {
-                return false;
+                result = false;
+                return result;
             }
 
             var menu = (Menu)obj;
             if (this.Id.HasValue || menu.Id.HasValue)
             {
-                return this.Id.Equals(menu.Id);
+                result = this.Id.Equals(menu.Id);
+                return result;
             }
 
-            return this.Title.Equals(menu.Title);
+            result = this.Title.Equals(menu.Title);
+            return result;
         }
 
         public override int GetHashCode()
         {
-            return this.Id.HasValue ? this.Id.Value.GetHashCode() : this.Title.GetHashCode();
+            int result = this.Id.HasValue ? this.Id.Value.GetHashCode() : this.Title.GetHashCode();
+            return result;
         }
     }
 }

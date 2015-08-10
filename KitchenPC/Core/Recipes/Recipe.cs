@@ -19,7 +19,7 @@
         private string creditUrl;
         private RecipeTags tags;
 
-        public Recipe(Guid id, string title, string description, string imageurl)
+        public Recipe(Guid id, string title, string description, string imageUrl)
         {
             this.ingredients = new IngredientUsageCollection();
             this.PrepTime = 0;
@@ -35,7 +35,7 @@
             this.Id = id;
             this.Title = title;
             this.Description = description;
-            this.ImageUrl = imageurl;
+            this.ImageUrl = imageUrl;
         }
 
         public Recipe()
@@ -229,6 +229,7 @@
         public Rating UserRating { get; set; }
 
         #endregion PROPERTIES
+
         public static Recipe FromId(Guid recipeId)
         {
             return new Recipe(recipeId, null, null, null);
