@@ -52,7 +52,7 @@
 
         public SkillFilter Skill { get; set; }
 
-        public TasteFilter Taste { get; }
+        public TasteFilter Taste { get; set; }
 
         public MealFilter Meal { get; set; }
 

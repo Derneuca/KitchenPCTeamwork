@@ -188,7 +188,7 @@
                     if (match.Success && match.Groups["domain"].Success)
                     {
                         this.creditUrl = match.Value;
-                        this.Credit = match.Groups["domain"].Value.ToLower(); //TODO: Clean up domain name
+                        this.Credit = match.Groups["domain"].Value.ToLower(); // TODO: Clean up domain name
                     }
                     else 
                     {
