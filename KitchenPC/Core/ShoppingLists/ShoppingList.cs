@@ -1,94 +1,99 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace KitchenPC.ShoppingLists
+﻿namespace KitchenPC.ShoppingLists
 {
-   public class ShoppingList : IEnumerable<ShoppingListItem>
-   {
-      public static Guid GUID_WATER = new Guid("cb44df2d-f27c-442a-bd6e-fd7bdd501f10");
-      public Guid? Id { get; set; }
-      public string Title { get; set; }
-      readonly List<ShoppingListItem> list;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
 
-      static readonly ShoppingList defaultList = new ShoppingList(null, "");
+    public class ShoppingList : IEnumerable<ShoppingListItem>
+    {
+        public static readonly Guid GuidWater = new Guid("cb44df2d-f27c-442a-bd6e-fd7bdd501f10");
+        public static readonly ShoppingList Default = new ShoppingList(null, string.Empty);
 
-      public static ShoppingList Default
-      {
-         get
-         {
-            return defaultList;
-         }
-      }
+        private readonly List<ShoppingListItem> list;
 
-      public static ShoppingList FromId(Guid menuId)
-      {
-         return new ShoppingList(menuId, null);
-      }
+        public ShoppingList()
+        {
+            this.list = new List<ShoppingListItem>();
+        }
 
-      public ShoppingList()
-      {
-         list = new List<ShoppingListItem>();
-      }
+        public ShoppingList(Guid? id, string title)
+            : this()
+        {
+            this.Id = id;
+            this.Title = title;
+        }
 
-      public ShoppingList(Guid? id, String title) : this()
-      {
-         this.Id = id;
-         this.Title = title;
-      }
+        public ShoppingList(Guid? id, string title, IEnumerable<IShoppingListSource> items)
+            : this(id, title)
+        {
+            this.AddItems(items);
+        }
 
-      public ShoppingList(Guid? id, String title, IEnumerable<IShoppingListSource> items) : this(id, title)
-      {
-         AddItems(items);
-      }
+        public Guid? Id { get; set; }
 
-      public void AddItems(IEnumerable<IShoppingListSource> items)
-      {
-         foreach (var item in items)
-         {
-            AddItem(item.GetItem());
-         }
-      }
+        public string Title { get; set; }
 
-      void AddItem(ShoppingListItem item)
-      {
-         var existingItem = list.Find(i => i.Equals(item));
-         if (existingItem == null)
-         {
-            list.Add(item);
-            return;
-         }
+        public static ShoppingList FromId(Guid menuId)
+        {
+            return new ShoppingList(menuId, null);
+        }
 
-         existingItem.CrossedOut = item.CrossedOut; // If new item is crossed out, cross out existing item
+        public void AddItems(IEnumerable<IShoppingListSource> items)
+        {
+            foreach (var item in items)
+            {
+                this.AddItem(item.GetItem());
+            }
+        }
 
-         if (existingItem.Ingredient == null || existingItem.Amount == null) // Adding same ingredient twice, but nothing to aggregate.  Skip.
-            return;
+        public override string ToString()
+        {
+            string title = !string.IsNullOrEmpty(this.Title) ? this.Title : "Default List";
+            int count = this.list.Count;
+            string result = string.Format(
+                "{0} ({1} Item{2})", 
+                title, 
+                count, 
+                count != 1 ? "s" : string.Empty);
+            return result;
+        }
 
-         if (item.Amount == null) // Clear out existing amount
-         {
-            existingItem.Amount = null;
-            return;
-         }
+        public IEnumerator<ShoppingListItem> GetEnumerator()
+        {
+            return this.list.GetEnumerator();
+        }
 
-         //increment existing amount
-         existingItem.Amount += item.Amount;
-      }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.list.GetEnumerator();
+        }
 
-      public override string ToString()
-      {
-         var title = (!String.IsNullOrEmpty(Title) ? Title : "Default List");
-         var count = list.Count;
-         return String.Format("{0} ({1} Item{2})", title, count, (count != 1 ? "s" : ""));
-      }
+        private void AddItem(ShoppingListItem item)
+        {
+            var existingItem = this.list.Find(i => i.Equals(item));
+            if (existingItem == null)
+            {
+                this.list.Add(item);
+                return;
+            }
 
-      public IEnumerator<ShoppingListItem> GetEnumerator()
-      {
-         return list.GetEnumerator();
-      }
+            // If new item is crossed out, cross out existing item
+            existingItem.CrossedOut = item.CrossedOut;
 
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-         return list.GetEnumerator();
-      }
-   }
+            // Adding same ingredient twice, but nothing to aggregate. Skip.
+            if (existingItem.Ingredient == null || existingItem.Amount == null)
+            {
+                return;
+            }
+
+            // Clear out existing amount
+            if (item.Amount == null)
+            {
+                existingItem.Amount = null;
+                return;
+            }
+
+            existingItem.Amount += item.Amount;
+        }
+    }
 }

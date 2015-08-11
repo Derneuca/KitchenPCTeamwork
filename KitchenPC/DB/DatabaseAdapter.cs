@@ -204,7 +204,7 @@
                     .QueryOver<RecipeIngredients>()
                     .JoinAlias(r => r.IngredientForm, () => joinForm)
                     .JoinAlias(r => r.Ingredient, () => joinIng)
-                    .Where(p => joinIng.IngredientId != ShoppingList.GUID_WATER)
+                    .Where(p => joinIng.IngredientId != ShoppingList.GuidWater)
                     .Select(
                         p => joinIng.IngredientId,
                         p => p.Recipe.RecipeId,

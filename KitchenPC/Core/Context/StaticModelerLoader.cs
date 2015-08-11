@@ -49,7 +49,7 @@ namespace KitchenPC.Context
          var graph = (from ri in store.RecipeIngredients
             join f in forms on ri.IngredientFormId equals f.Key
             join i in ingredients on ri.IngredientId equals i.Key
-            where i.Key != ShoppingList.GUID_WATER
+            where i.Key != ShoppingList.GuidWater
             select IngredientBinding.Create(
                i.Key,
                ri.RecipeId,
