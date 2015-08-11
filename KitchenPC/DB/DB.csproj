@@ -75,6 +75,7 @@
     <Compile Include="Models\NlpAnomalousIngredients.cs" />
     <Compile Include="Models\NlpDefaultPairings.cs" />
     <Compile Include="Models\NlpFormSynonyms.cs" />
+    <Compile Include="Models\NlpFormSynonymsMap.cs" />
     <Compile Include="Models\NlpIngredientSynonyms.cs" />
     <Compile Include="Models\NlpPrepNotes.cs" />
     <Compile Include="Models\NlpUnitSynonyms.cs" />

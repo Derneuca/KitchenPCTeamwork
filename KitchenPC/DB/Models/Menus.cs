@@ -42,11 +42,7 @@
 
         public virtual Menu AsMenu()
         {
-            return new Menu
-            {
-                Id = this.MenuId,
-                Title = this.Title,
-            };
+            return new Menu(this.MenuId, this.Title);
         }
 
 
