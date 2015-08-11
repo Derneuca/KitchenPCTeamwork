@@ -1,18 +1,20 @@
-﻿using System;
-
-namespace KitchenPC.ShoppingLists
+﻿namespace KitchenPC.ShoppingLists
 {
-   public class ShoppingListModification
-   {
-      public Guid ModifiedItemId { get; private set; }
-      public Amount NewAmount { get; private set; }
-      public Boolean? CrossOut { get; private set; }
+    using System;
 
-      public ShoppingListModification(Guid itemId, Amount newAmount, Boolean? crossout)
-      {
-         ModifiedItemId = itemId;
-         NewAmount = newAmount;
-         CrossOut = crossout;
-      }
-   }
+    public class ShoppingListModification
+    {
+        public ShoppingListModification(Guid itemId, Amount newAmount, bool? crossout)
+        {
+            this.ModifiedItemId = itemId;
+            this.NewAmount = newAmount;
+            this.CrossOut = crossout;
+        }
+
+        public Guid ModifiedItemId { get; private set; }
+
+        public Amount NewAmount { get; private set; }
+
+        public bool? CrossOut { get; private set; }
+    }
 }
