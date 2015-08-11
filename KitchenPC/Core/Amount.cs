@@ -47,10 +47,10 @@ namespace KitchenPC
                ret.Unit = Units.Quart;
             }
 
-            //If quarts, convert to gallons (4 quarts in a gallon)
-            if (ret.Unit == Units.Quart && (low%4 + hi%4) == 0)
-            {
-               ret /= 4;
+             //If quarts, convert to gallons (4 quarts in a gallon)
+             if (ret.Unit == Units.Quart && (low % 4 + hi % 4) == 0)
+             {
+                 ret /= 4;
                ret.Unit = Units.Gallon;
             }
          }
