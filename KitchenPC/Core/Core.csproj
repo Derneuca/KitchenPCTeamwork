@@ -228,8 +228,8 @@
     <Compile Include="NLP\SynonymTree.cs" />
     <Compile Include="NLP\Template.cs" />
     <Compile Include="NLP\TemplateStatistics.cs" />
-    <Compile Include="NLP\Tokens\AmtToken.cs" />
-    <Compile Include="NLP\Tokens\AnomToken.cs" />
+    <Compile Include="NLP\Tokens\AmountToken.cs" />
+    <Compile Include="NLP\Tokens\AnomalousToken.cs" />
     <Compile Include="NLP\Tokens\FormToken.cs" />
     <Compile Include="NLP\Tokens\IngToken.cs" />
     <Compile Include="NLP\Tokens\PrepToken.cs" />
@@ -304,7 +304,6 @@
     <Compile Include="Recipes\RecipeTag.cs" />
     <Compile Include="Recipes\RecipeTags.cs" />
     <Compile Include="Recipes\SearchResults.cs" />
-    <Compile Include="ShoppingLists\Enums.cs" />
     <Compile Include="ShoppingLists\GetShoppingListOptions.cs" />
     <Compile Include="ShoppingLists\IShoppingListSource.cs" />
     <Compile Include="ShoppingLists\ShoppingList.cs" />
@@ -313,6 +312,7 @@
     <Compile Include="ShoppingLists\ShoppingListResult.cs" />
     <Compile Include="ShoppingLists\ShoppingListUpdateCommand.cs" />
     <Compile Include="AuthIdentity.cs" />
+    <Compile Include="ShoppingLists\ShoppingListUpdateType.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="UnitConverter.cs" />
     <Compile Include="Weight.cs" />
@@ -330,7 +330,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
     <None Include="license.md" />
     <None Include="packages.config" />

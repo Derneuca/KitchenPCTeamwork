@@ -1,49 +1,48 @@
-using System;
-using System.IO;
-
 namespace KitchenPC.NLP.Tokens
 {
-   public class FormToken : IGrammar
-   {
-      static FormSynonyms data;
+    using System.IO;
 
-      /// <summary>
-      /// Reads stream to match it against a dictionary of all known forms
-      /// </summary>
-      /// <param name="stream"></param>
-      /// <param name="matchdata"></param>
-      /// <returns></returns>
-      public bool Read(Stream stream, MatchData matchdata)
-      {
-         if (data == null)
-         {
-            data = new FormSynonyms();
-         }
+     public class FormToken : IGrammar
+    {
+        private static FormSynonyms data;
 
-         FormNode node;
-         matchdata.Form = null;
-         var buffer = String.Empty;
-         var matchPos = stream.Position;
-         int curByte;
-
-         while ((curByte = stream.ReadByte()) >= 0)
-         {
-            buffer += (char) curByte;
-            var match = data.Parse(buffer, out node);
-            if (match == MatchPrecision.None)
+        /// <summary>
+        /// Reads stream to match it against a dictionary of all known forms
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="matchdata"></param>
+        /// <returns></returns>
+        public bool Read(Stream stream, MatchData matchdata)
+        {
+            if (data == null)
             {
-               break; //No reason to continue reading stream, let's see what we have..
+                data = new FormSynonyms();
             }
 
-            if (match == MatchPrecision.Exact)
-            {
-               matchPos = stream.Position;
-               matchdata.Form = node;
-            }
-         }
+            matchdata.Form = null;
+            var buffer = string.Empty;
+            var matchPos = stream.Position;
+            int curByte;
 
-         stream.Seek(matchPos, SeekOrigin.Begin);
-         return (matchdata.Form != null);
-      }
-   }
+            while ((curByte = stream.ReadByte()) >= 0)
+            {
+                buffer += (char)curByte;
+                FormNode node;
+                var match = data.Parse(buffer, out node);
+                if (match == MatchPrecision.None)
+                {
+                    break;
+                }
+
+                if (match == MatchPrecision.Exact)
+                {
+                    matchPos = stream.Position;
+                    matchdata.Form = node;
+                }
+            }
+
+            stream.Seek(matchPos, SeekOrigin.Begin);
+            return matchdata.Form != null;
+        }
+    }
 }

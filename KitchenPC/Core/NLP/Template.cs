@@ -79,13 +79,13 @@ namespace KitchenPC.NLP
             case "[UNIT]":
                return new UnitToken();
             case "[ING]":
-               return new IngToken();
+               return new IngredientToken();
             case "[FORM]":
                return new FormToken();
             case "[PREP]":
                return new PrepToken();
             case "[ANOMALY]":
-               return new AnomToken();
+               return new AnomalousToken();
          }
 
          throw new UnknownTokenException(tokenName);
