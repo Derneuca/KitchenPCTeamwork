@@ -1,51 +1,49 @@
-﻿using System;
-using System.IO;
-
-namespace KitchenPC.NLP.Tokens
+﻿namespace KitchenPC.NLP.Tokens
 {
-   public class NumericToken : IGrammar
-   {
-      static NumericVocab data;
+    using System.IO;
 
-      /// <summary>
-      /// Reads stream to match it against a dictionary of all known units for an ingredient
-      /// </summary>
-      /// <param name="stream"></param>
-      /// <param name="matchdata"></param>
-      /// <returns></returns>
-      public bool Read(Stream stream, MatchData matchdata)
-      {
-         if (data == null)
-         {
-            data = new NumericVocab();
-         }
+    public class NumericToken : IGrammar
+    {
+        static NumericVocab data;
 
-         NumericNode node;
-         var fMatch = false;
-         var buffer = String.Empty;
-         var matchPos = stream.Position;
-         int curByte;
-
-         while ((curByte = stream.ReadByte()) >= 0)
-         {
-            buffer += (char) curByte;
-            var match = data.Parse(buffer, out node);
-            if (match == MatchPrecision.None)
+        /// <summary>
+        /// Reads stream to match it against a dictionary of all known units for an ingredient
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="matchdata"></param>
+        /// <returns></returns>
+        public bool Read(Stream stream, MatchData matchdata)
+        {
+            if (data == null)
             {
-               stream.Seek(matchPos, SeekOrigin.Begin);
-               break; //No reason to continue reading stream, let's see what we have..
+                data = new NumericVocab();
             }
 
-            if (match == MatchPrecision.Exact)
-            {
-               matchPos = stream.Position;
-               fMatch = true;
-               matchdata.Amount = new Amount();
-               matchdata.Amount.SizeHigh = node.Value;
-            }
-         }
+            var matchFound = false;
+            var buffer = string.Empty;
+            var matchPos = stream.Position;
+            int curByte;
 
-         return fMatch;
-      }
-   }
+            while ((curByte = stream.ReadByte()) >= 0)
+            {
+                buffer += (char)curByte;
+                NumericNode node;
+                var match = data.Parse(buffer, out node);
+                if (match == MatchPrecision.None)
+                {
+                    stream.Seek(matchPos, SeekOrigin.Begin);
+                    break;
+                }
+
+                if (match == MatchPrecision.Exact)
+                {
+                    matchPos = stream.Position;
+                    matchFound = true;
+                    matchdata.Amount = new Amount { SizeHigh = node.Value };
+                }
+            }
+
+            return matchFound;
+        }
+    }
 }
