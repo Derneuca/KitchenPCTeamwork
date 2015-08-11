@@ -15,7 +15,7 @@
 
         public IngredientUsage NewUsage { get; set; }
 
-        public String NewRaw { get; set; }
+        public string NewRaw { get; set; }
 
         public Guid? RemoveItem { get; set; }
 

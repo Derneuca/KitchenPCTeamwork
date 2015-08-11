@@ -1,10 +1,11 @@
-﻿using System;
-
-namespace KitchenPC.ShoppingLists
+﻿namespace KitchenPC.ShoppingLists
 {
-   public class ShoppingListResult
-   {
-      public Guid? NewShoppingListId;
-      public ShoppingList List;
-   }
+    using System;
+
+    public class ShoppingListResult
+    {
+        public Guid? NewShoppingListId { get; set; }
+
+        public ShoppingList List { get; set; }
+    }
 }
