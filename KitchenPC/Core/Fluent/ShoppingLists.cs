@@ -91,10 +91,7 @@ namespace KitchenPC.Context.Fluent
 
       public IList<ShoppingList> List()
       {
-         var options = new GetShoppingListOptions
-         {
-            LoadItems = loadItems
-         };
+          var options = new GetShoppingListOptions(this.loadItems);
 
          return context.GetShoppingLists(listsToLoad, options);
       }
