@@ -231,7 +231,7 @@
     <Compile Include="NLP\Tokens\AmountToken.cs" />
     <Compile Include="NLP\Tokens\AnomalousToken.cs" />
     <Compile Include="NLP\Tokens\FormToken.cs" />
-    <Compile Include="NLP\Tokens\IngToken.cs" />
+    <Compile Include="NLP\Tokens\IngredientToken.cs" />
     <Compile Include="NLP\Tokens\PrepToken.cs" />
     <Compile Include="NLP\Tokens\StaticToken.cs" />
     <Compile Include="NLP\Tokens\UnitToken.cs" />
