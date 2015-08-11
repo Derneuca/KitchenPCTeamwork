@@ -49,7 +49,9 @@
         public override bool Equals(object obj)
         {
             if (false == (obj is Menus))
+            {
                 return false;
+            }
 
             var menu = (Menus)obj;
             return this.MenuId.Equals(menu.MenuId);
