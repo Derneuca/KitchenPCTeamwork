@@ -1,56 +1,55 @@
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
-
 namespace KitchenPC.NLP.Tokens
 {
-   public class PrepToken : IGrammar
-   {
-      static PrepNotes data;
+    using System.IO;
+    using System.Text.RegularExpressions;
 
-      public bool Read(Stream stream, MatchData matchData)
-      {
-         if (data == null)
-         {
-            data = new PrepNotes();
-         }
+    public class PrepToken : IGrammar
+    {
+        private static PrepNotes data;
 
-         var buffer = String.Empty;
-         PrepNode foundPrep = null;
-         var fFound = false;
-         var matchPos = stream.Position;
-         int curByte;
-
-         while ((curByte = stream.ReadByte()) >= 0)
-         {
-            buffer += (char) curByte;
-
-            //Prep tokens can have leading commas or parens - so trim these off
-            buffer = Regex.Replace(buffer, @"^\s*(,|-|\()\s*", "");
-            buffer = Regex.Replace(buffer, @"\s*\)\s*$", "");
-
-            PrepNode node;
-            var match = data.Parse(buffer, out node);
-            if (match == MatchPrecision.None)
+        public bool Read(Stream stream, MatchData matchData)
+        {
+            if (data == null)
             {
-               break; //No reason to continue reading stream, let's see what we have..
+                data = new PrepNotes();
             }
 
-            if (match == MatchPrecision.Exact)
+            var buffer = string.Empty;
+            PrepNode foundPrep = null;
+            var matchFound = false;
+            var matchPos = stream.Position;
+            int curByte;
+
+            while ((curByte = stream.ReadByte()) >= 0)
             {
-               matchPos = stream.Position;
-               foundPrep = node;
-               fFound = true;
+                buffer += (char)curByte;
+
+                //Prep tokens can have leading commas or parens - so trim these off
+                buffer = Regex.Replace(buffer, @"^\s*(,|-|\()\s*", "");
+                buffer = Regex.Replace(buffer, @"\s*\)\s*$", "");
+
+                PrepNode node;
+                var match = data.Parse(buffer, out node);
+                if (match == MatchPrecision.None)
+                {
+                    break;
+                }
+
+                if (match == MatchPrecision.Exact)
+                {
+                    matchPos = stream.Position;
+                    foundPrep = node;
+                    matchFound = true;
+                }
             }
-         }
 
-         if (foundPrep != null) //Add the prep at the end of the loop in case we found multiple preps along the way
-         {
-            matchData.Preps.Add(foundPrep);
-         }
+            if (foundPrep != null)
+            {
+                matchData.Preps.Add(foundPrep);
+            }
 
-         stream.Seek(matchPos, SeekOrigin.Begin);
-         return fFound;
-      }
-   }
+            stream.Seek(matchPos, SeekOrigin.Begin);
+            return matchFound;
+        }
+    }
 }
