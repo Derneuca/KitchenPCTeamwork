@@ -9,6 +9,7 @@ using KitchenPC.Recipes;
 using KitchenPC.ShoppingLists;
 using KitchenPC.Recipes.Enums;
 using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
+using KitchenPC.Fluent.Menus;
 
 namespace KitchenPC.Context
 {
@@ -60,7 +61,7 @@ namespace KitchenPC.Context
       // Menu support
       Menu[] GetMenus(IList<Menu> menus, GetMenuOptions options);
       void DeleteMenus(params Guid[] menuIds);
-      MenuResult UpdateMenu(Guid? menuId, Guid[] recipesAdd, Guid[] recipesRemove, MenuMove[] recipesMove, bool clear, string newName = null);
+      MenuResult UpdateMenu(Guid? menuId, Guid[] addRecipes, Guid[] removeRecipes, MenuMove[] moveRecipes, bool clear, string newName = null);
       MenuResult CreateMenu(Menu menu, params Guid[] recipeIds);
 
       // Fluent Interfaces (Will eventually replace non-fluent API)

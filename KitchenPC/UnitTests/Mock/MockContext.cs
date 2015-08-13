@@ -11,6 +11,7 @@ using KitchenPC.Recipes;
 using KitchenPC.ShoppingLists;
 using IngredientNode = KitchenPC.Context.IngredientNode;
 using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
+using KitchenPC.Fluent.Menus;
 
 namespace KPCServer.UnitTests
 {

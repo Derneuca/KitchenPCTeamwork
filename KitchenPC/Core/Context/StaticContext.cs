@@ -16,6 +16,7 @@ using KitchenPC.Recipes;
 using KitchenPC.Recipes.Enums;
 using KitchenPC.ShoppingLists;
 using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
+using KitchenPC.Fluent.Menus;
 
 namespace KitchenPC.Context
 {

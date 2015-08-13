@@ -168,6 +168,13 @@
     <Compile Include="Context\StaticSearch.cs" />
     <Compile Include="Context\StaticUnitLoader.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Fluent\Menus\MenuAction.cs" />
+    <Compile Include="Fluent\Menus\MenuCreator.cs" />
+    <Compile Include="Fluent\Menus\MenuDeleter.cs" />
+    <Compile Include="Fluent\Menus\MenuLoader.cs" />
+    <Compile Include="Fluent\Menus\MenuMover.cs" />
+    <Compile Include="Fluent\Menus\MenuUpdater.cs" />
+    <Compile Include="Fluent\Menus\MoveAction.cs" />
     <Compile Include="FormConversion.cs" />
     <Compile Include="Fractions.cs" />
     <Compile Include="Ingredients\Ingredient.cs" />

@@ -16,7 +16,7 @@
                 this.Nodes = new Node[94];
             }
 
-            public Node[] Nodes { get; }
+            public Node[] Nodes { get; set; }
             
             public ConnectorVertex<T> Connections { get; private set; }
 
