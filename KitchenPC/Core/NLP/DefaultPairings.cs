@@ -4,7 +4,7 @@
 
     public struct DefaultPairings
     {
-        public static DefaultPairings Empty = new DefaultPairings();
+        public static readonly DefaultPairings Empty = new DefaultPairings();
 
         public IngredientForm Unit { get; set; }
 

@@ -14,7 +14,7 @@
 
         public delegate void NoMatchEvent(NoMatch result, string usage);
 
-        public static ILog Log = LogManager.GetLogger(typeof(Parser));
+        public static readonly ILog Log = LogManager.GetLogger(typeof(Parser));
 
         public NoMatchEvent OnNoMatch { get; set; }
 
