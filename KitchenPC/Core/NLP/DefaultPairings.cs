@@ -4,11 +4,13 @@
 
     public struct DefaultPairings
     {
-        public static DefaultPairings Empty { get; } = new DefaultPairings();
+        public static DefaultPairings Empty = new DefaultPairings();
 
-        public IngredientForm Unit;
-        public IngredientForm Volume;
-        public IngredientForm Weight;
+        public IngredientForm Unit { get; set; }
+
+        public IngredientForm Volume { get; set; }
+
+        public IngredientForm Weight { get; set; }
 
         public bool IsEmpty
         {

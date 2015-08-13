@@ -9,11 +9,12 @@
     public class Parser
     {
         private static readonly Regex ReWhitespace = new Regex(@"[ ]{2,}", RegexOptions.Compiled);
+
         private List<Template> templates;
 
         public delegate void NoMatchEvent(NoMatch result, string usage);
 
-        public static ILog Log { get; set; } = LogManager.GetLogger(typeof(Parser));
+        public static ILog Log = LogManager.GetLogger(typeof(Parser));
 
         public NoMatchEvent OnNoMatch { get; set; }
 
