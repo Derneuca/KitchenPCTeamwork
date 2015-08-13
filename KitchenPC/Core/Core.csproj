@@ -182,6 +182,14 @@
     <Compile Include="Fluent\Queue\QueueLoader.cs" />
     <Compile Include="Fluent\Queue\RecipeDequeuer.cs" />
     <Compile Include="Fluent\Queue\RecipeEnqueuer.cs" />
+    <Compile Include="Fluent\Recipes\IngredientAdder.cs" />
+    <Compile Include="Fluent\Recipes\IngredientUsageCreator.cs" />
+    <Compile Include="Fluent\Recipes\RecipeAction.cs" />
+    <Compile Include="Fluent\Recipes\RecipeCreator.cs" />
+    <Compile Include="Fluent\Recipes\RecipeFinder.cs" />
+    <Compile Include="Fluent\Recipes\RecipeLoader.cs" />
+    <Compile Include="Fluent\Recipes\RecipeQueryBuilder.cs" />
+    <Compile Include="Fluent\Recipes\RecipeRater.cs" />
     <Compile Include="FormConversion.cs" />
     <Compile Include="Fractions.cs" />
     <Compile Include="Ingredients\Ingredient.cs" />
@@ -261,7 +269,6 @@
     <Compile Include="Context\StaticContext.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Fluent\Recipes.cs" />
     <Compile Include="Fluent\ShoppingLists.cs" />
     <Compile Include="Linq\Enumerable.cs" />
     <Compile Include="Modeler\DBSnapshot.cs" />

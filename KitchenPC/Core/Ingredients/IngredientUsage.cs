@@ -1,5 +1,6 @@
 ﻿using System;
 using KitchenPC.Context.Fluent;
+using KitchenPC.Fluent.Recipes;
 
 namespace KitchenPC.Ingredients
 {

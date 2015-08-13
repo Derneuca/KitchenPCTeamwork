@@ -14,6 +14,7 @@ using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;
 using KitchenPC.Fluent.Menus;
 using KitchenPC.Fluent.Modeler;
 using KitchenPC.Fluent.Queue;
+using KitchenPC.Fluent.Recipes;
 
 namespace KPCServer.UnitTests
 {
