@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   public class Anomalies : SynonymTree<AnomalousNode>
-   {
-      static readonly object MapInitLock = new object();
+    using System.Collections.Generic;
 
-      public static void InitIndex(ISynonymLoader<AnomalousNode> loader)
-      {
-         lock (MapInitLock)
-         {
-            index = new AlphaTree<AnomalousNode>();
-            synonymMap = new Dictionary<string, AnomalousNode>();
-            var anomalies = loader.LoadSynonyms();
+    public class Anomalies : SynonymTree<AnomalousNode>
+    {
+        private static readonly object MapInitLock = new object();
 
-            foreach (var anom in anomalies)
+        public static void InitIndex(ISynonymLoader<AnomalousNode> loader)
+        {
+            lock (MapInitLock)
             {
-               IndexString(anom.Name, anom);
+                index = new AlphaTree<AnomalousNode>();
+                synonymMap = new Dictionary<string, AnomalousNode>();
+                var anomalies = loader.LoadSynonyms();
+
+                foreach (var anom in anomalies)
+                {
+                    IndexString(anom.Name, anom);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }
