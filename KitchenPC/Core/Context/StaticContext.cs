@@ -342,8 +342,8 @@ namespace KitchenPC.Context
             NutritionLowFat = recipe.Tags.HasTag(RecipeTag.LowFat),
             NutritionLowSodium = recipe.Tags.HasTag(RecipeTag.LowSodium),
             NutritionLowSugar = recipe.Tags.HasTag(RecipeTag.LowSugar),
-            SkillCommon = recipe.Tags.HasTag(RecipeTag.CommonIngredients),
-            SkillEasy = recipe.Tags.HasTag(RecipeTag.EasyToMake),
+            SkillCommonIngredients = recipe.Tags.HasTag(RecipeTag.CommonIngredients),
+            SkillEasyToMake = recipe.Tags.HasTag(RecipeTag.EasyToMake),
             SkillQuick = recipe.Tags.HasTag(RecipeTag.Quick)
          });
 

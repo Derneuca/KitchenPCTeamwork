@@ -71,7 +71,7 @@ namespace KitchenPC.Context
             }
 
             //High-res photos
-            if (query.Photos == PhotoFilter.HighRes) q = q.Where(p => p.Metadata.PhotoRes >= 1024*768);
+            if (query.Photos == PhotoFilter.HighRes) q = q.Where(p => p.Metadata.PhotoResolution >= 1024*768);
 
             //Diet
             if (query.Diet.GlutenFree) q = q.Where(p => p.Metadata.DietGlutenFree);
@@ -88,8 +88,8 @@ namespace KitchenPC.Context
             if (query.Nutrition.LowSugar) q = q.Where(p => p.Metadata.NutritionLowSugar);
 
             //Skill
-            if (query.Skill.Common) q = q.Where(p => p.Metadata.SkillCommon).OrderByDescending(p => p.Metadata.Commonality);
-            if (query.Skill.Easy) q = q.Where(p => p.Metadata.SkillEasy);
+            if (query.Skill.Common) q = q.Where(p => p.Metadata.SkillCommonIngredients).OrderByDescending(p => p.Metadata.Commonality);
+            if (query.Skill.Easy) q = q.Where(p => p.Metadata.SkillEasyToMake);
             if (query.Skill.Quick) q = q.Where(p => p.Metadata.SkillQuick);
 
             //Taste
