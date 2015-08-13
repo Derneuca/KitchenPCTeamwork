@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml.Serialization;
-using KitchenPC.Context.Fluent;
 using KitchenPC.Data;
 using KitchenPC.Data.DTO;
 using KitchenPC.Ingredients;
@@ -20,6 +19,7 @@ using KitchenPC.Fluent.Menus;
 using KitchenPC.Fluent.Modeler;
 using KitchenPC.Fluent.Queue;
 using KitchenPC.Fluent.Recipes;
+using KitchenPC.Fluent.ShoppingLists;
 
 namespace KitchenPC.Context
 {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using KitchenPC.Context.Fluent;
 using KitchenPC.Data;
 using KitchenPC.Ingredients;
 using KitchenPC.Menus;
@@ -17,6 +16,7 @@ using KitchenPC.Fluent.Menus;
 using KitchenPC.Fluent.Modeler;
 using KitchenPC.Fluent.Queue;
 using KitchenPC.Fluent.Recipes;
+using KitchenPC.Fluent.ShoppingLists;
 
 namespace KitchenPC.Context
 {
