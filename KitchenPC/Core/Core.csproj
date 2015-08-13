@@ -178,6 +178,10 @@
     <Compile Include="Fluent\Modeler\ModelerAction.cs" />
     <Compile Include="Fluent\Modeler\ModelingSessionAction.cs" />
     <Compile Include="Fluent\Modeler\ProfileCreator.cs" />
+    <Compile Include="Fluent\Queue\QueueAction.cs" />
+    <Compile Include="Fluent\Queue\QueueLoader.cs" />
+    <Compile Include="Fluent\Queue\RecipeDequeuer.cs" />
+    <Compile Include="Fluent\Queue\RecipeEnqueuer.cs" />
     <Compile Include="FormConversion.cs" />
     <Compile Include="Fractions.cs" />
     <Compile Include="Ingredients\Ingredient.cs" />
@@ -257,7 +261,6 @@
     <Compile Include="Context\StaticContext.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Fluent\Queue.cs" />
     <Compile Include="Fluent\Recipes.cs" />
     <Compile Include="Fluent\ShoppingLists.cs" />
     <Compile Include="Linq\Enumerable.cs" />

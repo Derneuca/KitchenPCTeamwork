@@ -60,7 +60,7 @@
 
         public ProfileCreator AddRating(Recipe recipe, byte rating)
         {
-            ratings.Add(new RecipeRating
+            this.ratings.Add(new RecipeRating
             {
                 RecipeId = recipe.Id,
                 Rating = rating

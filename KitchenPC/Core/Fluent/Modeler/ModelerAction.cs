@@ -34,7 +34,7 @@
 
         public ModelingSessionAction WithProfile(IUserProfile profile)
         {
-            var result = new ModelingSessionAction(context, profile);
+            var result = new ModelingSessionAction(this.context, profile);
             return result;
         }
 

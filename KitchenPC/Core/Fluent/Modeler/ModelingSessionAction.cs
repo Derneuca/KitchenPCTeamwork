@@ -36,7 +36,7 @@
 
         public Model Generate()
         {
-            var result = this.session.Generate(recipes, scale);
+            var result = this.session.Generate(this.recipes, this.scale);
             return result;
         }
 
