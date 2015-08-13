@@ -1,38 +1,39 @@
-﻿using log4net;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   /// <summary>Implementation of ITracer that uses Log4Net</summary>
-   public class DefaultTracer : ITracer
-   {
-      readonly ILog log;
+    using Enums;
+    using log4net;
 
-      public DefaultTracer()
-      {
-         log = LogManager.GetLogger(typeof (Parser));
-         log.Info("Initialized logger for new NLP parser.");
-      }
+    /// <summary>Implementation of ITracer that uses Log4Net</summary>
+    public class DefaultTracer : ITracer
+    {
+        private readonly ILog log;
 
-      public void Trace(TraceLevel level, string message, params object[] args)
-      {
-         switch (level)
-         {
-            case TraceLevel.Debug:
-               log.DebugFormat(message, args);
-               break;
-            case TraceLevel.Error:
-               log.ErrorFormat(message, args);
-               break;
-            case TraceLevel.Fatal:
-               log.FatalFormat(message, args);
-               break;
-            case TraceLevel.Info:
-               log.InfoFormat(message, args);
-               break;
-            case TraceLevel.Warn:
-               log.WarnFormat(message, args);
-               break;
-         }
-      }
-   }
+        public DefaultTracer()
+        {
+            this.log = LogManager.GetLogger(typeof(Parser));
+            this.log.Info("Initialized logger for new NLP parser.");
+        }
+
+        public void Trace(TraceLevel level, string message, params object[] args)
+        {
+            switch (level)
+            {
+                case TraceLevel.Debug:
+                    this.log.DebugFormat(message, args);
+                    break;
+                case TraceLevel.Error:
+                    this.log.ErrorFormat(message, args);
+                    break;
+                case TraceLevel.Fatal:
+                    this.log.FatalFormat(message, args);
+                    break;
+                case TraceLevel.Info:
+                    this.log.InfoFormat(message, args);
+                    break;
+                case TraceLevel.Warn:
+                    this.log.WarnFormat(message, args);
+                    break;
+            }
+        }
+    }
 }

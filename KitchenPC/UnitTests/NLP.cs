@@ -2,9 +2,12 @@
 using KitchenPC.NLP;
 using NUnit.Framework;
 
+
 namespace KitchenPC.UnitTests
 {
-   [TestFixture]
+    using NLP.Enums;
+
+    [TestFixture]
    internal class NlpTests
    {
       Parser parser;

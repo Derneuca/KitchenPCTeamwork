@@ -1,73 +1,74 @@
-﻿using System;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   public class IngredientNode
-   {
-      readonly IngredientNode parent; //This node can shadow another node under another name
-      readonly Guid id;
-      readonly DefaultPairings pairings;
-      readonly UnitType convtype;
-      readonly Weight unitweight;
+    using System;
 
-      public Guid Id
-      {
-         get
-         {
-            return (parent == null) ? id : parent.id;
-         }
-      }
+    public class IngredientNode
+    {
+        private readonly IngredientNode parent;
+        private readonly Guid id;
+        private readonly DefaultPairings pairings;
+        private readonly UnitType convtype;
+        private readonly Weight unitweight;
 
-      public DefaultPairings Pairings
-      {
-         get
-         {
-            return (parent == null) ? pairings : parent.pairings;
-         }
-      }
+        public IngredientNode(Guid id, string name, UnitType convtype, Weight unitweight, DefaultPairings pairings)
+        {
+            this.id = id;
+            this.pairings = pairings;
+            this.convtype = convtype;
+            this.unitweight = unitweight;
 
-      public IngredientNode Parent
-      {
-         get
-         {
-            return parent;
-         }
-      }
+            this.IngredientName = name;
+        }
 
-      public string IngredientName; //Name of the ingredient or synonym
-      public string PrepNote; //If this ingredient is an alias for another, it will use this as a prep note, eg: Ripe Bananas => Bananas (Ripe)
+        public IngredientNode(IngredientNode root, string synonym, string prepnote)
+        {
+            this.parent = root;
+            this.IngredientName = synonym;
+            this.PrepNote = prepnote;
+        }
 
-      public UnitType ConversionType
-      {
-         get
-         {
-            return (parent == null) ? convtype : parent.convtype;
-         }
-      } //Default conversion type for this ingredient (from ShoppingIngredients)
+        public Guid Id
+        {
+            get
+            {
+                return (this.parent == null) ? this.id : this.parent.id;
+            }
+        }
 
-      public Weight UnitWeight
-      {
-         get
-         {
-            return (parent == null) ? unitweight : parent.unitweight;
-         }
-      } //How much a single unit weighs (from ShoppingIngredients)
+        public DefaultPairings Pairings
+        {
+            get
+            {
+                return (this.parent == null) ? this.pairings : this.parent.pairings;
+            }
+        }
 
-      public IngredientNode(Guid id, string name, UnitType convtype, Weight unitweight, DefaultPairings pairings)
-      {
-         this.id = id;
-         this.pairings = pairings;
-         this.convtype = convtype;
-         this.unitweight = unitweight;
+        public IngredientNode Parent
+        {
+            get
+            {
+                return this.parent;
+            }
+        }
 
-         IngredientName = name;
-      }
+        public string IngredientName { get; set; }
 
-      public IngredientNode(IngredientNode root, string synonym, string prepnote)
-      {
-         this.parent = root;
-         IngredientName = synonym;
-         PrepNote = prepnote;
-      }
-   }
+        public string PrepNote { get; set; }
+
+        public UnitType ConversionType
+        {
+            get
+            {
+                return (this.parent == null) ? this.convtype : this.parent.convtype;
+            }
+        }
+
+        public Weight UnitWeight
+        {
+            get
+            {
+                return (this.parent == null) ? this.unitweight : this.parent.unitweight;
+            }
+        }
+    }
 }

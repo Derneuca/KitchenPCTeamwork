@@ -17,7 +17,7 @@
             }
 
             public Node[] Nodes { get; set; }
-            
+
             public ConnectorVertex<T> Connections { get; private set; }
 
             public Node AddLink(char c)

@@ -1,27 +1,28 @@
-﻿using System;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   public class NoMatch : Result
-   {
-      readonly MatchResult status;
+    using Enums;
 
-      public override MatchResult Status
-      {
-         get
-         {
-            return status;
-         }
-      }
+    public class NoMatch : Result
+    {
+        private readonly MatchResult status;
 
-      public NoMatch(string input, MatchResult status) : base(input)
-      {
-         this.status = status;
-      }
+        public NoMatch(string input, MatchResult status)
+            : base(input)
+        {
+            this.status = status;
+        }
 
-      public override string ToString()
-      {
-         return String.Format("[NoMatch] Error: {0}", status);
-      }
-   }
+        public override MatchResult Status
+        {
+            get
+            {
+                return this.status;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[NoMatch] Error: {0}", this.status);
+        }
+    }
 }

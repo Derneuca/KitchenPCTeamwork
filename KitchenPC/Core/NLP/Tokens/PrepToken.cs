@@ -2,6 +2,7 @@ namespace KitchenPC.NLP.Tokens
 {
     using System.IO;
     using System.Text.RegularExpressions;
+    using Enums;
 
     public class PrepToken : IGrammar
     {

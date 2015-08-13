@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   public class IngredientSynonyms : SynonymTree<IngredientNode>
-   {
-      static readonly object MapInitLock = new object();
+    using System.Collections.Generic;
 
-      public static void InitIndex(ISynonymLoader<IngredientNode> loader)
-      {
-         lock (MapInitLock)
-         {
-            index = new AlphaTree<IngredientNode>();
-            synonymMap = new Dictionary<string, IngredientNode>();
-            var ings = loader.LoadSynonyms();
+    public class IngredientSynonyms : SynonymTree<IngredientNode>
+    {
+        private static readonly object MapInitLock = new object();
 
-            foreach (var ing in ings)
+        public static void InitIndex(ISynonymLoader<IngredientNode> loader)
+        {
+            lock (MapInitLock)
             {
-               IndexString(ing.IngredientName, ing);
+                Index = new AlphaTree<IngredientNode>();
+                SynonymMap = new Dictionary<string, IngredientNode>();
+                var ings = loader.LoadSynonyms();
+
+                foreach (var ing in ings)
+                {
+                    IndexString(ing.IngredientName, ing);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }

@@ -71,7 +71,7 @@ namespace KitchenPC.Modeler
             timer.Reset();
             timer.Start();
 
-            //Build tag index
+            //Build tag Index
             foreach (var r in snapshot.recipeMap.Values)
             {
                if (r.Hidden)
@@ -134,7 +134,7 @@ namespace KitchenPC.Modeler
                }
 
                //For each tag the recipe has, we need to create a link through ingNode.RecipesByTag to the recipe
-               if (!node.Hidden) //Don't index Hidden recipes
+               if (!node.Hidden) //Don't Index Hidden recipes
                {
                   foreach (var tag in node.Tags)
                   {
@@ -177,7 +177,7 @@ namespace KitchenPC.Modeler
 
             ratingGraph = null;
 
-            //Free up memory/increase index accessing speed by converting List<> objects to arrays
+            //Free up memory/increase Index accessing speed by converting List<> objects to arrays
             foreach (var r in snapshot.recipeMap.Values)
             {
                r.Ingredients = r.Ingredients.ToArray();
@@ -216,7 +216,7 @@ namespace KitchenPC.Modeler
    {
       Dictionary<Guid, RecipeNode> recipeMap; //Recipe Index (will include hidden recipes)
       Dictionary<Guid, IngredientNode> ingredientMap; //Ingredient Index
-      IEnumerable<RecipeNode>[] recipeList; //Ordinal recipe index keyed by tag (for picking random recipes)
+      IEnumerable<RecipeNode>[] recipeList; //Ordinal recipe Index keyed by tag (for picking random recipes)
 
       public int RecipeCount
       {

@@ -439,7 +439,7 @@ namespace KitchenPC.Modeler
       {
          RecipeNode recipeNode;
 
-         if (pantryIngredients == null) //No pantry, fish through Recipe index
+         if (pantryIngredients == null) //No pantry, fish through Recipe Index
          {
             int rnd;
             var tag = (AllowedTags == null) ? random.Next(RecipeTag.NumberOfTags) : AllowedTags[random.Next(AllowedTags.Length)].Value;

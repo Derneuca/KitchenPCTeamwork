@@ -1,36 +1,37 @@
-﻿using System;
-using KitchenPC.Ingredients;
-
-namespace KitchenPC.NLP
+﻿namespace KitchenPC.NLP
 {
-   public class Match : Result
-   {
-      protected IngredientUsage usage;
+    using Enums;
+    using Ingredients;
 
-      public override IngredientUsage Usage
-      {
-         get
-         {
-            return usage;
-         }
-      }
+    public class Match : Result
+    {
+        protected IngredientUsage usage;
 
-      public override MatchResult Status
-      {
-         get
-         {
-            return MatchResult.Match;
-         }
-      }
+        public Match(string input, IngredientUsage usage)
+           : base(input)
+        {
+            this.usage = usage;
+        }
 
-      public Match(string input, IngredientUsage usage) : base(input)
-      {
-         this.usage = usage;
-      }
+        public override IngredientUsage Usage
+        {
+            get
+            {
+                return this.usage;
+            }
+        }
 
-      public override string ToString()
-      {
-         return String.Format("[Match] Usage: {0}", usage);
-      }
-   }
+        public override MatchResult Status
+        {
+            get
+            {
+                return MatchResult.Match;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[Match] Usage: {0}", this.usage);
+        }
+    }
 }

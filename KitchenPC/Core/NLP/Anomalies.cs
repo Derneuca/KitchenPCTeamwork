@@ -10,8 +10,8 @@
         {
             lock (MapInitLock)
             {
-                index = new AlphaTree<AnomalousNode>();
-                synonymMap = new Dictionary<string, AnomalousNode>();
+                Index = new AlphaTree<AnomalousNode>();
+                SynonymMap = new Dictionary<string, AnomalousNode>();
                 var anomalies = loader.LoadSynonyms();
 
                 foreach (var anom in anomalies)

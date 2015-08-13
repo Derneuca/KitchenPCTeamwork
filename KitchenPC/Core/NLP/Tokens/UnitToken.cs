@@ -1,6 +1,7 @@
 namespace KitchenPC.NLP.Tokens
 {
     using System.IO;
+    using Enums;
 
     public class UnitToken : IGrammar
     {

@@ -1,6 +1,7 @@
 namespace KitchenPC.NLP.Tokens
 {
     using System.IO;
+    using Enums;
 
     public class AnomalousToken : IGrammar
     {
