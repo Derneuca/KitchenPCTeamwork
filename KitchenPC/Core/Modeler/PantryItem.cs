@@ -2,7 +2,7 @@ namespace KitchenPC.Modeler
 {
     using System;
 
-    public struct PantryItem
+    public class PantryItem
     {
         public PantryItem(Ingredients.IngredientUsage usage)
         {
