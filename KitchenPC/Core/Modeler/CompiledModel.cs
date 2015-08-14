@@ -1,48 +1,48 @@
-﻿using System;
-using KitchenPC.Recipes;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
-   /// <summary>
-   /// A fully compiled result set from the modeler containing full recipe briefs and ingredient aggregation data.
-   /// </summary>
-   public class CompiledModel
-   {
-      static CompiledModel empty;
+    using System;
+    using KitchenPC.Recipes;
 
-      public RecipeBrief[] Briefs;
-      public Guid[] RecipeIds { get; set; }
-      public PantryItem[] Pantry { get; set; }
-      public SuggestedRecipe[] Recipes { get; set; }
+    /// <summary>
+    /// A fully compiled result set from the modeler containing full recipe briefs and ingredient aggregation data.
+    /// </summary>
+    public class CompiledModel
+    {
+        private static CompiledModel empty;
 
-      public int Count
-      {
-         get
-         {
-            return (Recipes == null ? 0 : Recipes.Length);
-         }
-         set
-         {
-         }
-      }
-
-      public static CompiledModel Empty
-      {
-         get
-         {
-            if (empty == null)
+        public static CompiledModel Empty
+        {
+            get
             {
-               empty = new CompiledModel()
-               {
-                  Briefs = new RecipeBrief[0],
-                  Pantry = new PantryItem[0],
-                  RecipeIds = new Guid[0],
-                  Recipes = new SuggestedRecipe[0]
-               };
-            }
+                if (empty == null)
+                {
+                    empty = new CompiledModel()
+                    {
+                        Briefs = new RecipeBrief[0],
+                        Pantry = new PantryItem[0],
+                        RecipeIds = new Guid[0],
+                        Recipes = new SuggestedRecipe[0]
+                    };
+                }
 
-            return empty;
-         }
-      }
-   }
+                return empty;
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return this.Recipes == null ? 0 : this.Recipes.Length;
+            }
+        }
+
+        public RecipeBrief[] Briefs { get; set; }
+
+        public Guid[] RecipeIds { get; set; }
+
+        public PantryItem[] Pantry { get; set; }
+
+        public SuggestedRecipe[] Recipes { get; set; }
+    }
 }
