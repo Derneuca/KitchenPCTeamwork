@@ -1,120 +1,125 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-   #region Support classes for RatingGraph
+    #region Support classes for RatingGraph
 
-   partial class RatingGraph
-   {
-      class RecipeNode
-      {
-         public Guid Key { get; set; }
-         public List<Rating> Ratings { get; set; }
-      }
+    internal partial class RatingGraph
+    {
+        private class RecipeNode
+        {
+            internal Guid Key { get; set; }
 
-      class UserNode
-      {
-         public Guid Key { get; set; }
-         public List<Rating> Ratings { get; set; }
-      }
+            internal List<Rating> Ratings { get; set; }
+        }
 
-      class Rating
-      {
-         public RecipeNode Recipe { get; set; }
-         public UserNode User { get; set; }
-         public short Weight { get; set; }
-      }
-   }
+        private class UserNode
+        {
+            internal Guid Key { get; set; }
 
-   #endregion
+            internal List<Rating> Ratings { get; set; }
+        }
 
-   partial class RatingGraph
-   {
-      readonly Dictionary<Object, RecipeNode> _recipeIndex;
-      readonly Dictionary<Object, UserNode> _userIndex;
+        private class Rating
+        {
+            internal RecipeNode Recipe { get; set; }
 
-      public RatingGraph()
-      {
-         _recipeIndex = new Dictionary<object, RecipeNode>();
-         _userIndex = new Dictionary<object, UserNode>();
-      }
+            internal UserNode User { get; set; }
 
-      public void AddRating(short r, Guid uid, Guid rid)
-      {
-         RecipeNode rnode;
-         UserNode unode;
+            internal short Weight { get; set; }
+        }
+    }
 
-         if (_recipeIndex.ContainsKey(rid) == false)
-         {
-            rnode = new RecipeNode();
-            rnode.Key = rid;
-            rnode.Ratings = new List<Rating>();
-            _recipeIndex.Add(rid, rnode);
-         }
-         else
-         {
-            rnode = _recipeIndex[rid];
-         }
+    #endregion
 
-         if (_userIndex.ContainsKey(uid) == false)
-         {
-            unode = new UserNode();
-            unode.Key = uid;
-            unode.Ratings = new List<Rating>();
-            _userIndex.Add(uid, unode);
-         }
-         else
-         {
-            unode = _userIndex[uid];
-         }
+    internal partial class RatingGraph
+    {
+        private readonly Dictionary<object, RecipeNode> recipeIndex;
+        private readonly Dictionary<object, UserNode> userIndex;
 
-         var v = new Rating();
-         v.Weight = r;
-         v.Recipe = rnode;
-         v.User = unode;
+        public RatingGraph()
+        {
+            this.recipeIndex = new Dictionary<object, RecipeNode>();
+            this.userIndex = new Dictionary<object, UserNode>();
+        }
 
-         rnode.Ratings.Add(v);
-         unode.Ratings.Add(v);
-      }
+        public void AddRating(short rating, Guid userId, Guid recipeId)
+        {
+            RecipeNode recipeNode;
+            UserNode userNode;
 
-      public Guid[] GetSimilarRecipes(Guid recipeid)
-      {
-         if (_recipeIndex.ContainsKey(recipeid) == false)
-         {
-            return new Guid[] {};
-         }
-
-         var rnode = _recipeIndex[recipeid];
-         var results = new Dictionary<Guid, int>();
-         foreach (var r1 in rnode.Ratings)
-         {
-            var unode = r1.User;
-            foreach (var r2 in unode.Ratings)
+            if (this.recipeIndex.ContainsKey(recipeId) == false)
             {
-               if (r2.Recipe.Key == recipeid)
-                  continue;
-
-               if (results.ContainsKey(r2.Recipe.Key) == false)
-               {
-                  results.Add(r2.Recipe.Key, 1);
-               }
-               else
-               {
-                  results[r2.Recipe.Key]++;
-               }
+                recipeNode = new RecipeNode();
+                recipeNode.Key = recipeId;
+                recipeNode.Ratings = new List<Rating>();
+                this.recipeIndex.Add(recipeId, recipeNode);
             }
-         }
+            else
+            {
+                recipeNode = this.recipeIndex[recipeId];
+            }
 
-         //For every pair in graph, calculate the Jaccard similarity coefficient (Number of overlapping ingredients divided by total distinct ingredients in both)
+            if (this.userIndex.ContainsKey(userId) == false)
+            {
+                userNode = new UserNode();
+                userNode.Key = userId;
+                userNode.Ratings = new List<Rating>();
+                this.userIndex.Add(userId, userNode);
+            }
+            else
+            {
+                userNode = this.userIndex[userId];
+            }
 
-         var r = (from k in results.Keys
-            orderby results[k] descending
-            select k);
+            var newRating = new Rating();
+            newRating.Weight = rating;
+            newRating.Recipe = recipeNode;
+            newRating.User = userNode;
 
-         return r.ToArray();
-      }
-   }
+            recipeNode.Ratings.Add(newRating);
+            userNode.Ratings.Add(newRating);
+        }
+
+        public Guid[] GetSimilarRecipes(Guid recipeId)
+        {
+            if (this.recipeIndex.ContainsKey(recipeId) == false)
+            {
+                return new Guid[] { };
+            }
+
+            var recipeNode = this.recipeIndex[recipeId];
+            var results = new Dictionary<Guid, int>();
+            foreach (var rating1 in recipeNode.Ratings)
+            {
+                var userNode = rating1.User;
+                foreach (var rating2 in userNode.Ratings)
+                {
+                    if (rating2.Recipe.Key == recipeId)
+                    {
+                        continue;
+                    }
+
+                    if (results.ContainsKey(rating2.Recipe.Key) == false)
+                    {
+                        results.Add(rating2.Recipe.Key, 1);
+                    }
+                    else
+                    {
+                        results[rating2.Recipe.Key]++;
+                    }
+                }
+            }
+
+            // For every pair in graph, calculate the Jaccard similarity coefficient 
+            // (Number of overlapping ingredients divided by total distinct ingredients in both)
+            var result = from k in results.Keys
+                    orderby results[k] descending
+                    select k;
+
+            return result.ToArray();
+        }
+    }
 }
