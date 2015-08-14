@@ -1,68 +1,79 @@
-using System;
-using KitchenPC.Ingredients;
-
 namespace KitchenPC.Modeler
 {
-   public struct IngredientBinding
-   {
-      public Guid RecipeId { get; set; }
-      public Guid IngredientId { get; set; }
-      public Single? Qty { get; set; }
-      public Units Unit { get; set; }
+    using System;
+    using KitchenPC.Ingredients;
 
-      public static IngredientBinding Create(Guid ingId, Guid recipeId, Single? qty, Units usageUnit, UnitType convType, Int32 unitWeight,
-         Units formUnit, Single equivAmount, Units equivUnit)
-      {
-         var rawUnit = KitchenPC.Unit.GetDefaultUnitType(convType);
+    public struct IngredientBinding
+    {
+        public Guid RecipeId { get; set; }
 
-         if (qty.HasValue && rawUnit != usageUnit)
-         {
-            if (UnitConverter.CanConvert(usageUnit, rawUnit))
+        public Guid IngredientId { get; set; }
+
+        public float? Qty { get; set; }
+
+        public Units Unit { get; set; }
+
+        public static IngredientBinding Create(
+            Guid ingredientId,
+            Guid recipeId, 
+            float? qty, 
+            Units usageUnit, 
+            UnitType conversionType, 
+            int unitWeight,
+            Units formUnit, 
+            float equivAmount, 
+            Units equivUnit)
+        {
+            var rawUnit = KitchenPC.Unit.GetDefaultUnitType(conversionType);
+
+            if (qty.HasValue && rawUnit != usageUnit)
             {
-               qty = UnitConverter.Convert(qty.Value, usageUnit, rawUnit);
+                if (UnitConverter.CanConvert(usageUnit, rawUnit))
+                {
+                    qty = UnitConverter.Convert(qty.Value, usageUnit, rawUnit);
+                }
+                else
+                {
+                    var ingredient = new Ingredient
+                    {
+                        Id = ingredientId,
+                        ConversionType = conversionType,
+                        UnitWeight = unitWeight
+                    };
+
+                    var form = new IngredientForm
+                    {
+                        FormUnitType = formUnit,
+                        FormAmount = new Amount(equivAmount, equivUnit),
+                        IngredientId = ingredientId
+                    };
+
+                    var usage = new Ingredients.IngredientUsage
+                    {
+                        Form = form,
+                        Ingredient = ingredient,
+                        Amount = new Amount(qty.Value, usageUnit)
+                    };
+
+                    try
+                    {
+                        var newAmount = FormConversion.GetNativeAmountForUsage(ingredient, usage);
+                        qty = UnitConverter.Convert(newAmount.SizeHigh, newAmount.Unit, rawUnit); // Ingredient graph only stores high amounts
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DataLoadException(e);
+                    }
+                }
             }
-            else
+
+            return new IngredientBinding
             {
-               var ing = new Ingredient
-               {
-                  Id = ingId,
-                  ConversionType = convType,
-                  UnitWeight = unitWeight
-               };
-
-               var form = new IngredientForm
-               {
-                  FormUnitType = formUnit,
-                  FormAmount = new Amount(equivAmount, equivUnit),
-                  IngredientId = ingId
-               };
-
-               var usage = new Ingredients.IngredientUsage
-               {
-                  Form = form,
-                  Ingredient = ing,
-                  Amount = new Amount(qty.Value, usageUnit)
-               };
-
-               try
-               {
-                  var newAmt = FormConversion.GetNativeAmountForUsage(ing, usage);
-                  qty = UnitConverter.Convert(newAmt.SizeHigh, newAmt.Unit, rawUnit); //Ingredient graph only stores high amounts
-               }
-               catch (Exception e)
-               {
-                  throw new DataLoadException(e);
-               }
-            }
-         }
-
-         return new IngredientBinding
-         {
-            RecipeId = recipeId,
-            IngredientId = ingId,
-            Qty = qty.HasValue ? (float?) Math.Round(qty.Value, 3) : null,
-            Unit = rawUnit
-         };
-      }
-   }
+                RecipeId = recipeId,
+                IngredientId = ingredientId,
+                Qty = qty.HasValue ? (float?)Math.Round(qty.Value, 3) : null,
+                Unit = rawUnit
+            };
+        }
+    }
 }
