@@ -1,10 +1,10 @@
-using System;
-
 namespace KitchenPC.Modeler
 {
-   public struct RecipeRating
-   {
-      public Guid RecipeId;
-      public Byte Rating;
-   }
+    using System;
+
+    public struct RecipeRating
+    {
+        public Guid RecipeId { get; set; }
+        public byte Rating { get; set; }
+    }
 }
