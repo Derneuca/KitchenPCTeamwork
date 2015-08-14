@@ -1,45 +1,54 @@
-﻿using System;
-using KitchenPC.Context;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
-   public class ModelerProxy
-   {
-      DBSnapshot db;
-      readonly IKPCContext context;
+    using System;
+    using KitchenPC.Context;
 
-      public ModelerProxy(IKPCContext context)
-      {
-         this.context = context;
-      }
+    public class ModelerProxy
+    {
+        private readonly IKPCContext context;
+        private DBSnapshot dataBase;
 
-      public void LoadSnapshot()
-      {
-         db = new DBSnapshot(context);
-      }
+        public ModelerProxy(IKPCContext context)
+        {
+            this.context = context;
+        }
 
-      public ModelingSession CreateSession(IUserProfile profile)
-      {
-         if (db == null)
-            throw new Exception("ModelerProxy has not been initialized.");
+        public void LoadSnapshot()
+        {
+            this.dataBase = new DBSnapshot(this.context);
+        }
 
-         return new ModelingSession(context, db, profile);
-      }
+        public ModelingSession CreateSession(IUserProfile profile)
+        {
+            if (this.dataBase == null)
+            {
+                throw new Exception("ModelerProxy has not been initialized.");
+            }
+            
+            var session = new ModelingSession(this.context, this.dataBase, profile);
+            return session;
+        }
 
-      public RecipeNode FindRecipe(Guid id)
-      {
-         if (db == null)
-            throw new Exception("ModelerProxy has not been initialized.");
+        public RecipeNode FindRecipe(Guid id)
+        {
+            if (this.dataBase == null)
+            {
+                throw new Exception("ModelerProxy has not been initialized.");
+            }
 
-         return db.FindRecipe(id);
-      }
+            var recipeNode = this.dataBase.FindRecipe(id);
+            return recipeNode;
+        }
 
-      public IngredientNode FindIngredient(Guid id)
-      {
-         if (db == null)
-            throw new Exception("ModelerProxy has not been initialized.");
+        public IngredientNode FindIngredient(Guid id)
+        {
+            if (this.dataBase == null)
+            {
+                throw new Exception("ModelerProxy has not been initialized.");
+            }
 
-         return db.FindIngredient(id);
-      }
-   }
+            var ingredientNode = this.dataBase.FindIngredient(id);
+            return ingredientNode;
+        }
+    }
 }
