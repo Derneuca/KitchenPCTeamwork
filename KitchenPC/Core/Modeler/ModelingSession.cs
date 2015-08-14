@@ -86,7 +86,7 @@ namespace KitchenPC.Modeler
                   throw new DuplicatePantryItemException();
                }
 
-               pantryAmounts.Add(node, item.Amt);
+               pantryAmounts.Add(node, item.Amount);
             }
 
             if (pantryAmounts.Keys.Count == 0)

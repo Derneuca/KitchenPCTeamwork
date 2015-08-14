@@ -24,8 +24,8 @@ namespace KPCServer.UnitTests
 
          pantry = new PantryItem[]
          {
-            new PantryItem() {IngredientId = ModelerTests.ING_CHINESECHESTNUTS, Amt = 5}, //Chinese chestnuts, no recipes
-            new PantryItem() {IngredientId = ModelerTests.ING_GREENTURTLE, Amt = 16} //Green Turtle, no recipes
+            new PantryItem() {IngredientId = ModelerTests.ING_CHINESECHESTNUTS, Amount = 5}, //Chinese chestnuts, no recipes
+            new PantryItem() {IngredientId = ModelerTests.ING_GREENTURTLE, Amount = 16} //Green Turtle, no recipes
          };
       }
 

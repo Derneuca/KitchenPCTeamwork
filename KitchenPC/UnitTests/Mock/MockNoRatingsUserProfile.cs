@@ -17,11 +17,11 @@ namespace KPCServer.UnitTests
 
          pantry = new PantryItem[]
          {
-            new PantryItem() {IngredientId = ModelerTests.ING_EGGS, Amt = 6}, //6 eggs
-            new PantryItem() {IngredientId = ModelerTests.ING_MILK, Amt = 16}, //16 cups of milk (1 gallon)
-            new PantryItem() {IngredientId = ModelerTests.ING_FLOUR, Amt = 8}, //8oz flour
-            new PantryItem() {IngredientId = ModelerTests.ING_CHEESE, Amt = 16}, //16oz cheese
-            new PantryItem() {IngredientId = ModelerTests.ING_CHICKEN, Amt = 16} //16oz chicken
+            new PantryItem() {IngredientId = ModelerTests.ING_EGGS, Amount = 6}, //6 eggs
+            new PantryItem() {IngredientId = ModelerTests.ING_MILK, Amount = 16}, //16 cups of milk (1 gallon)
+            new PantryItem() {IngredientId = ModelerTests.ING_FLOUR, Amount = 8}, //8oz flour
+            new PantryItem() {IngredientId = ModelerTests.ING_CHEESE, Amount = 16}, //16oz cheese
+            new PantryItem() {IngredientId = ModelerTests.ING_CHICKEN, Amount = 16} //16oz chicken
          };
       }
 
