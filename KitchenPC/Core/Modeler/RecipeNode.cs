@@ -1,29 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using KitchenPC.Recipes;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
-   public sealed class RecipeNode
-   {
-      static int nextkey = 0;
+    using System;
+    using System.Collections.Generic;
+    using KitchenPC.Recipes;
 
-      public Int32 Key; //Internally, recipes will have numeric keys for faster hashing
-      public Guid RecipeId;
-      public IEnumerable<IngredientUsage> Ingredients;
-      public RecipeTags Tags; //Tags from DB
-      public Byte Rating; //Public rating from DB
-      public Boolean Hidden; //Recipe is hidden (won't be picked at random)
-      public RecipeNode[] Suggestions; //Users who like this recipe might also like these recipes (in order of weight)
+    public sealed class RecipeNode
+    {
+        private static int nextkey = 0;
 
-      public RecipeNode()
-      {
-         this.Key = nextkey++;
-      }
+        public RecipeNode()
+        {
+            this.Key = nextkey++;
+        }
 
-      public override int GetHashCode()
-      {
-         return Key;
-      }
-   }
+        // Internally, recipes will have numeric keys for faster hashing
+        public int Key { get; set; }
+
+        public Guid RecipeId { get; set; }
+
+        public IEnumerable<IngredientUsage> Ingredients { get; set; }
+
+        // Tags from DB
+        public RecipeTags Tags { get; set; }
+
+        // Public rating from DB
+        public byte Rating { get; set; }
+
+        // Recipe is hidden (won't be picked at random)
+        public bool Hidden { get; set; }
+
+        // Users who like this recipe might also like these recipes (in order of weight)
+        public RecipeNode[] Suggestions { get; set; }
+
+        public override int GetHashCode()
+        {
+            return this.Key;
+        }
+    }
 }

@@ -5,6 +5,7 @@ namespace KitchenPC.Modeler
     public struct RecipeRating
     {
         public Guid RecipeId { get; set; }
+
         public byte Rating { get; set; }
     }
 }
