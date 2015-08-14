@@ -793,7 +793,7 @@ namespace KitchenPC.Context
                var ingId = usage.Ingredient.IngredientId;
                var ingName = ingParser.GetIngredientById(ingId);
                var ing = new Ingredient(ingId, ingName);
-               ing.ConversionType = usage.Ingredient.ConvType;
+               ing.ConversionType = usage.Ingredient.ConversionType;
 
                IngredientAggregation agg;
                if (!ings.TryGetValue(ingId, out agg))

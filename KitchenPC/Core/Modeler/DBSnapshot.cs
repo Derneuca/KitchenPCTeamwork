@@ -130,7 +130,7 @@ namespace KitchenPC.Modeler
                         {
                             IngredientId = ingredientId,
                             RecipesByTag = nodes,
-                            ConvType = convType
+                            ConversionType = convType
                         });
                     }
                     else
