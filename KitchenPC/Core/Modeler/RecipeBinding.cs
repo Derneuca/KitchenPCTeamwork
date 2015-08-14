@@ -1,13 +1,16 @@
-﻿using System;
-using KitchenPC.Recipes;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
-   public struct RecipeBinding
-   {
-      public Guid Id { get; set; }
-      public Byte Rating { get; set; }
-      public RecipeTags Tags { get; set; }
-      public Boolean Hidden { get; set; }
-   }
+    using System;
+    using KitchenPC.Recipes;
+
+    public struct RecipeBinding
+    {
+        public Guid Id { get; set; }
+
+        public byte Rating { get; set; }
+
+        public RecipeTags Tags { get; set; }
+
+        public bool Hidden { get; set; }
+    }
 }
