@@ -269,12 +269,12 @@ namespace KitchenPC.Modeler
                if (!fContains)
                {
                   curUsage = new IngredientUsage();
-                  curUsage.Amt = ingredient.Amt;
+                  curUsage.Amount = ingredient.Amount;
                   totals.Add(ingredient.Ingredient, curUsage);
                }
                else
                {
-                  curUsage.Amt += ingredient.Amt;
+                  curUsage.Amount += ingredient.Amount;
                }
             }
          }
@@ -304,13 +304,13 @@ namespace KitchenPC.Modeler
                      continue;
                   }
 
-                  if (!e.Current.Value.Amt.HasValue) //This recipe doesn't specify an amount - So we "act" like we use half of what we have
+                  if (!e.Current.Value.Amount.HasValue) //This recipe doesn't specify an amount - So we "act" like we use half of what we have
                   {
                      wasted += EMPTY_RECIPE_AMOUNT;
                      continue;
                   }
 
-                  var need = e.Current.Value.Amt.Value;
+                  var need = e.Current.Value.Amount.Value;
                   var ratio = 1 - ((have.Value - need)/have.Value); //Percentage of how much you're using of what you have
                   if (ratio > 1) //If you need more than you have, add the excess ratio to the waste but don't go over the punishment for not having the ingredient at all
                   {

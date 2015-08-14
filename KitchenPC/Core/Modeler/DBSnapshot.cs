@@ -155,7 +155,7 @@ namespace KitchenPC.Modeler
                     var usages = node.Ingredients as List<IngredientUsage>; //Add ingredient usage to recipe
                     usages.Add(new IngredientUsage()
                     {
-                        Amt = qty,
+                        Amount = qty,
                         Ingredient = ingredientNode,
                         Unit = unit
                     });

@@ -807,10 +807,10 @@ namespace KitchenPC.Context
                //TODO: If usage.Unit is different than agg.Amount.Unit then we have a problem, throw an exception if that happens?
                if (agg.Amount == null) //This aggregation contains an empty amount, so we can't aggregate
                   continue;
-               else if (!usage.Amt.HasValue) //This amount is null, cancel aggregation
+               else if (!usage.Amount.HasValue) //This amount is null, cancel aggregation
                   agg.Amount = null;
                else
-                  agg.Amount += usage.Amt.Value;
+                  agg.Amount += usage.Amount.Value;
             }
          }
 
