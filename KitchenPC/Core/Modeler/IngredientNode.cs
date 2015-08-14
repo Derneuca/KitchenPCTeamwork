@@ -20,7 +20,7 @@ namespace KitchenPC.Modeler
                 return nextKey;
             }
 
-            set
+            private set
             {
                 nextKey = value;
             }
