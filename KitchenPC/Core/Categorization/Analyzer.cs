@@ -12,8 +12,8 @@
     {
         private const float Tolerance = .05f;
 
-        private float i;  // TODO: Don't know correct name 
-        private float invI; // TODO: Don't know correct name 
+        private float i;  
+        private float invI; 
 
         private RecipeIndex breakfastIndex;
         private RecipeIndex lunchIndex;
