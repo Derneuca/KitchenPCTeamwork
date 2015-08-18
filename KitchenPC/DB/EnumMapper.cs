@@ -22,6 +22,7 @@ namespace KitchenPC.DB
                    });
             }
         }
+
         public override SqlType SqlType
         {
             get

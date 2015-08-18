@@ -22,11 +22,11 @@ namespace KPCServer.UnitTests
             new RecipeRating() {RecipeId = new Guid("7046fe97-46d8-4506-aa97-debc7dc7febb"), Rating = 4}
          };
 
-         pantry = new PantryItem[]
-         {
-            new PantryItem() {IngredientId = ModelerTests.ING_CHINESECHESTNUTS, Amount = 5}, //Chinese chestnuts, no recipes
-            new PantryItem() {IngredientId = ModelerTests.ING_GREENTURTLE, Amount = 16} //Green Turtle, no recipes
-         };
+         //pantry = new PantryItem[]
+         //{
+         //   new PantryItem() {IngredientId = ModelerTests.ING_CHINESECHESTNUTS, Amount = 5}, //Chinese chestnuts, no recipes
+         //   new PantryItem() {IngredientId = ModelerTests.ING_GREENTURTLE, Amount = 16} //Green Turtle, no recipes
+         //};
       }
 
       public Guid UserId

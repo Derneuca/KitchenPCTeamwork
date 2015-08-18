@@ -2,11 +2,9 @@ namespace KitchenPC.DB
 {
     using System;
     using System.Collections.Generic;
-
+    using Context;
     using FluentNHibernate.Cfg.Db;
     using FluentNHibernate.Conventions;
-
-    using KitchenPC.Context;
 
     public class DatabaseAdapterBuilder : IConfigurationBuilder<DatabaseAdapter>
     {
@@ -19,25 +17,31 @@ namespace KitchenPC.DB
 
         public DatabaseAdapter Create()
         {
-            return adapter;
+            return this.adapter;
         }
+
         public DatabaseAdapterBuilder AddConvention(IConvention convention)
         {
-            if (adapter.DatabaseConventions == null)
-                adapter.DatabaseConventions = new List<IConvention>();
+            if (this.adapter.DatabaseConventions == null)
+            {
+                this.adapter.DatabaseConventions = new List<IConvention>();
+            }
 
-            adapter.DatabaseConventions.Add(convention);
+            this.adapter.DatabaseConventions.Add(convention);
 
             return this;
         }
+
         public DatabaseAdapterBuilder DatabaseConfiguration(IPersistenceConfigurer config)
         {
-            adapter.DatabaseConfiguration = config;
+            this.adapter.DatabaseConfiguration = config;
             return this;
         }
-        public DatabaseAdapterBuilder SearchProvider<T>(Func<DatabaseAdapter, T> createProvider) where T : ISearchProvider
+
+        public DatabaseAdapterBuilder SearchProvider<T>(Func<DatabaseAdapter, T> createProvider)
+            where T : ISearchProvider
         {
-            adapter.SearchProvider = createProvider(adapter);
+            this.adapter.SearchProvider = createProvider(this.adapter);
             return this;
         }
     }

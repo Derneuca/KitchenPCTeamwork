@@ -3,27 +3,32 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using KitchenPC.Data.DTO;
+    using Data.DTO;
     using log4net;
     using NHibernate;
 
     public class DatabaseImporter : IDisposable
     {
-        readonly ISession session;
+        private readonly ISession session;
 
-
-        public static ILog Log = LogManager.GetLogger(typeof(DatabaseImporter));
-
-
-        public void Dispose()
-        {
-            session.Dispose();
-        }
         public DatabaseImporter(ISession session)
         {
             this.session = session;
         }
 
+
+        public static ILog Log
+        {
+            get
+            {
+                return LogManager.GetLogger(typeof(DatabaseImporter));
+            }
+        }
+
+        public void Dispose()
+        {
+            this.session.Dispose();
+        }
 
         public void Import(IEnumerable<Menus> data)
         {
@@ -40,17 +45,18 @@
                         CreatedDate = row.CreatedDate
                     };
 
-                    session.Save(dbRow, row.MenuId);
+                    this.session.Save(dbRow, row.MenuId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Menus", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<Recipes> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -73,17 +79,18 @@
                         Ingredients = new List<Models.RecipeIngredients>()
                     };
 
-                    session.Save(dbRow, row.RecipeId);
+                    this.session.Save(dbRow, row.RecipeId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Recipes", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<Favorites> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -101,12 +108,13 @@
 
                 Log.DebugFormat("Created {0} row(s) in Favorites", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<Ingredients> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -124,17 +132,18 @@
                         UsdaDesc = row.UsdaDesc
                     };
 
-                    session.Save(dbRow, row.IngredientId);
+                    this.session.Save(dbRow, row.IngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Ingredients", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpPrepNotes> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -144,14 +153,15 @@
                         Name = row.Name
                     };
 
-                    session.Save(dbRow);
+                    this.session.Save(dbRow);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpPrepNotes", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<QueuedRecipes> data)
         {
             using (var transaction = session.BeginTransaction())
@@ -167,14 +177,15 @@
                         QueuedDate = row.QueuedDate
                     };
 
-                    session.Save(dbRow, row.QueueId);
+                    this.session.Save(dbRow, row.QueueId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in QueuedRecipes", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<RecipeRatings> data)
         {
             using (var transaction = session.BeginTransaction())
@@ -190,17 +201,18 @@
                         Rating = row.Rating
                     };
 
-                    session.Save(dbRow, row.RatingId);
+                    this.session.Save(dbRow, row.RatingId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeRatings", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<ShoppingLists> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -220,9 +232,10 @@
                 session.Flush();
             }
         }
+
         public void Import(IEnumerable<RecipeMetadata> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -231,7 +244,7 @@
                     {
                         RecipeMetadataId = row.RecipeMetadataId,
                         Recipe = Models.Recipes.FromId(row.RecipeId),
-                        PhotoRes = row.PhotoRes,
+                        PhotoRes = row.PhotoResolution,
                         Commonality = row.Commonality,
                         UsdaMatch = row.UsdaMatch,
                         MealBreakfast = row.MealBreakfast,
@@ -254,23 +267,24 @@
                         NutritionLowCarb = row.NutritionLowCarb,
                         NutritionTotalCarbs = row.NutritionTotalCarbs,
                         SkillQuick = row.SkillQuick,
-                        SkillEasy = row.SkillEasy,
-                        SkillCommon = row.SkillCommon,
+                        SkillEasy = row.SkillEasyToMake,
+                        SkillCommon = row.SkillCommonIngredients,
                         TasteMildToSpicy = row.TasteMildToSpicy,
                         TasteSavoryToSweet = row.TasteSavoryToSweet
                     };
 
-                    session.Save(dbRow, row.RecipeMetadataId);
+                    this.session.Save(dbRow, row.RecipeMetadataId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeMetadata", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpFormSynonyms> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -283,17 +297,18 @@
                         Name = row.Name
                     };
 
-                    session.Save(dbRow, row.FormSynonymId);
+                    this.session.Save(dbRow, row.FormSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpFormSynonyms", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<IngredientForms> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -310,17 +325,18 @@
                         FormDisplayName = row.FormDisplayName
                     };
 
-                    session.Save(dbRow, row.IngredientFormId);
+                    this.session.Save(dbRow, row.IngredientFormId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in IngredientForms", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpUnitSynonyms> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -333,17 +349,18 @@
                         Name = row.Name
                     };
 
-                    session.Save(dbRow, row.UnitSynonymId);
+                    this.session.Save(dbRow, row.UnitSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpUnitSynonyms", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<RecipeIngredients> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -362,17 +379,18 @@
                         Section = row.Section
                     };
 
-                    session.Save(dbRow, row.RecipeIngredientId);
+                    this.session.Save(dbRow, row.RecipeIngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeIngredients", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<ShoppingListItems> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -390,17 +408,18 @@
                         CrossedOut = row.CrossedOut
                     };
 
-                    session.Save(dbItem, row.ItemId);
+                    this.session.Save(dbItem, row.ItemId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in ShoppingListItems", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpDefaultPairings> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -414,17 +433,18 @@
                         UnitForm = row.UnitFormId.HasValue ? Models.IngredientForms.FromId(row.UnitFormId.Value) : null
                     };
 
-                    session.Save(dbRow, row.DefaultPairingId);
+                    this.session.Save(dbRow, row.DefaultPairingId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpDefaultPairings", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<IngredientMetadata> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -447,17 +467,18 @@
                         HasAnimal = row.HasAnimal
                     };
 
-                    session.Save(dbRow, row.IngredientMetadataId);
+                    this.session.Save(dbRow, row.IngredientMetadataId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in IngredientMetadata", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpIngredientSynonyms> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -470,17 +491,18 @@
                         Prepnote = row.Prepnote
                     };
 
-                    session.Save(dbRow, row.IngredientSynonymId);
+                    this.session.Save(dbRow, row.IngredientSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpIngredientSynonyms", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
+
         public void Import(IEnumerable<NlpAnomalousIngredients> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
@@ -495,14 +517,13 @@
                         UnitForm = row.UnitFormId.HasValue ? Models.IngredientForms.FromId(row.UnitFormId.Value) : null
                     };
 
-                    session.Save(dbRow, row.AnomalousIngredientId);
+                    this.session.Save(dbRow, row.AnomalousIngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpAnomalousIngredients", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
-
     }
 }

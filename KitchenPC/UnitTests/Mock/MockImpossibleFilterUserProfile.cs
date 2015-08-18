@@ -20,14 +20,14 @@ namespace KPCServer.UnitTests
             new RecipeRating() {RecipeId = new Guid("0fc6c435-d9d1-4d21-a60b-42e3389b60a1"), Rating = 5}
          };
 
-         pantry = new PantryItem[]
-         {
-            new PantryItem() {IngredientId = ModelerTests.ING_EGGS, Amount = 6}, //6 eggs
-            new PantryItem() {IngredientId = ModelerTests.ING_MILK, Amount = 16}, //16 cups of milk (1 gallon)
-            new PantryItem() {IngredientId = ModelerTests.ING_FLOUR, Amount = 8}, //8oz flour
-            new PantryItem() {IngredientId = ModelerTests.ING_CHEESE, Amount = 16}, //16oz cheese
-            new PantryItem() {IngredientId = ModelerTests.ING_CHICKEN, Amount = 16} //16oz chicken
-         };
+         //pantry = new PantryItem[]
+         //{
+         //   new PantryItem() {IngredientId = ModelerTests.ING_EGGS, Amount = 6}, //6 eggs
+         //   new PantryItem() {IngredientId = ModelerTests.ING_MILK, Amount = 16}, //16 cups of milk (1 gallon)
+         //   new PantryItem() {IngredientId = ModelerTests.ING_FLOUR, Amount = 8}, //8oz flour
+         //   new PantryItem() {IngredientId = ModelerTests.ING_CHEESE, Amount = 16}, //16oz cheese
+         //   new PantryItem() {IngredientId = ModelerTests.ING_CHICKEN, Amount = 16} //16oz chicken
+         //};
       }
 
       public Guid UserId
