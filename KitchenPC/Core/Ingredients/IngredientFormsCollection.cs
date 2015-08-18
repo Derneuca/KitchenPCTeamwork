@@ -1,39 +1,38 @@
-﻿using System.Collections.Generic;
-
-namespace KitchenPC.Ingredients
+﻿namespace KitchenPC.Ingredients
 {
-   public class IngredientFormsCollection
-   {
-      readonly List<IngredientForm> _forms;
+    using System.Collections.Generic;
 
-      public IngredientForm[] Forms
-      {
-         get
-         {
-            return _forms.ToArray();
-         }
+    public class IngredientFormsCollection
+    {
+        private readonly List<IngredientForm> forms;
 
-         set
-         {
-            _forms.Clear();
-            foreach (var form in value)
-               _forms.Add(form);
-         }
-      }
+        public IngredientFormsCollection()
+            : this(null)
+        { 
+        }
 
-      public IngredientFormsCollection()
-      {
-         _forms = new List<IngredientForm>();
-      }
+        public IngredientFormsCollection(IEnumerable<IngredientForm> forms)
+        {
+            this.forms = new List<IngredientForm>(forms);
+        }
 
-      public IngredientFormsCollection(IEnumerable<IngredientForm> forms)
-      {
-         _forms = new List<IngredientForm>(forms);
-      }
+        public IngredientForm[] Forms
+        {
+            get
+            {
+                return this.forms.ToArray();
+            }
 
-      public void AddForm(IngredientForm form)
-      {
-         _forms.Add(form);
-      }
-   }
+            set
+            {
+                this.forms.Clear();
+                this.forms.AddRange(value);
+            }
+        }
+
+        public void AddForm(IngredientForm form)
+        {
+            this.forms.Add(form);
+        }
+    }
 }
