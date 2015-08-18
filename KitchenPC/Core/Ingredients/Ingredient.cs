@@ -1,57 +1,60 @@
-﻿using System;
-
-namespace KitchenPC.Ingredients
+﻿namespace KitchenPC.Ingredients
 {
-   public class Ingredient
-   {
-      public Guid Id;
-      public String Name;
-      public UnitType ConversionType;
-      public String UnitName;
-      public Weight UnitWeight;
+    using System;
 
-      public IngredientMetadata Metadata;
+    public class Ingredient
+    {
+        public Ingredient(Guid id, string name, IngredientMetadata metadata)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Metadata = metadata;
+        }
 
-      public static Ingredient FromId(Guid ingredientId)
-      {
-         return new Ingredient
-         {
-            Id = ingredientId
-         };
-      }
+        public Ingredient(Guid id, string name)
+            : this(id, name, new IngredientMetadata())
+        {
+        }
 
-      public Ingredient(Guid id, String name)
-      {
-         Id = id;
-         Name = name;
-         Metadata = new IngredientMetadata();
-      }
+        public Ingredient()
+            : this(Guid.Empty, string.Empty)
+        {
+        }
 
-      public Ingredient(Guid id, String name, IngredientMetadata metadata)
-      {
-         Id = id;
-         Name = name;
-         Metadata = metadata;
-      }
+        public Guid Id { get; set; }
 
-      public Ingredient() : this(Guid.Empty, String.Empty)
-      {
-      }
+        public string Name { get; set; }
 
-      public override string ToString()
-      {
-         return Name;
-      }
+        public UnitType ConversionType { get; set; }
 
-      public override bool Equals(object obj)
-      {
-         var i = obj as Ingredient;
-         return (i != null && this.Id == i.Id);
-      }
+        public string UnitName { get; set; }
 
-      public override int GetHashCode()
-      {
-         return Id.GetHashCode();
-      }
-   }
+        public Weight UnitWeight { get; set; }
+
+        public IngredientMetadata Metadata { get; set; }
+
+        public static Ingredient FromId(Guid ingredientId)
+        {
+            return new Ingredient
+            {
+                Id = ingredientId
+            };
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var ingredient = obj as Ingredient;
+            return ingredient != null && this.Id == ingredient.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+    }
 }
