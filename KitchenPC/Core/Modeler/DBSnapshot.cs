@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using KitchenPC.Context;
-using KitchenPC.Recipes;
-
-namespace KitchenPC.Modeler
+﻿namespace KitchenPC.Modeler
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using KitchenPC.Context;
+    using KitchenPC.Recipes;
+
     /// <summary>
     /// Captures an instance of the database in memory for modeling without requiring DB hits.
     /// This "cache" only contains the exact information it needs and is optimized for modeling performance.
@@ -38,79 +38,152 @@ namespace KitchenPC.Modeler
                 this.ratingGraph = new RatingGraph();
                 var loader = context.ModelerLoader;
 
+                this.CreateRatingGraph(loader);
+
+                ModelingSession.Log.InfoFormat("Building Rating Graph took {0}ms.", timer.ElapsedMilliseconds);
+                timer.Reset();
+                timer.Start();
+
+                this.CreateEmptyRecipeNodes(loader);
+
+                ModelingSession.Log.InfoFormat("Building empty RecipeNodes took {0}ms.", timer.ElapsedMilliseconds);
+                timer.Reset();
+                timer.Start();
+
+                this.IndexRecipes();
+
+                ModelingSession.Log.InfoFormat("Indexing recipes by tag took {0}ms.", timer.ElapsedMilliseconds);
+                timer.Reset();
+                timer.Start();
+
+                this.CreatIngredientUsageVertices(loader);
+
+                ModelingSession.Log.InfoFormat("Creating IngredientUsage vertices took {0}ms.", timer.ElapsedMilliseconds);
+                timer.Reset();
+                timer.Start();
+
+                this.CreateSuggestionLinks();
+
+                ModelingSession.Log.InfoFormat("Building suggestions for each recipe took {0}ms.", timer.ElapsedMilliseconds);
+                timer.Reset();
+            }
+
+            public void Dispose()
+            {
+                var timer = new Stopwatch();
+                timer.Start();
+
+                this.ratingGraph = null;
+
+                // Free up memory/increase Index accessing speed by converting List<> objects to arrays
+                foreach (var recipe in this.snapshot.recipeMap.Values)
+                {
+                    recipe.Ingredients = recipe.Ingredients.ToArray();
+                }
+
+                foreach (var ingredientNode in this.snapshot.ingredientMap.Values)
+                {
+                    var temp = new List<RecipeNode[]>();
+                    int usedTags = 0;
+
+                    for (int count = 0; count < RecipeTag.NumberOfTags; count++)
+                    {
+                        RecipeNode[] nodes = null;
+                        if (ingredientNode.RecipesByTag[count] != null)
+                        {
+                            nodes = ingredientNode.RecipesByTag[count].ToArray();
+                            usedTags += 1 << count;
+                        }
+
+                        temp.Add(nodes);
+                    }
+
+                    ingredientNode.RecipesByTag = temp.ToArray();
+                    ingredientNode.AvailableTags = usedTags;
+                }
+
+                // Force garbage collection now, since there might be several hundred megs of unreachable allocations
+                GC.Collect(); 
+
+                timer.Stop();
+                ModelingSession.Log.InfoFormat("Cleaning up Indexer took {0}ms.", timer.ElapsedMilliseconds);
+            }
+
+            private void CreateRatingGraph(IModelerLoader loader)
+            {
                 foreach (var dataItem in loader.LoadRatingGraph())
                 {
                     var rating = dataItem.Rating;
                     var userId = dataItem.UserId;
                     var recipeId = dataItem.RecipeId;
 
-                    if (rating < 4) //Rating too low to worry about
+                    // Rating too low to worry about
+                    if (rating < 4) 
                     {
-                        continue; //TODO: Might not be needed, DB should only query for 4 or 5 star ratings
+                        continue; // TODO: Might not be needed, DB should only query for 4 or 5 star ratings
                     }
 
                     this.ratingGraph.AddRating(rating, userId, recipeId);
                 }
+            }
 
-                ModelingSession.Log.InfoFormat("Building Rating Graph took {0}ms.", timer.ElapsedMilliseconds);
-                timer.Reset();
-                timer.Start();
-
-                //Create empty recipe nodes without links
+            /// <summary>
+            /// Creates empty recipe nodes without links
+            /// </summary>
+            private void CreateEmptyRecipeNodes(IModelerLoader loader)
+            {
                 this.snapshot.recipeMap = (from o in loader.LoadRecipeGraph()
-                                      select new RecipeNode()
-                                      {
-                                          RecipeId = o.Id,
-                                          Rating = o.Rating,
-                                          Tags = o.Tags,
-                                          Hidden = o.Hidden,
-                                          Ingredients = new List<IngredientUsage>()
-                                      }).ToDictionary(k => k.RecipeId);
+                                           select new RecipeNode()
+                                           {
+                                               RecipeId = o.Id,
+                                               Rating = o.Rating,
+                                               Tags = o.Tags,
+                                               Hidden = o.Hidden,
+                                               Ingredients = new List<IngredientUsage>()
+                                           }).ToDictionary(k => k.RecipeId);
+            }
 
-                ModelingSession.Log.InfoFormat("Building empty RecipeNodes took {0}ms.", timer.ElapsedMilliseconds);
-                timer.Reset();
-                timer.Start();
-
-                //Build tag Index
+            private void IndexRecipes()
+            {
                 foreach (var recipeNode in this.snapshot.recipeMap.Values)
                 {
                     if (recipeNode.Hidden)
                     {
                         // recipeList does not include Hidden recipes so they don't get picked at random
-                        continue; 
+                        continue;
                     }
 
                     foreach (var tag in recipeNode.Tags)
                     {
-                        var nodes = snapshot.recipeList[tag.Value] as List<RecipeNode>;
+                        var nodes = this.snapshot.recipeList[tag.Value] as List<RecipeNode>;
                         if (nodes == null)
                         {
-                            snapshot.recipeList[tag.Value] = nodes = new List<RecipeNode>();
+                            this.snapshot.recipeList[tag.Value] = nodes = new List<RecipeNode>();
                         }
 
                         nodes.Add(recipeNode);
                     }
                 }
 
-                for (var i = 0; i < snapshot.recipeList.Length; i++)
+                for (var i = 0; i < this.snapshot.recipeList.Length; i++)
                 {
-                    var list = snapshot.recipeList[i] as List<RecipeNode>;
+                    var list = this.snapshot.recipeList[i] as List<RecipeNode>;
                     if (list != null)
                     {
-                        snapshot.recipeList[i] = list.ToArray();
+                        this.snapshot.recipeList[i] = list.ToArray();
                     }
-                    else // No recipes in DB use this tag
+                    else 
                     {
-                        snapshot.recipeList[i] = new RecipeNode[0];
+                        // No recipes in DB use this tag
+                        this.snapshot.recipeList[i] = new RecipeNode[0];
                     }
                 }
+            }
 
-                ModelingSession.Log.InfoFormat("Indexing recipes by tag took {0}ms.", timer.ElapsedMilliseconds);
-                timer.Reset();
-                timer.Start();
-
-                //Loop through ingredient usages and fill in vertices on graph
-                //For each item: Create IngredientUsage and add to recipe, create IngredientNode (if necessary) and add recipe to IngredientNode
+            private void CreatIngredientUsageVertices(IModelerLoader loader)
+            {
+                // Loop through ingredient usages and fill in vertices on graph
+                // For each item: Create IngredientUsage and add to recipe, create IngredientNode (if necessary) and add recipe to IngredientNode
                 foreach (var o in loader.LoadIngredientGraph())
                 {
                     var recipeId = o.RecipeId;
@@ -123,23 +196,26 @@ namespace KitchenPC.Modeler
                     IngredientNode ingredientNode;
                     var node = this.snapshot.recipeMap[recipeId];
 
-                    if (!this.snapshot.ingredientMap.TryGetValue(ingredientId, out ingredientNode)) //New ingredient, create node for it
+                    // New ingredient, create node for it
+                    if (!this.snapshot.ingredientMap.TryGetValue(ingredientId, out ingredientNode)) 
                     {
                         nodes = new List<RecipeNode>[RecipeTag.NumberOfTags];
-                        this.snapshot.ingredientMap.Add(ingredientId, ingredientNode = new IngredientNode()
-                        {
-                            IngredientId = ingredientId,
-                            RecipesByTag = nodes,
-                            ConversionType = convType
-                        });
+                        ingredientNode = new IngredientNode()
+                            {
+                                IngredientId = ingredientId,
+                                RecipesByTag = nodes,
+                                ConversionType = convType
+                            };
+                        this.snapshot.ingredientMap.Add(ingredientId, ingredientNode);
                     }
                     else
                     {
                         nodes = ingredientNode.RecipesByTag as List<RecipeNode>[];
                     }
 
-                    //For each tag the recipe has, we need to create a link through ingNode.RecipesByTag to the recipe
-                    if (!node.Hidden) //Don't Index Hidden recipes
+                    // For each tag the recipe has, we need to create a link through ingNode.RecipesByTag to the recipe
+                    // Don't Index Hidden recipes
+                    if (!node.Hidden)
                     {
                         foreach (var tag in node.Tags)
                         {
@@ -148,11 +224,13 @@ namespace KitchenPC.Modeler
                                 nodes[tag.Value] = new List<RecipeNode>();
                             }
 
-                            nodes[tag.Value].Add(node); //Add ingredient link to RecipeNode
+                            // Add ingredient link to RecipeNode
+                            nodes[tag.Value].Add(node); 
                         }
                     }
 
-                    var usages = node.Ingredients as List<IngredientUsage>; //Add ingredient usage to recipe
+                    // Add ingredient usage to recipe
+                    var usages = node.Ingredients as List<IngredientUsage>;
                     usages.Add(new IngredientUsage()
                     {
                         Amount = qty,
@@ -160,76 +238,27 @@ namespace KitchenPC.Modeler
                         Unit = unit
                     });
                 }
-
-                ModelingSession.Log.InfoFormat("Creating IngredientUsage vertices took {0}ms.", timer.ElapsedMilliseconds);
-                timer.Reset();
-                timer.Start();
-
-                //Create suggestion links for each recipe
-                foreach (var r in snapshot.recipeMap.Values)
-                {
-                    r.Suggestions = (from s in ratingGraph.GetSimilarRecipes(r.RecipeId) select snapshot.recipeMap[s]).ToArray();
-                }
-
-                ModelingSession.Log.InfoFormat("Building suggestions for each recipe took {0}ms.", timer.ElapsedMilliseconds);
-                timer.Reset();
             }
 
-            public void Dispose()
+            /// <summary>
+            /// Creates suggestion links for each recipe
+            /// </summary>
+            private void CreateSuggestionLinks()
             {
-                var timer = new Stopwatch();
-                timer.Start();
-
-                ratingGraph = null;
-
-                //Free up memory/increase Index accessing speed by converting List<> objects to arrays
-                foreach (var r in snapshot.recipeMap.Values)
+                foreach (var recipe in this.snapshot.recipeMap.Values)
                 {
-                    r.Ingredients = r.Ingredients.ToArray();
+                    recipe.Suggestions = (from suggestion in this.ratingGraph.GetSimilarRecipes(recipe.RecipeId)
+                                          select this.snapshot.recipeMap[suggestion]).ToArray();
                 }
-
-                foreach (var i in snapshot.ingredientMap.Values)
-                {
-                    var temp = new List<RecipeNode[]>();
-                    var usedTags = 0;
-
-                    for (var c = 0; c < RecipeTag.NumberOfTags; c++)
-                    {
-                        RecipeNode[] nodes = null;
-                        if (i.RecipesByTag[c] != null)
-                        {
-                            nodes = i.RecipesByTag[c].ToArray();
-                            usedTags += (1 << c);
-                        }
-
-                        temp.Add(nodes);
-                    }
-
-                    i.RecipesByTag = temp.ToArray();
-                    i.AvailableTags = usedTags;
-                }
-
-                GC.Collect(); //Force garbage collection now, since there might be several hundred megs of unreachable allocations
-
-                timer.Stop();
-                ModelingSession.Log.InfoFormat("Cleaning up Indexer took {0}ms.", timer.ElapsedMilliseconds);
             }
         }
     }
 
     public sealed partial class DBSnapshot
     {
-        Dictionary<Guid, RecipeNode> recipeMap; //Recipe Index (will include hidden recipes)
-        Dictionary<Guid, IngredientNode> ingredientMap; //Ingredient Index
-        IEnumerable<RecipeNode>[] recipeList; //Ordinal recipe Index keyed by tag (for picking random recipes)
-
-        public int RecipeCount
-        {
-            get
-            {
-                return recipeMap.Keys.Count;
-            }
-        }
+        private Dictionary<Guid, RecipeNode> recipeMap; // Recipe Index (will include hidden recipes)
+        private Dictionary<Guid, IngredientNode> ingredientMap; // Ingredient Index
+        private IEnumerable<RecipeNode>[] recipeList; // Ordinal recipe Index keyed by tag (for picking random recipes)
 
         public DBSnapshot(IKPCContext context)
         {
@@ -245,19 +274,30 @@ namespace KitchenPC.Modeler
             ModelingSession.Log.InfoFormat("Total time building snapshot was {0}ms.", timer.ElapsedMilliseconds);
         }
 
+        public int RecipeCount
+        {
+            get
+            {
+                return this.recipeMap.Keys.Count;
+            }
+        }
+
         public RecipeNode FindRecipe(Guid id)
         {
-            return recipeMap.ContainsKey(id) ? recipeMap[id] : null;
+            var result = this.recipeMap.ContainsKey(id) ? this.recipeMap[id] : null;
+            return result;
         }
 
         public RecipeNode[] FindRecipesByTag(int tag)
         {
-            return recipeList[tag] as RecipeNode[];
+            var result = this.recipeList[tag] as RecipeNode[];
+            return result;
         }
 
         public IngredientNode FindIngredient(Guid id)
         {
-            return ingredientMap.ContainsKey(id) ? ingredientMap[id] : null;
+            var result = this.ingredientMap.ContainsKey(id) ? this.ingredientMap[id] : null;
+            return result;
         }
     }
 }
