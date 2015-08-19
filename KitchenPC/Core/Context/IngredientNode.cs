@@ -1,18 +1,20 @@
-﻿using System;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class IngredientNode
-   {
-      public Guid Id;
-      public string IngredientName;
-      public int Popularity;
+    using System;
 
-      public IngredientNode(Guid id, string name, int popularity)
-      {
-         Id = id;
-         IngredientName = name;
-         Popularity = popularity;
-      }
-   }
+    public class IngredientNode
+    {
+        public IngredientNode(Guid id, string name, int popularity)
+        {
+            this.Id = id;
+            this.IngredientName = name;
+            this.Popularity = popularity;
+        }
+
+        public Guid Id { get; set; }
+
+        public string IngredientName { get; set; }
+
+        public int Popularity { get; set; }
+    }
 }
