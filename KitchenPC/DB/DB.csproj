@@ -68,7 +68,9 @@
     <Compile Include="DatabaseExporter.cs" />
     <Compile Include="EnumMapper.cs" />
     <Compile Include="Models\Favorites.cs" />
+    <Compile Include="Models\FavoritesMap.cs" />
     <Compile Include="Models\IngredientForms.cs" />
+    <Compile Include="Models\IngredientFormsMap.cs" />
     <Compile Include="Models\IngredientMetadata.cs" />
     <Compile Include="Models\Ingredients.cs" />
     <Compile Include="Models\Menus.cs" />

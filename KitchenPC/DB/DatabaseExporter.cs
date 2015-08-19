@@ -19,7 +19,6 @@ namespace KitchenPC.DB.Provisioning
             this.session = session;
         }
 
-
         public static ILog Log
         {
             get
@@ -27,7 +26,6 @@ namespace KitchenPC.DB.Provisioning
                 return LogManager.GetLogger(typeof(DatabaseExporter));
             }
         }
-
 
         public void Dispose()
         {

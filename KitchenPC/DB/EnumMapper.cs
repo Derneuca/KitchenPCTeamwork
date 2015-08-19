@@ -18,7 +18,7 @@ namespace KitchenPC.DB
                    x =>
                    {
                        x.CustomType<EnumMapper<T>>();
-                       x.CustomSqlType((typeof(T).Name));
+                       x.CustomSqlType(typeof(T).Name);
                    });
             }
         }

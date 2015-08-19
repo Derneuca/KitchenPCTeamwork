@@ -16,7 +16,6 @@
             this.session = session;
         }
 
-
         public static ILog Log
         {
             get
@@ -32,12 +31,12 @@
 
         public void Import(IEnumerable<Menus> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.Menus
+                    var menus = new Models.Menus
                     {
                         MenuId = row.MenuId,
                         UserId = row.UserId,
@@ -45,7 +44,7 @@
                         CreatedDate = row.CreatedDate
                     };
 
-                    this.session.Save(dbRow, row.MenuId);
+                    this.session.Save(menus, row.MenuId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Menus", d.Count());
@@ -61,7 +60,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.Recipes
+                    var recipes = new Models.Recipes
                     {
                         RecipeId = row.RecipeId,
                         CookTime = row.CookTime,
@@ -79,7 +78,7 @@
                         Ingredients = new List<Models.RecipeIngredients>()
                     };
 
-                    this.session.Save(dbRow, row.RecipeId);
+                    this.session.Save(recipes, row.RecipeId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Recipes", d.Count());
@@ -95,7 +94,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.Favorites
+                    var favorites = new Models.Favorites
                     {
                         FavoriteId = row.FavoriteId,
                         UserId = row.UserId,
@@ -103,7 +102,7 @@
                         Menu = row.MenuId.HasValue ? Models.Menus.FromId(row.MenuId.Value) : null
                     };
 
-                    session.Save(dbRow, row.FavoriteId);
+                    this.session.Save(favorites, row.FavoriteId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Favorites", d.Count());
@@ -119,7 +118,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.Ingredients
+                    var ingredients = new Models.Ingredients
                     {
                         IngredientId = row.IngredientId,
                         FoodGroup = row.FoodGroup,
@@ -132,7 +131,7 @@
                         UsdaDesc = row.UsdaDesc
                     };
 
-                    this.session.Save(dbRow, row.IngredientId);
+                    this.session.Save(ingredients, row.IngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in Ingredients", d.Count());
@@ -148,12 +147,12 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpPrepNotes
+                    var notes = new Models.NlpPrepNotes
                     {
                         Name = row.Name
                     };
 
-                    this.session.Save(dbRow);
+                    this.session.Save(notes);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpPrepNotes", d.Count());
@@ -164,12 +163,12 @@
 
         public void Import(IEnumerable<QueuedRecipes> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.QueuedRecipes
+                    var queuedRecipes = new Models.QueuedRecipes
                     {
                         QueueId = row.QueueId,
                         UserId = row.UserId,
@@ -177,7 +176,7 @@
                         QueuedDate = row.QueuedDate
                     };
 
-                    this.session.Save(dbRow, row.QueueId);
+                    this.session.Save(queuedRecipes, row.QueueId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in QueuedRecipes", d.Count());
@@ -188,12 +187,12 @@
 
         public void Import(IEnumerable<RecipeRatings> data)
         {
-            using (var transaction = session.BeginTransaction())
+            using (var transaction = this.session.BeginTransaction())
             {
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.RecipeRatings
+                    var recipeRatings = new Models.RecipeRatings
                     {
                         RatingId = row.RatingId,
                         UserId = row.UserId,
@@ -201,7 +200,7 @@
                         Rating = row.Rating
                     };
 
-                    this.session.Save(dbRow, row.RatingId);
+                    this.session.Save(recipeRatings, row.RatingId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeRatings", d.Count());
@@ -217,19 +216,19 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.ShoppingLists
+                    var shoppingLists = new Models.ShoppingLists
                     {
                         ShoppingListId = row.ShoppingListId,
                         UserId = row.UserId,
                         Title = row.Title
                     };
 
-                    session.Save(dbRow, row.ShoppingListId);
+                    this.session.Save(shoppingLists, row.ShoppingListId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in ShoppingLists", d.Count());
                 transaction.Commit();
-                session.Flush();
+                this.session.Flush();
             }
         }
 
@@ -240,7 +239,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.RecipeMetadata
+                    var recipeMetadata = new Models.RecipeMetadata
                     {
                         RecipeMetadataId = row.RecipeMetadataId,
                         Recipe = Models.Recipes.FromId(row.RecipeId),
@@ -273,7 +272,7 @@
                         TasteSavoryToSweet = row.TasteSavoryToSweet
                     };
 
-                    this.session.Save(dbRow, row.RecipeMetadataId);
+                    this.session.Save(recipeMetadata, row.RecipeMetadataId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeMetadata", d.Count());
@@ -289,7 +288,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpFormSynonyms
+                    var formSynonyms = new Models.NlpFormSynonyms
                     {
                         FormSynonymId = row.FormSynonymId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -297,7 +296,7 @@
                         Name = row.Name
                     };
 
-                    this.session.Save(dbRow, row.FormSynonymId);
+                    this.session.Save(formSynonyms, row.FormSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpFormSynonyms", d.Count());
@@ -313,7 +312,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.IngredientForms
+                    var ingredientForms = new Models.IngredientForms
                     {
                         IngredientFormId = row.IngredientFormId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -325,7 +324,7 @@
                         FormDisplayName = row.FormDisplayName
                     };
 
-                    this.session.Save(dbRow, row.IngredientFormId);
+                    this.session.Save(ingredientForms, row.IngredientFormId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in IngredientForms", d.Count());
@@ -341,7 +340,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpUnitSynonyms
+                    var unitSynonyms = new Models.NlpUnitSynonyms
                     {
                         UnitSynonymId = row.UnitSynonymId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -349,7 +348,7 @@
                         Name = row.Name
                     };
 
-                    this.session.Save(dbRow, row.UnitSynonymId);
+                    this.session.Save(unitSynonyms, row.UnitSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpUnitSynonyms", d.Count());
@@ -365,7 +364,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.RecipeIngredients
+                    var recipeIngredients = new Models.RecipeIngredients
                     {
                         RecipeIngredientId = row.RecipeIngredientId,
                         Recipe = Models.Recipes.FromId(row.RecipeId),
@@ -379,7 +378,7 @@
                         Section = row.Section
                     };
 
-                    this.session.Save(dbRow, row.RecipeIngredientId);
+                    this.session.Save(recipeIngredients, row.RecipeIngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in RecipeIngredients", d.Count());
@@ -395,7 +394,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbItem = new Models.ShoppingListItems
+                    var shoppingListItems = new Models.ShoppingListItems
                     {
                         ItemId = row.ItemId,
                         Raw = row.Raw,
@@ -408,7 +407,7 @@
                         CrossedOut = row.CrossedOut
                     };
 
-                    this.session.Save(dbItem, row.ItemId);
+                    this.session.Save(shoppingListItems, row.ItemId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in ShoppingListItems", d.Count());
@@ -424,7 +423,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpDefaultPairings
+                    var defaultPairings = new Models.NlpDefaultPairings
                     {
                         DefaultPairingId = row.DefaultPairingId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -433,7 +432,7 @@
                         UnitForm = row.UnitFormId.HasValue ? Models.IngredientForms.FromId(row.UnitFormId.Value) : null
                     };
 
-                    this.session.Save(dbRow, row.DefaultPairingId);
+                    this.session.Save(defaultPairings, row.DefaultPairingId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpDefaultPairings", d.Count());
@@ -449,7 +448,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.IngredientMetadata
+                    var ingredientMetadata = new Models.IngredientMetadata
                     {
                         IngredientMetadataId = row.IngredientMetadataId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -467,7 +466,7 @@
                         HasAnimal = row.HasAnimal
                     };
 
-                    this.session.Save(dbRow, row.IngredientMetadataId);
+                    this.session.Save(ingredientMetadata, row.IngredientMetadataId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in IngredientMetadata", d.Count());
@@ -483,7 +482,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpIngredientSynonyms
+                    var ingredientSynonyms = new Models.NlpIngredientSynonyms
                     {
                         IngredientSynonymId = row.IngredientSynonymId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
@@ -491,7 +490,7 @@
                         Prepnote = row.PreparationNote
                     };
 
-                    this.session.Save(dbRow, row.IngredientSynonymId);
+                    this.session.Save(ingredientSynonyms, row.IngredientSynonymId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpIngredientSynonyms", d.Count());
@@ -507,7 +506,7 @@
                 var d = data.ToArray();
                 foreach (var row in d)
                 {
-                    var dbRow = new Models.NlpAnomalousIngredients
+                    var anomalousIngredients = new Models.NlpAnomalousIngredients
                     {
                         AnomalousIngredientId = row.AnomalousIngredientId,
                         Name = row.Name,
@@ -517,7 +516,7 @@
                         UnitForm = row.UnitFormId.HasValue ? Models.IngredientForms.FromId(row.UnitFormId.Value) : null
                     };
 
-                    this.session.Save(dbRow, row.AnomalousIngredientId);
+                    this.session.Save(anomalousIngredients, row.AnomalousIngredientId);
                 }
 
                 Log.DebugFormat("Created {0} row(s) in NlpAnomalousIngredients", d.Count());
