@@ -53,7 +53,7 @@ namespace KitchenPC.DB.Provisioning
                 RecipeId = (Guid)r["RecipeId"],
                 CookTime = r["CookTime"] as short?,
                 Steps = r["Steps"] as string,
-                PrepTime = r["PrepTime"] as short?,
+                PreparationTime = r["PrepTime"] as short?,
                 Rating = (short)r["Rating"],
                 Description = r["Description"] as string,
                 Title = r["Title"] as string,
@@ -289,7 +289,7 @@ namespace KitchenPC.DB.Provisioning
                 Unit = Unit.Parse<Units>(r["Unit"]),
                 QtyLow = r["QtyLow"] as float?,
                 DisplayOrder = (short)r["DisplayOrder"],
-                PrepNote = r["PrepNote"] as string,
+                PreparationNote = r["PrepNote"] as string,
                 Qty = r["Qty"] as float?,
                 Section = r["Section"] as string
             }).ToList();

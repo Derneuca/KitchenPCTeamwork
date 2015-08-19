@@ -11,7 +11,7 @@ namespace KitchenPC.Data.DTO
 
         public short? CookTime { get; set; }
         
-        public short? PrepTime { get; set; }
+        public short? PreparationTime { get; set; }
 
         public short Rating { get; set; }
 
@@ -39,7 +39,7 @@ namespace KitchenPC.Data.DTO
                 ImageUrl = dtoRecipe.ImageUrl,
                 AvgRating = dtoRecipe.Rating,
                 CookTime = dtoRecipe.CookTime,
-                PrepTime = dtoRecipe.PrepTime,
+                PrepTime = dtoRecipe.PreparationTime,
                 Description = dtoRecipe.Description,
                 Title = dtoRecipe.Title
             };

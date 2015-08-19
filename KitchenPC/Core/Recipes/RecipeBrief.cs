@@ -19,7 +19,7 @@
             this.Description = recipe.Description;
             this.ImageUrl = recipe.ImageUrl;
             this.Author = recipe.OwnerAlias;
-            this.PrepTime = recipe.PrepTime;
+            this.PrepTime = recipe.PreparationTime;
             this.CookTime = recipe.CookTime;
             this.AvgRating = recipe.AvgRating;
         }

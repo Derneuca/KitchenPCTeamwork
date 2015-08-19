@@ -231,9 +231,9 @@
             // Easy: Has the word "easy" in the title, or (prep <= 15min and ingredients <= 5)
             result.SkillEasy =
                 recipe.Title.ToLower().Contains("easy") ||
-                (recipe.PrepTime <= 15 && recipe.Ingredients.Length <= 5);
+                (recipe.PreparationTime <= 15 && recipe.Ingredients.Length <= 5);
 
-            result.SkillQuick = recipe.PrepTime <= 10 && recipe.CookTime <= 20;
+            result.SkillQuick = recipe.PreparationTime <= 10 && recipe.CookTime <= 20;
         }
     }
 }

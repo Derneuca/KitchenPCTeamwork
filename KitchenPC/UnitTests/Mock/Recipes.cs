@@ -29,7 +29,7 @@ namespace KitchenPC.UnitTests.Mock
             r.Tags = RecipeTag.NoMeat | RecipeTag.NoPork | RecipeTag.NoRedMeat | RecipeTag.Dessert;
             r.AvgRating = 5;
             r.CookTime = 40;
-            r.PrepTime = 15;
+            r.PreparationTime = 15;
             r.ServingSize = 24;
             r.AddIngredients(new IngredientUsage[]
             {

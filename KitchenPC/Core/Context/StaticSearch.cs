@@ -31,7 +31,7 @@
 
             if (query.Time.MaxPrep.HasValue)
             {
-                q = q.Where(p => p.Recipe.PrepTime <= query.Time.MaxPrep.Value);
+                q = q.Where(p => p.Recipe.PreparationTime <= query.Time.MaxPrep.Value);
             }
 
             if (query.Time.MaxCook.HasValue)
@@ -187,7 +187,7 @@
                     q = (query.Direction == SortDirection.Ascending) ? q.OrderBy(p => p.Recipe.Title) : q.OrderByDescending(p => p.Recipe.Title);
                     break;
                 case SortOrder.PrepTime:
-                    q = (query.Direction == SortDirection.Ascending) ? q.OrderBy(p => p.Recipe.PrepTime) : q.OrderByDescending(p => p.Recipe.PrepTime);
+                    q = (query.Direction == SortDirection.Ascending) ? q.OrderBy(p => p.Recipe.PreparationTime) : q.OrderByDescending(p => p.Recipe.PreparationTime);
                     break;
                 case SortOrder.CookTime:
                     q = (query.Direction == SortDirection.Ascending) ? q.OrderBy(p => p.Recipe.CookTime) : q.OrderByDescending(p => p.Recipe.CookTime);

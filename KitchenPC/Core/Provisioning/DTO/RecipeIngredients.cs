@@ -20,7 +20,7 @@ namespace KitchenPC.Data.DTO
 
         public float? Qty { get; set; }
 
-        public string PrepNote { get; set; }
+        public string PreparationNote { get; set; }
 
         public string Section { get; set; }
     }

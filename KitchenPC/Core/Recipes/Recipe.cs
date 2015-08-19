@@ -22,7 +22,7 @@
         public Recipe(Guid id, string title, string description, string imageUrl)
         {
             this.ingredients = new List<IngredientUsage>();
-            this.PrepTime = 0;
+            this.PreparationTime = 0;
             this.CookTime = 0;
             this.AvgRating = 0;
             this.ServingSize = 4;
@@ -64,7 +64,7 @@
             }
         }
 
-        public short? PrepTime
+        public short? PreparationTime
         {
             get
             {

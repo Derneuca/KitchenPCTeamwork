@@ -57,7 +57,7 @@
 
         public RecipeCreator WithPrepTime(short prepTime)
         {
-            this.recipe.PrepTime = prepTime;
+            this.recipe.PreparationTime = prepTime;
             return this;
         }
 

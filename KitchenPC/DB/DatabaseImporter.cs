@@ -65,7 +65,7 @@
                         RecipeId = row.RecipeId,
                         CookTime = row.CookTime,
                         Steps = row.Steps,
-                        PrepTime = row.PrepTime,
+                        PrepTime = row.PreparationTime,
                         Rating = row.Rating,
                         Description = row.Description,
                         Title = row.Title,
@@ -373,7 +373,7 @@
                         Unit = row.Unit,
                         QtyLow = row.QtyLow,
                         DisplayOrder = row.DisplayOrder,
-                        PrepNote = row.PrepNote,
+                        PrepNote = row.PreparationNote,
                         Qty = row.Qty,
                         Section = row.Section
                     };
