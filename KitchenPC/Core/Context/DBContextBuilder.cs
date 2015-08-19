@@ -1,31 +1,31 @@
-using System;
-
 namespace KitchenPC.Context
 {
-   public class DBContextBuilder : IConfigurationBuilder<DBContext>
-   {
-      readonly DBContext context;
+    using System;
 
-      public DBContextBuilder(DBContext context)
-      {
-         this.context = context;
-      }
+    public class DBContextBuilder : IConfigurationBuilder<DBContext>
+    {
+        private readonly DBContext context;
 
-      public DBContextBuilder Adapter<T>(IConfigurationBuilder<T> adapter) where T : IDBAdapter
-      {
-         context.Adapter = adapter.Create();
-         return this;
-      }
+        public DBContextBuilder(DBContext context)
+        {
+            this.context = context;
+        }
 
-      public DBContextBuilder Identity(Func<AuthIdentity> getIdentity)
-      {
-         context.GetIdentity = getIdentity;
-         return this;
-      }
+        public DBContextBuilder Adapter<T>(IConfigurationBuilder<T> adapter) where T : IDBAdapter
+        {
+            this.context.Adapter = adapter.Create();
+            return this;
+        }
 
-      public DBContext Create()
-      {
-         return context;
-      }
-   }
+        public DBContextBuilder Identity(Func<AuthIdentity> getIdentity)
+        {
+            this.context.GetIdentity = getIdentity;
+            return this;
+        }
+
+        public DBContext Create()
+        {
+            return this.context;
+        }
+    }
 }
