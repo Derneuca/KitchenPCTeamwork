@@ -1,118 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class IngredientParser
-   {
-      const int MIN_SUBSTR = 3; // TODO: Should this be configurable?
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
 
-      Dictionary<Guid, String> nameLookup;
-      AlphaTree index;
+    public class IngredientParser
+    {
+        private const int MinimumSubstring = 3;
 
-      public IEnumerable<IngredientNode> MatchIngredient(string query)
-      {
-         ConnectorVertex connections;
-         if (FindSubstr(query, out connections))
-         {
-            if (connections != null)
+        private Dictionary<Guid, string> nameLookup;
+        private AlphaTree index;
+
+        public IEnumerable<IngredientNode> MatchIngredient(string query)
+        {
+            ConnectorVertex connections;
+            if (this.FindSubstring(query, out connections))
             {
-               return connections.Connections;
-            }
-         }
-
-         return Enumerable.Empty<IngredientNode>();
-      }
-
-      public string GetIngredientById(Guid id)
-      {
-         if (nameLookup == null)
-         {
-            throw new IngredientMapNotInitializedException();
-         }
-
-         string r;
-         if (nameLookup.TryGetValue(id, out r) == false)
-         {
-            throw new IngredientMapInvalidIngredientException();
-         }
-
-         return r;
-      }
-
-      public void CreateIndex(IEnumerable<IngredientSource> datasource)
-      {
-         nameLookup = new Dictionary<Guid, string>();
-         index = new AlphaTree();
-
-         foreach (var ing in datasource)
-         {
-            if (String.IsNullOrWhiteSpace(ing.DisplayName)) continue;
-
-            ParseString(ing.DisplayName, ing.Id);
-            nameLookup.Add(ing.Id, ing.DisplayName);
-         }
-      }
-
-      void ParseString(string ing, Guid id)
-      {
-         var iStart = 0;
-         var iLen = MIN_SUBSTR;
-         var node = new IngredientNode(id, ing, 0);
-         var parsedIng = Regex.Replace(ing.ToLower(), "[^a-z]", "");
-
-         while (iStart + iLen <= parsedIng.Length)
-         {
-            var substr = parsedIng.Substring(iStart, iLen);
-            IndexSubStr(substr, node);
-            iLen++;
-
-            if (iStart + iLen > parsedIng.Length)
-            {
-               iStart++;
-               iLen = MIN_SUBSTR;
-            }
-         }
-      }
-
-      void IndexSubStr(string substr, IngredientNode node)
-      {
-         var curNode = index.Head;
-
-         for (var i = 0; i < substr.Length; i++)
-         {
-            var c = substr[i];
-            if (curNode.HasLink(c) == false)
-            {
-               curNode = curNode.AddLink(c);
-            }
-            else
-            {
-               curNode = curNode.GetLink(c);
+                if (connections != null)
+                {
+                    return connections.Connections;
+                }
             }
 
-            curNode.AddConnection(node);
-         }
-      }
+            return Enumerable.Empty<IngredientNode>();
+        }
 
-      bool FindSubstr(string substr, out ConnectorVertex connections)
-      {
-         var node = index.Head;
-         connections = null;
-         substr = Regex.Replace(substr, "[^a-z]", "");
+        public string GetIngredientById(Guid id)
+        {
+            if (this.nameLookup == null)
+            {
+                throw new IngredientMapNotInitializedException();
+            }
 
-         for (var i = 0; i < substr.Length; i++)
-         {
-            if (node.HasLink(substr[i]) == false)
-               return false;
+            string ingredient;
+            if (this.nameLookup.TryGetValue(id, out ingredient) == false)
+            {
+                throw new IngredientMapInvalidIngredientException();
+            }
 
-            node = node.GetLink(substr[i]);
-         }
+            return ingredient;
+        }
 
-         connections = node.Connections;
-         return true;
-      }
-   }
+        public void CreateIndex(IEnumerable<IngredientSource> dataSource)
+        {
+            this.nameLookup = new Dictionary<Guid, string>();
+            this.index = new AlphaTree();
+
+            foreach (var ingredient in dataSource)
+            {
+                if (string.IsNullOrWhiteSpace(ingredient.DisplayName))
+                {
+                    continue;
+                }
+
+                this.ParseString(ingredient.DisplayName, ingredient.Id);
+                this.nameLookup.Add(ingredient.Id, ingredient.DisplayName);
+            }
+        }
+
+        private void ParseString(string ingredient, Guid id)
+        {
+            int start = 0;
+            int length = MinimumSubstring;
+            var node = new IngredientNode(id, ingredient, 0);
+            string parsedIngredient = Regex.Replace(ingredient.ToLower(), "[^a-z]", string.Empty);
+
+            while (start + length <= parsedIngredient.Length)
+            {
+                string substring = parsedIngredient.Substring(start, length);
+                this.IndexSubstring(substring, node);
+                length++;
+
+                if (start + length > parsedIngredient.Length)
+                {
+                    start++;
+                    length = MinimumSubstring;
+                }
+            }
+        }
+
+        private void IndexSubstring(string substring, IngredientNode node)
+        {
+            var currentNode = this.index.Head;
+
+            for (int i = 0; i < substring.Length; i++)
+            {
+                char character = substring[i];
+                if (currentNode.HasLink(character) == false)
+                {
+                    currentNode = currentNode.AddLink(character);
+                }
+                else
+                {
+                    currentNode = currentNode.GetLink(character);
+                }
+
+                currentNode.AddConnection(node);
+            }
+        }
+
+        private bool FindSubstring(string substring, out ConnectorVertex connections)
+        {
+            var node = this.index.Head;
+            connections = null;
+            substring = Regex.Replace(substring, "[^a-z]", string.Empty);
+
+            for (int i = 0; i < substring.Length; i++)
+            {
+                if (node.HasLink(substring[i]) == false)
+                {
+                    return false;
+                }
+
+                node = node.GetLink(substring[i]);
+            }
+
+            connections = node.Connections;
+            return true;
+        }
+    }
 }
