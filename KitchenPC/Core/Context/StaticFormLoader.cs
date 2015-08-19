@@ -42,7 +42,7 @@ namespace KitchenPC.Context
             var convType = f.UnitType;
             var displayName = f.FormDisplayName;
             var unitName = f.UnitName;
-            int convMultiplier = f.ConvMultiplier;
+            int convMultiplier = f.ConversionMultiplier;
             var formAmt = f.FormAmount;
             var formUnit = f.FormUnit;
             var amount = new Amount(formAmt, formUnit);

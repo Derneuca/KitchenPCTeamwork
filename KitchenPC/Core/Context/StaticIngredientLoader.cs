@@ -40,21 +40,21 @@ namespace KitchenPC.Context
                {
                   var wf = forms[defaultPairing.WeightFormId.Value];
                   var wfAmount = new Amount(wf.FormAmount, wf.FormUnit);
-                  pairings.Weight = new IngredientForm(wf.IngredientFormId, ingId, Units.Ounce, null, null, wf.ConvMultiplier, wfAmount);
+                  pairings.Weight = new IngredientForm(wf.IngredientFormId, ingId, Units.Ounce, null, null, wf.ConversionMultiplier, wfAmount);
                }
 
                if (defaultPairing.VolumeFormId.HasValue)
                {
                   var vf = forms[defaultPairing.VolumeFormId.Value];
                   var vfAmount = new Amount(vf.FormAmount, vf.FormUnit);
-                  pairings.Volume = new IngredientForm(vf.IngredientFormId, ingId, Units.Cup, null, null, vf.ConvMultiplier, vfAmount);
+                  pairings.Volume = new IngredientForm(vf.IngredientFormId, ingId, Units.Cup, null, null, vf.ConversionMultiplier, vfAmount);
                }
 
                if (defaultPairing.UnitFormId.HasValue)
                {
                   var uf = forms[defaultPairing.UnitFormId.Value];
                   var ufAmount = new Amount(uf.FormAmount, uf.FormUnit);
-                  pairings.Unit = new IngredientForm(uf.IngredientFormId, ingId, Units.Unit, null, null, uf.ConvMultiplier, ufAmount);
+                  pairings.Unit = new IngredientForm(uf.IngredientFormId, ingId, Units.Unit, null, null, uf.ConversionMultiplier, ufAmount);
                }
             }
 

@@ -317,7 +317,7 @@
                     {
                         IngredientFormId = row.IngredientFormId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
-                        ConvMultiplier = row.ConvMultiplier,
+                        ConvMultiplier = row.ConversionMultiplier,
                         FormAmount = row.FormAmount,
                         UnitType = row.UnitType,
                         UnitName = row.UnitName,

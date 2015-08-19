@@ -9,7 +9,7 @@ namespace KitchenPC.Data.DTO
 
         public Guid IngredientId { get; set; }
 
-        public short ConvMultiplier { get; set; }
+        public short ConversionMultiplier { get; set; }
 
         public float FormAmount { get; set; }
 
@@ -27,7 +27,7 @@ namespace KitchenPC.Data.DTO
             {
                 FormId = dtoForm.IngredientFormId,
                 FormUnitType = dtoForm.UnitType,
-                ConversionMultiplier = dtoForm.ConvMultiplier,
+                ConversionMultiplier = dtoForm.ConversionMultiplier,
                 FormDisplayName = dtoForm.FormDisplayName,
                 FormUnitName = dtoForm.UnitName,
                 IngredientId = dtoForm.IngredientId,

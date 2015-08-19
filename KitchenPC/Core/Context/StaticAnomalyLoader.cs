@@ -1,90 +1,98 @@
-﻿using System;
-using System.Collections.Generic;
-using KitchenPC.Data;
-using KitchenPC.Ingredients;
-using KitchenPC.NLP;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class StaticAnomalyLoader : ISynonymLoader<AnomalousNode>
-   {
-      readonly DataStore store;
+    using System;
+    using System.Collections.Generic;
+    using KitchenPC.Data;
+    using KitchenPC.Ingredients;
+    using KitchenPC.NLP;
 
-      public StaticAnomalyLoader(DataStore store)
-      {
-         this.store = store;
-      }
+    public class StaticAnomalyLoader : ISynonymLoader<AnomalousNode>
+    {
+        private readonly DataStore store;
 
-      public IEnumerable<AnomalousNode> LoadSynonyms()
-      {
-         var forms = store.GetIndexedIngredientForms();
-         var ingredients = store.GetIndexedIngredients();
-         var anomalies = store.NlpAnomalousIngredients;
+        public StaticAnomalyLoader(DataStore store)
+        {
+            this.store = store;
+        }
 
-         var ret = new List<AnomalousNode>();
+        public IEnumerable<AnomalousNode> LoadSynonyms()
+        {
+            var forms = this.store.GetIndexedIngredientForms();
+            var ingredients = this.store.GetIndexedIngredients();
+            var anomalies = this.store.NlpAnomalousIngredients;
 
-         foreach (var anon in anomalies)
-         {
-            var ingredient = ingredients[anon.IngredientId];
+            var result = new List<AnomalousNode>();
 
-            var name = anon.Name;
-            var ing = anon.IngredientId;
-            var ingName = ingredient.DisplayName;
-
-            IngredientForm weightForm = null, volumeForm = null, unitForm = null;
-            if (anon.WeightFormId.HasValue)
+            foreach (var anomaly in anomalies)
             {
-               var wf = forms[anon.WeightFormId.Value];
+                var ingredient = ingredients[anomaly.IngredientId];
 
-               weightForm = new IngredientForm(
-                  wf.IngredientFormId,
-                  ing,
-                  wf.UnitType,
-                  wf.FormDisplayName,
-                  wf.UnitName,
-                  wf.ConvMultiplier,
-                  new Amount(wf.FormAmount, wf.FormUnit));
+                string name = anomaly.Name;
+                var ingredientId = anomaly.IngredientId;
+                var ingredientName = ingredient.DisplayName;
+                IngredientForm weightForm = null;
+                IngredientForm volumeForm = null; 
+                IngredientForm unitForm = null;
+
+                if (anomaly.WeightFormId.HasValue)
+                {
+                    var wf = forms[anomaly.WeightFormId.Value];
+
+                    weightForm = new IngredientForm(
+                       wf.IngredientFormId,
+                       ingredientId,
+                       wf.UnitType,
+                       wf.FormDisplayName,
+                       wf.UnitName,
+                       wf.ConversionMultiplier,
+                       new Amount(wf.FormAmount, wf.FormUnit));
+                }
+
+                if (anomaly.VolumeFormId.HasValue)
+                {
+                    var vf = forms[anomaly.VolumeFormId.Value];
+
+                    volumeForm = new IngredientForm(
+                       vf.IngredientFormId,
+                       ingredientId,
+                       vf.UnitType,
+                       vf.FormDisplayName,
+                       vf.UnitName,
+                       vf.ConversionMultiplier,
+                       new Amount(vf.FormAmount, vf.FormUnit));
+                }
+
+                if (anomaly.UnitFormId.HasValue)
+                {
+                    var uf = forms[anomaly.UnitFormId.Value];
+
+                    unitForm = new IngredientForm(
+                       uf.IngredientFormId,
+                       ingredientId,
+                       uf.UnitType,
+                       uf.FormDisplayName,
+                       uf.UnitName,
+                       uf.ConversionMultiplier,
+                       new Amount(uf.FormAmount, uf.FormUnit));
+                }
+
+                var pairings = new DefaultPairings() 
+                { 
+                    Weight = weightForm, 
+                    Volume = volumeForm, 
+                    Unit = unitForm 
+                };
+
+                var ingredientNode = new AnomalousIngredientNode(ingredientId, ingredientName, UnitType.Unit, 0, pairings); // TODO: Must load conv type and unit weight
+                result.Add(new AnomalousNode(name, ingredientNode));
             }
 
-            if (anon.VolumeFormId.HasValue)
-            {
-               var vf = forms[anon.VolumeFormId.Value];
+            return result;
+        }
 
-               volumeForm = new IngredientForm(
-                  vf.IngredientFormId,
-                  ing,
-                  vf.UnitType,
-                  vf.FormDisplayName,
-                  vf.UnitName,
-                  vf.ConvMultiplier,
-                  new Amount(vf.FormAmount, vf.FormUnit));
-            }
-
-            if (anon.UnitFormId.HasValue)
-            {
-               var uf = forms[anon.UnitFormId.Value];
-
-               unitForm = new IngredientForm(
-                  uf.IngredientFormId,
-                  ing,
-                  uf.UnitType,
-                  uf.FormDisplayName,
-                  uf.UnitName,
-                  uf.ConvMultiplier,
-                  new Amount(uf.FormAmount, uf.FormUnit));
-            }
-
-            var pairings = new DefaultPairings() {Weight = weightForm, Volume = volumeForm, Unit = unitForm};
-            var ingNode = new AnomalousIngredientNode(ing, ingName, UnitType.Unit, 0, pairings); //TODO: Must load conv type and unit weight
-            ret.Add(new AnomalousNode(name, ingNode));
-         }
-
-         return ret;
-      }
-
-      public Pairings LoadFormPairings()
-      {
-         throw new NotImplementedException();
-      }
-   }
+        public Pairings LoadFormPairings()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

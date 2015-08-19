@@ -121,7 +121,7 @@ namespace KitchenPC.DB.Provisioning
             {
                 IngredientFormId = (Guid)r["IngredientFormId"],
                 IngredientId = (Guid)r["IngredientId"],
-                ConvMultiplier = (short)r["ConvMultiplier"],
+                ConversionMultiplier = (short)r["ConvMultiplier"],
                 FormAmount = (float)r["FormAmount"],
                 UnitType = Unit.Parse<Units>(r["UnitType"]),
                 UnitName = r["UnitName"] as string,
