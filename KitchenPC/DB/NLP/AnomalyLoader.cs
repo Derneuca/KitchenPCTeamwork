@@ -73,7 +73,7 @@ namespace KitchenPC.DB
                     }
 
                     var pairings = new DefaultPairings() { Weight = weightForm, Volume = volumeForm, Unit = unitForm };
-                    var ingNode = new AnomalousIngredientNode(ing, ingName, UnitType.Unit, 0, pairings); //TODO: Must load conv type and unit weight
+                    var ingNode = new AnomalousIngredientNode(ing, ingName, UnitType.Unit, 0, pairings);
                     ret.Add(new AnomalousNode(name, ingNode));
                 }
 

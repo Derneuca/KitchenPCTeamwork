@@ -1,50 +1,50 @@
 ﻿namespace KitchenPC.DB.Models
 {
     using System;
-    using FluentNHibernate.Mapping;
+
     using KitchenPC.ShoppingLists;
 
-    public class ShoppingListItems
+    public sealed class ShoppingListItems
     {
         public ShoppingListItems()
         {
         }
 
-        public ShoppingListItems(Guid id, Guid userid, String raw)
+        public ShoppingListItems(Guid id, Guid userid, string raw)
         {
-            ItemId = id;
-            UserId = userid;
-            Raw = raw;
+            this.ItemId = id;
+            this.UserId = userid;
+            this.Raw = raw;
         }
 
         public ShoppingListItems(Guid id, Guid userid, Amount amt, Guid? ingredientId, Guid? recipeId)
         {
-            ItemId = id;
-            UserId = userid;
-            Amount = amt;
-            Ingredient = ingredientId.HasValue ? Ingredients.FromId(ingredientId.Value) : null;
-            Recipe = recipeId.HasValue ? Recipes.FromId(recipeId.Value) : null;
+            this.ItemId = id;
+            this.UserId = userid;
+            this.Amount = amt;
+            this.Ingredient = ingredientId.HasValue ? Ingredients.FromId(ingredientId.Value) : null;
+            this.Recipe = recipeId.HasValue ? Recipes.FromId(recipeId.Value) : null;
         }
 
-        public virtual Guid ItemId { get; set; }
+        public Guid ItemId { get; set; }
 
-        public virtual String Raw { get; set; }
+        public string Raw { get; set; }
 
-        public virtual float? Qty { get; set; }
+        public float? Qty { get; set; }
 
-        public virtual Units? Unit { get; set; }
+        public Units? Unit { get; set; }
 
-        public virtual Guid UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public virtual Ingredients Ingredient { get; set; }
+        public Ingredients Ingredient { get; set; }
 
-        public virtual Recipes Recipe { get; set; }
+        public Recipes Recipe { get; set; }
 
-        public virtual ShoppingLists ShoppingList { get; set; }
+        public ShoppingLists ShoppingList { get; set; }
 
-        public virtual bool CrossedOut { get; set; }
+        public bool CrossedOut { get; set; }
 
-        public virtual Amount Amount
+        public Amount Amount
         {
             get
             {
@@ -80,7 +80,7 @@
             };
         }
 
-        public virtual ShoppingListItem AsShoppingListItem()
+        public ShoppingListItem AsShoppingListItem()
         {
             if (this.Ingredient != null)
             {
@@ -98,26 +98,6 @@
                 Id = this.ItemId,
                 CrossedOut = this.CrossedOut
             };
-        }
-    }
-
-    public class ShoppingListItemsMap : ClassMap<ShoppingListItems>
-    {
-        public ShoppingListItemsMap()
-        {
-            this.Id(x => x.ItemId)
-               .GeneratedBy.GuidComb()
-               .UnsavedValue(Guid.Empty);
-
-            this.Map(x => x.Raw).Length(50);
-            this.Map(x => x.Qty);
-            this.Map(x => x.Unit);
-            this.Map(x => x.UserId).Not.Nullable().Index("IDX_ShoppingListItems_UserId");
-            this.Map(x => x.CrossedOut).Not.Nullable();
-
-            this.References(x => x.Recipe).Column("RecipeId");
-            this.References(x => x.Ingredient).Column("IngredientId");
-            this.References(x => x.ShoppingList).Column("ShoppingListId").Index("IDX_ShoppingListItems_ListId");
         }
     }
 }

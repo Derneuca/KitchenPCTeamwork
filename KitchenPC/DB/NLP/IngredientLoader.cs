@@ -10,7 +10,7 @@ namespace KitchenPC.DB
 
     public class IngredientLoader : ISynonymLoader<IngredientNode>
     {
-        readonly DatabaseAdapter adapter;
+        private readonly DatabaseAdapter adapter;
 
         public IngredientLoader(DatabaseAdapter adapter)
         {
@@ -44,7 +44,7 @@ namespace KitchenPC.DB
                     {
                         if (defaultPairing.WeightForm != null)
                         {
-                            var wfAmount = new Amount(defaultPairing.WeightForm.FormAmount, defaultPairing.WeightForm.FormUnit);
+                            var weightFormAmount = new Amount(defaultPairing.WeightForm.FormAmount, defaultPairing.WeightForm.FormUnit);
                             pairings.Weight = new IngredientForm(
                                 defaultPairing.WeightForm.IngredientFormId, 
                                 ingId, 
@@ -52,12 +52,12 @@ namespace KitchenPC.DB
                                 null,
                                 null,
                                 defaultPairing.WeightForm.ConvMultiplier,
-                                wfAmount);
+                                weightFormAmount);
                         }
 
                         if (defaultPairing.VolumeForm != null)
                         {
-                            var vfAmount = new Amount(defaultPairing.VolumeForm.FormAmount, defaultPairing.VolumeForm.FormUnit);
+                            var volumeFormAmount = new Amount(defaultPairing.VolumeForm.FormAmount, defaultPairing.VolumeForm.FormUnit);
                             pairings.Volume = new IngredientForm(
                                 defaultPairing.VolumeForm.IngredientFormId,
                                 ingId,
@@ -65,12 +65,12 @@ namespace KitchenPC.DB
                                 null,
                                 null, 
                                 defaultPairing.VolumeForm.ConvMultiplier,
-                                vfAmount);
+                                volumeFormAmount);
                         }
 
                         if (defaultPairing.UnitForm != null)
                         {
-                            var ufAmount = new Amount(defaultPairing.UnitForm.FormAmount, defaultPairing.UnitForm.FormUnit);
+                            var unitFormAmount = new Amount(defaultPairing.UnitForm.FormAmount, defaultPairing.UnitForm.FormUnit);
                             pairings.Unit = new IngredientForm(
                                 defaultPairing.UnitForm.IngredientFormId, 
                                 ingId, 
@@ -78,7 +78,7 @@ namespace KitchenPC.DB
                                 null,
                                 null,
                                 defaultPairing.UnitForm.ConvMultiplier,
-                                ufAmount);
+                                unitFormAmount);
                         }
                     }
 
@@ -103,7 +103,7 @@ namespace KitchenPC.DB
                     var prepnote = syn.Prepnote;
 
                     IngredientNode node;
-                    if (nodes.TryGetValue(ingId, out node)) // TODO: If this fails, maybe throw an exception?
+                    if (nodes.TryGetValue(ingId, out node))
                     {
                         ret.Add(new IngredientNode(node, alias, prepnote));
                     }

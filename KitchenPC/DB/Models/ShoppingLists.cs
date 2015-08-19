@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using FluentNHibernate.Mapping;
+
     using KitchenPC.ShoppingLists;
 
     public class ShoppingLists
@@ -11,7 +11,7 @@
 
         public virtual Guid UserId { get; set; }
 
-        public virtual String Title { get; set; }
+        public virtual string Title { get; set; }
 
         public virtual IList<ShoppingListItems> Items { get; set; }
 
@@ -30,24 +30,6 @@
                 Id = this.ShoppingListId,
                 Title = this.Title
             };
-        }
-    }
-
-    public class ShoppingListsMap : ClassMap<ShoppingLists>
-    {
-        public ShoppingListsMap()
-        {
-            this.Id(x => x.ShoppingListId)
-               .GeneratedBy.GuidComb()
-               .UnsavedValue(Guid.Empty);
-
-            this.Map(x => x.UserId).Not.Nullable().Index("IDX_ShoppingLists_UserId").UniqueKey("UniqueTitle");
-            this.Map(x => x.Title).Not.Nullable().UniqueKey("UniqueTitle");
-
-            this.HasMany(x => x.Items)
-               .KeyColumn("ShoppingListId")
-               .Inverse()
-               .Cascade.All();
         }
     }
 }

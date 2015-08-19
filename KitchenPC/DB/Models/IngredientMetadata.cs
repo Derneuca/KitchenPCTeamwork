@@ -1,8 +1,7 @@
-using System;
-using FluentNHibernate.Mapping;
-
 namespace KitchenPC.DB.Models
 {
+    using System;
+
     public class IngredientMetadata
     {
         public virtual Guid IngredientMetadataId { get; set; }
@@ -37,44 +36,19 @@ namespace KitchenPC.DB.Models
         {
             return new KitchenPC.Ingredients.IngredientMetadata
             {
-                HasMeat = HasMeat,
-                CarbsPerUnit = CarbsPerUnit,
-                HasRedMeat = HasRedMeat,
-                SugarPerUnit = SugarPerUnit,
-                HasPork = HasPork,
-                FatPerUnit = FatPerUnit,
-                SodiumPerUnit = SodiumPerUnit,
-                CaloriesPerUnit = CaloriesPerUnit,
-                Spicy = Spicy,
-                Sweet = Sweet,
-                HasGluten = HasGluten,
-                HasAnimal = HasAnimal
+                HasMeat = this.HasMeat,
+                CarbsPerUnit = this.CarbsPerUnit,
+                HasRedMeat = this.HasRedMeat,
+                SugarPerUnit = this.SugarPerUnit,
+                HasPork = this.HasPork,
+                FatPerUnit = this.FatPerUnit,
+                SodiumPerUnit = this.SodiumPerUnit,
+                CaloriesPerUnit = this.CaloriesPerUnit,
+                Spicy = this.Spicy,
+                Sweet = this.Sweet,
+                HasGluten = this.HasGluten,
+                HasAnimal = this.HasAnimal
             };
-        }
-    }
-
-    public class IngredientMetadataMap : ClassMap<IngredientMetadata>
-    {
-        public IngredientMetadataMap()
-        {
-            Id(x => x.IngredientMetadataId)
-               .GeneratedBy.GuidComb()
-               .UnsavedValue(Guid.Empty);
-
-            Map(x => x.HasMeat);
-            Map(x => x.CarbsPerUnit);
-            Map(x => x.HasRedMeat);
-            Map(x => x.SugarPerUnit);
-            Map(x => x.HasPork);
-            Map(x => x.FatPerUnit);
-            Map(x => x.SodiumPerUnit);
-            Map(x => x.CaloriesPerUnit);
-            Map(x => x.Spicy).Not.Nullable();
-            Map(x => x.Sweet).Not.Nullable();
-            Map(x => x.HasGluten);
-            Map(x => x.HasAnimal);
-
-            References(x => x.Ingredient).Not.Nullable().Unique();
         }
     }
 }

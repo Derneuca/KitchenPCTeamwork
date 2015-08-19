@@ -15,7 +15,7 @@
     {
         private readonly DatabaseAdapter adapter;
 
-        NHSearch(DatabaseAdapter adapter)
+        public NHSearch(DatabaseAdapter adapter)
         {
             this.adapter = adapter;
         }
@@ -27,7 +27,7 @@
 
         public SearchResults Search(AuthIdentity identity, RecipeQuery query)
         {
-            using (var session = adapter.GetSession())
+            using (var session = this.adapter.GetSession())
             {
                 Recipes recipe = null;
 
@@ -93,21 +93,23 @@
                         {
                             q = q.Where(() => metadata.MealBreakfast);
                         }
+
                         if (query.Meal == MealFilter.Dessert)
                         {
                             q = q.Where(() => metadata.MealDessert);
                         }
+
                         if (query.Meal == MealFilter.Dinner)
                         {
                             q = q.Where(() => metadata.MealDinner);
                         }
+
                         if (query.Meal == MealFilter.Lunch)
                         {
                             q = q.Where(() => metadata.MealLunch);
                         }
                     }
 
-                    //High-res photos
                     if (query.Photos == PhotoFilter.HighRes)
                     {
                         q = q.Where(() => metadata.PhotoRes >= 1024 * 768);
@@ -117,18 +119,22 @@
                     {
                         q = q.Where(() => metadata.DietGlutenFree);
                     }
+
                     if (query.Diet.NoAnimals)
                     {
                         q = q.Where(() => metadata.DietNoAnimals);
                     }
+
                     if (query.Diet.NoMeat)
                     {
                         q = q.Where(() => metadata.DietNomeat);
                     }
+
                     if (query.Diet.NoPork)
                     {
                         q = q.Where(() => metadata.DietNoPork);
                     }
+
                     if (query.Diet.NoRedMeat)
                     {
                         q = q.Where(() => metadata.DietNoRedMeat);
@@ -138,18 +144,22 @@
                     {
                         q = q.Where(() => metadata.NutritionLowCalorie);
                     }
+
                     if (query.Nutrition.LowCarb)
                     {
                         q = q.Where(() => metadata.NutritionLowCarb);
                     }
+
                     if (query.Nutrition.LowFat)
                     {
                         q = q.Where(() => metadata.NutritionLowFat);
                     }
+
                     if (query.Nutrition.LowSodium)
                     {
                         q = q.Where(() => metadata.NutritionLowSodium);
                     }
+
                     if (query.Nutrition.LowSugar)
                     {
                         q = q.Where(() => metadata.NutritionLowSugar);
@@ -159,10 +169,12 @@
                     {
                         q = q.Where(() => metadata.SkillCommon).OrderBy(() => metadata.Commonality).Desc();
                     }
+
                     if (query.Skill.Easy)
                     {
                         q = q.Where(() => metadata.SkillEasy);
                     }
+
                     if (query.Skill.Quick)
                     {
                         q = q.Where(() => metadata.SkillQuick);
@@ -212,7 +224,7 @@
                 return new SearchResults
                 {
                     Briefs = results.Select(r => r.AsRecipeBrief()).ToArray(),
-                    TotalCount = results.Count // TODO: This needs to be the total matches, not the returned matches
+                    TotalCount = results.Count
                 };
             }
         }

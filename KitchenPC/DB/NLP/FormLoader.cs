@@ -19,9 +19,8 @@
 
         public IEnumerable<FormNode> LoadSynonyms()
         {
-            using (var session = adapter.GetStatelessSession())
+            using (var session = this.adapter.GetStatelessSession())
             {
-                //Load synonyms
                 var formSyn = session.Query<NlpFormSynonyms>()
                    .OrderBy(p => p.Name)
                    .Select(s => s.Name)
@@ -34,13 +33,12 @@
 
         public Pairings LoadFormPairings()
         {
-            using (var session = adapter.GetStatelessSession())
+            using (var session = this.adapter.GetStatelessSession())
             {
                 var formSyn = session.QueryOver<NlpFormSynonyms>()
                    .Fetch(prop => prop.Form).Eager()
                    .List();
 
-                //Load all form pairings from db
                 var pairings = new Pairings();
 
                 foreach (var syn in formSyn)

@@ -19,7 +19,7 @@ namespace KitchenPC.DB
 
         public IEnumerable<UnitNode> LoadSynonyms()
         {
-            using (var session = adapter.GetStatelessSession())
+            using (var session = this.adapter.GetStatelessSession())
             {
                 // Load synonyms
                 var unitSyn = session.Query<NlpUnitSynonyms>()
@@ -34,15 +34,15 @@ namespace KitchenPC.DB
 
         public Pairings LoadFormPairings()
         {
-            using (var session = adapter.GetStatelessSession())
+            using (var session = this.adapter.GetStatelessSession())
             {
                 // Load all form pairings from db
-                var unitSyn = session.QueryOver<NlpUnitSynonyms>()
+                var unitSynonymses = session.QueryOver<NlpUnitSynonyms>()
                    .Fetch(prop => prop.Form).Eager()
                    .List();
 
                 var pairings = new Pairings();
-                foreach (var syn in unitSyn)
+                foreach (var syn in unitSynonymses)
                 {
                     pairings.Add(
                         new NameIngredientPair(syn.Name.Trim(), syn.Ingredient.IngredientId),
