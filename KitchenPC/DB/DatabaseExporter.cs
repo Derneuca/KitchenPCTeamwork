@@ -326,7 +326,7 @@ namespace KitchenPC.DB.Provisioning
                 IngredientSynonymId = (Guid)r["IngredientSynonymId"],
                 IngredientId = (Guid)r["IngredientId"],
                 Alias = r["Alias"] as string,
-                Prepnote = r["Prepnote"] as string
+                PreparationNote = r["Prepnote"] as string
             }).ToArray();
 
             Log.DebugFormat("Read {0} row(s) from NlpIngredientSynonyms.", list.Count());

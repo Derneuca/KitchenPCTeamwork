@@ -10,6 +10,6 @@ namespace KitchenPC.Data.DTO
 
         public string Alias { get; set; }
 
-        public string Prepnote { get; set; }
+        public string PreparationNote { get; set; }
     }
 }

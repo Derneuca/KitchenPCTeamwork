@@ -488,7 +488,7 @@
                         IngredientSynonymId = row.IngredientSynonymId,
                         Ingredient = Models.Ingredients.FromId(row.IngredientId),
                         Alias = row.Alias,
-                        Prepnote = row.Prepnote
+                        Prepnote = row.PreparationNote
                     };
 
                     this.session.Save(dbRow, row.IngredientSynonymId);
