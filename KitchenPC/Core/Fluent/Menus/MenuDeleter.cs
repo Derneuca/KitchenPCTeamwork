@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Menus;
 
     /// <summary>Represents one or more menus to be deleted.</summary>

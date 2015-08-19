@@ -1,5 +1,7 @@
 ﻿namespace KitchenPC.Context
 {
+    using KitchenPC.Context.Interfaces;
+
     /// <summary>Fluent interface to create configuration objects</summary>
     public class ConfigurationBuilder<T> : IConfigurationBuilder<IConfiguration<T>> where T : IKPCContext
     {

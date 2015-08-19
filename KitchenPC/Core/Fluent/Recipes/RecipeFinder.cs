@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Fluent.Recipes
 {
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Recipes;
 
     /// <summary>Provides the ability to search for recipe.</summary>

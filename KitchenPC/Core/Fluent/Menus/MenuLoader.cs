@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Menus;
 
     /// <summary>Represents one or more menus to be loaded.</summary>

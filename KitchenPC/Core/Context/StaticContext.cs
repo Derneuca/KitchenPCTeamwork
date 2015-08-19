@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Xml.Serialization;
 
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Data;
     using KitchenPC.Data.DTO;
     using KitchenPC.Fluent.Menus;

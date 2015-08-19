@@ -1,6 +1,8 @@
 namespace KitchenPC.Context
 {
     using System.Collections.Generic;
+
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Modeler;
 
     public class DBModelerLoader : IModelerLoader

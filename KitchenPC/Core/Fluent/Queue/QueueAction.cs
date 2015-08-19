@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Fluent.Queue
 {
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
 
     /// <summary>Provides the ability to fluently express recipe queue related actions, such as loading queue and enqueuing/dequeuing recipes.</summary>
     public class QueueAction

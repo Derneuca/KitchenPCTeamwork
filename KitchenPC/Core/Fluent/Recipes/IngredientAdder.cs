@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Ingredients;
     using KitchenPC.NLP;
     using KitchenPC.Recipes;

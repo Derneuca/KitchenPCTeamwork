@@ -2,7 +2,7 @@
 {
     using System;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Modeler;
 
     using IngredientUsage = KitchenPC.Ingredients.IngredientUsage;

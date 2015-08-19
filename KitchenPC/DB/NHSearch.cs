@@ -1,6 +1,7 @@
 ﻿namespace KitchenPC.DB.Search
 {
     using System.Linq;
+    using Context.Interfaces;
     using Context;
     using Models;
     using NHibernate.Criterion;

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Context.Interfaces;
     using Context;
     using Data;
     using FluentNHibernate.Cfg;

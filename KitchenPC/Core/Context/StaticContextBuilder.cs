@@ -2,6 +2,8 @@ namespace KitchenPC.Context
 {
     using System;
 
+    using KitchenPC.Context.Interfaces;
+
     public class StaticContextBuilder : IConfigurationBuilder<StaticContext>
     {
         private readonly StaticContext context;

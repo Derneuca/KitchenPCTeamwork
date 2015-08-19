@@ -2,6 +2,8 @@
 {
     using System;
 
+    using KitchenPC.Context.Interfaces;
+
     public class Configuration<T> : IConfiguration<T> where T : IKPCContext
     {
         private readonly ConfigurationBuilder<T> builder;

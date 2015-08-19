@@ -155,10 +155,13 @@
     <Compile Include="Context\ConnectorVertex.cs" />
     <Compile Include="Context\DBContextBuilder.cs" />
     <Compile Include="Context\DBModelerLoader.cs" />
-    <Compile Include="Context\IConfigurationBuilder.cs" />
     <Compile Include="Context\IngredientNode.cs" />
     <Compile Include="Context\IngredientParser.cs" />
-    <Compile Include="Context\ISearchProvider.cs" />
+    <Compile Include="Context\Interfaces\IConfiguration.cs" />
+    <Compile Include="Context\Interfaces\IConfigurationBuilder.cs" />
+    <Compile Include="Context\Interfaces\IDBAdapter.cs" />
+    <Compile Include="Context\Interfaces\IKPCContext.cs" />
+    <Compile Include="Context\Interfaces\ISearchProvider.cs" />
     <Compile Include="Context\StaticContextBuilder.cs" />
     <Compile Include="Context\StaticFormLoader.cs" />
     <Compile Include="Context\StaticIngredientLoader.cs" />
@@ -271,9 +274,6 @@
     <Compile Include="NLP\UnitNode.cs" />
     <Compile Include="NLP\UnitSynonyms.cs" />
     <Compile Include="Context\DBContext.cs" />
-    <Compile Include="Context\IConfiguration.cs" />
-    <Compile Include="Context\IDBAdapter.cs" />
-    <Compile Include="Context\IKPCContext.cs" />
     <Compile Include="Context\IngredientSource.cs" />
     <Compile Include="Context\KPCContext.cs" />
     <Compile Include="Context\StaticContext.cs" />

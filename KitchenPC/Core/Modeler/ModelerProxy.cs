@@ -1,7 +1,8 @@
 ﻿namespace KitchenPC.Modeler
 {
     using System;
-    using KitchenPC.Context;
+
+    using KitchenPC.Context.Interfaces;
 
     public class ModelerProxy
     {

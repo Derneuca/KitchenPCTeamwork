@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Recipes;
 
     /// <summary>Loads the recipe queue.</summary>

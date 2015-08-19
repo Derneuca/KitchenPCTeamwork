@@ -3,6 +3,7 @@ namespace KitchenPC.DB
     using System;
     using System.Collections.Generic;
     using Context;
+    using Context.Interfaces;
     using FluentNHibernate.Cfg.Db;
     using FluentNHibernate.Conventions;
 

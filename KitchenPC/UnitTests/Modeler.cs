@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using KitchenPC.Context;
+using KitchenPC.Context.Interfaces;
 using KPCServer.UnitTests;
 using NUnit.Framework;
 

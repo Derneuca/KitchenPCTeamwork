@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Recipes;
 
     /// <summary>Provides the ability to enqueue one or more recipes.</summary>

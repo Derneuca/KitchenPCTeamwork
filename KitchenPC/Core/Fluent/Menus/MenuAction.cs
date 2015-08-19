@@ -1,6 +1,6 @@
 ﻿namespace KitchenPC.Fluent.Menus
 {
-    using KitchenPC.Context;
+    using KitchenPC.Context.Interfaces;
     using KitchenPC.Menus;
 
     /// <summary>Provides the ability to fluently express menu related actions, such as creating, updating, or removing menus.</summary>

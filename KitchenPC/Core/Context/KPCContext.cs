@@ -2,6 +2,8 @@
 {
     using log4net;
 
+    using KitchenPC.Context.Interfaces;
+
     public static class KPCContext
     {
         static KPCContext()
