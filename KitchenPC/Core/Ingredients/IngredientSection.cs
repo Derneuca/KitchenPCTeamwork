@@ -10,12 +10,12 @@
         public IngredientSection(string name)
         {
             this.SectionName = name;
-            this.Ingredients = new IngredientUsageCollection();
+            this.Ingredients = new List<IngredientUsage>();
         }
 
         public string SectionName { get; private set; }
 
-        public IngredientUsageCollection Ingredients { get; private set; }
+        public List<IngredientUsage> Ingredients { get; private set; }
 
         public static IngredientSection[] GetSections(Recipe recipe)
         {

@@ -9,7 +9,7 @@
 
     public class Recipe
     {
-        private readonly IngredientUsageCollection ingredients;
+        private readonly List<IngredientUsage> ingredients;
 
         private short? prepTime;
         private short? cookTime;
@@ -21,7 +21,7 @@
 
         public Recipe(Guid id, string title, string description, string imageUrl)
         {
-            this.ingredients = new IngredientUsageCollection();
+            this.ingredients = new List<IngredientUsage>();
             this.PrepTime = 0;
             this.CookTime = 0;
             this.AvgRating = 0;
