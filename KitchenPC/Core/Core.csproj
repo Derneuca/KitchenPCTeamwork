@@ -208,7 +208,6 @@
     <Compile Include="Ingredients\IngredientMetadata.cs" />
     <Compile Include="Ingredients\IngredientSection.cs" />
     <Compile Include="Ingredients\IngredientUsage.cs" />
-    <Compile Include="Ingredients\IngredientUsageCollection.cs" />
     <Compile Include="Menus\GetMenuOptions.cs" />
     <Compile Include="Menus\Menu.cs" />
     <Compile Include="Menus\MenuMove.cs" />

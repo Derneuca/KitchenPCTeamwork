@@ -11,8 +11,6 @@
             this.builder = new ConfigurationBuilder<T>(this);
         }
 
-        public T Context { get; set; }
-
         public static ConfigurationBuilder<T> Build
         {
             get
@@ -30,10 +28,12 @@
             }
         }
 
+        public T Context { get; set; }
+
         public T InitializeContext()
         {
-            Context.Initialize();
-            return Context;
+            this.Context.Initialize();
+            return this.Context;
         }
     }
 }
