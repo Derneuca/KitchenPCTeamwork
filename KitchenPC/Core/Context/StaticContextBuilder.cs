@@ -1,42 +1,42 @@
-using System;
-
 namespace KitchenPC.Context
 {
-   public class StaticContextBuilder : IConfigurationBuilder<StaticContext>
-   {
-      readonly StaticContext context;
+    using System;
 
-      public StaticContextBuilder(StaticContext context)
-      {
-         this.context = context;
-      }
+    public class StaticContextBuilder : IConfigurationBuilder<StaticContext>
+    {
+        private readonly StaticContext context;
 
-      /// <summary>A path on the file system that contains a KitchenPC data file.</summary>
-      public StaticContextBuilder DataDirectory(string path)
-      {
-         context.DataDirectory = path;
-         return this;
-      }
+        public StaticContextBuilder(StaticContext context)
+        {
+            this.context = context;
+        }
 
-      /// <summary>Configures context to compress the store file on disk to save space.</summary>
-      public StaticContextBuilder CompressedStore
-      {
-         get
-         {
-            context.CompressedStore = true;
+        /// <summary>Configures context to compress the store file on disk to save space.</summary>
+        public StaticContextBuilder CompressedStore
+        {
+            get
+            {
+                this.context.CompressedStore = true;
+                return this;
+            }
+        }
+
+        /// <summary>A path on the file system that contains a KitchenPC data file.</summary>
+        public StaticContextBuilder DataDirectory(string path)
+        {
+            this.context.DataDirectory = path;
             return this;
-         }
-      }
+        }
 
-      public StaticContextBuilder Identity(Func<AuthIdentity> getIdentity)
-      {
-         context.GetIdentity = getIdentity;
-         return this;
-      }
+        public StaticContextBuilder Identity(Func<AuthIdentity> getIdentity)
+        {
+            this.context.GetIdentity = getIdentity;
+            return this;
+        }
 
-      public StaticContext Create()
-      {
-         return context;
-      }
-   }
+        public StaticContext Create()
+        {
+            return this.context;
+        }
+    }
 }
