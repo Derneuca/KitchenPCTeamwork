@@ -1,42 +1,48 @@
-using System.Collections.Generic;
-using KitchenPC.Modeler;
-
 namespace KitchenPC.Context
 {
-   public class DBModelerLoader : IModelerLoader
-   {
-      readonly IDBAdapter adapter;
-      IEnumerable<RecipeBinding> recipedata;
-      IEnumerable<IngredientBinding> ingredientdata;
-      IEnumerable<RatingBinding> ratingdata;
+    using System.Collections.Generic;
+    using KitchenPC.Modeler;
 
-      public DBModelerLoader(IDBAdapter adapter)
-      {
-         this.adapter = adapter;
-      }
+    public class DBModelerLoader : IModelerLoader
+    {
+        private readonly IDBAdapter adapter;
+        private IEnumerable<RecipeBinding> recipeData;
+        private IEnumerable<IngredientBinding> ingredientData;
+        private IEnumerable<RatingBinding> ratingData;
 
-      public IEnumerable<RecipeBinding> LoadRecipeGraph()
-      {
-         if (recipedata == null)
-            recipedata = adapter.LoadRecipeGraph();
+        public DBModelerLoader(IDBAdapter adapter)
+        {
+            this.adapter = adapter;
+        }
 
-         return recipedata;
-      }
+        public IEnumerable<RecipeBinding> LoadRecipeGraph()
+        {
+            if (this.recipeData == null)
+            {
+                this.recipeData = this.adapter.LoadRecipeGraph();
+            }
 
-      public IEnumerable<IngredientBinding> LoadIngredientGraph()
-      {
-         if (ingredientdata == null)
-            ingredientdata = adapter.LoadIngredientGraph();
+            return this.recipeData;
+        }
 
-         return ingredientdata;
-      }
+        public IEnumerable<IngredientBinding> LoadIngredientGraph()
+        {
+            if (this.ingredientData == null)
+            {
+                this.ingredientData = this.adapter.LoadIngredientGraph();
+            }
 
-      public IEnumerable<RatingBinding> LoadRatingGraph()
-      {
-         if (ratingdata == null)
-            ratingdata = adapter.LoadRatingGraph();
+            return this.ingredientData;
+        }
 
-         return ratingdata;
-      }
-   }
+        public IEnumerable<RatingBinding> LoadRatingGraph()
+        {
+            if (this.ratingData == null)
+            {
+                this.ratingData = this.adapter.LoadRatingGraph();
+            }
+
+            return this.ratingData;
+        }
+    }
 }
