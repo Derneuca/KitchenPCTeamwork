@@ -830,7 +830,7 @@
                     recipe.Ingredients = dbRecipe.Ingredients.Select(i => new IngredientUsage
                     {
                         Amount = i.Qty.HasValue ? new Amount(i.Qty.Value, i.Unit) : null,
-                        PrepNote = i.PrepNote,
+                        PreparationNote = i.PrepNote,
                         Section = i.Section,
                         Form = i.IngredientForm != null ? i.IngredientForm.AsIngredientForm() : null, // Note: Form will be null when usage has no amount
                         Ingredient = i.Ingredient.AsIngredient()

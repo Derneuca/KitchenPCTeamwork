@@ -62,7 +62,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_CHEESE_SHREDDED, result.Usage.Form.FormId);
          Assert.AreEqual(5.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Cup, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("1 cup melted cheddar cheese");
          result = parser.Parse("1 cup melted cheddar cheese");
@@ -71,7 +71,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_CHEESE_MELTED, result.Usage.Form.FormId);
          Assert.AreEqual(1.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Cup, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("5 1/2 cups flour");
          result = parser.Parse("5 1/2 cups flour");
@@ -80,7 +80,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_FLOUR_VOLUME, result.Usage.Form.FormId);
          Assert.AreEqual(5.5f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Cup, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("1 1/2 tsp of milk");
          result = parser.Parse("1 1/2 tsp of milk");
@@ -89,7 +89,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_MILK_VOLUME, result.Usage.Form.FormId);
          Assert.AreEqual(1.5f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Teaspoon, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("six eggs");
          result = parser.Parse("six eggs");
@@ -98,7 +98,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_EGG_UNIT, result.Usage.Form.FormId);
          Assert.AreEqual(6.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("an egg");
          result = parser.Parse("an egg");
@@ -107,7 +107,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_EGG_UNIT, result.Usage.Form.FormId);
          Assert.AreEqual(1.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("a dozen ripe bananas");
          result = parser.Parse("a dozen ripe bananas");
@@ -116,7 +116,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_BANANA_UNIT, result.Usage.Form.FormId);
          Assert.AreEqual(12.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.AreEqual("ripe", result.Usage.PrepNote);
+         Assert.AreEqual("ripe", result.Usage.PreparationNote);
 
          //parser.Parse("eggs: 3");
          result = parser.Parse("eggs: 3");
@@ -125,7 +125,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_EGG_UNIT, result.Usage.Form.FormId);
          Assert.AreEqual(3.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //parser.Parse("1 head of lettuce");
          result = parser.Parse("1 head of lettuce");
@@ -134,7 +134,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_LETTUCE_HEAD, result.Usage.Form.FormId);
          Assert.AreEqual(1.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.IsNull(result.Usage.PrepNote);
+         Assert.IsNull(result.Usage.PreparationNote);
 
          //Test a few prep notes
          result = parser.Parse("1 head of lettuce, chopped");
@@ -143,7 +143,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_LETTUCE_HEAD, result.Usage.Form.FormId);
          Assert.AreEqual(1.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.AreEqual("chopped", result.Usage.PrepNote);
+         Assert.AreEqual("chopped", result.Usage.PreparationNote);
 
          result = parser.Parse("1 ripe banana, sliced");
          Assert.AreEqual(MatchResult.Match, result.Status);
@@ -151,7 +151,7 @@ namespace KitchenPC.UnitTests
          Assert.AreEqual(TestIngredientLoader.FORM_BANANA_UNIT, result.Usage.Form.FormId);
          Assert.AreEqual(1.0f, result.Usage.Amount.SizeHigh);
          Assert.AreEqual(Units.Unit, result.Usage.Amount.Unit);
-         Assert.AreEqual("ripe//sliced", result.Usage.PrepNote);
+         Assert.AreEqual("ripe//sliced", result.Usage.PreparationNote);
       }
    }
 }

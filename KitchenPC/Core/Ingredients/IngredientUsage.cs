@@ -1,89 +1,97 @@
-﻿using System;
-using KitchenPC.Fluent.Recipes;
-
-namespace KitchenPC.Ingredients
+﻿namespace KitchenPC.Ingredients
 {
-   public class IngredientUsage
-   {
-      public Ingredient Ingredient;
-      public IngredientForm Form;
-      public Amount Amount;
-      public String PrepNote;
-      public String Section;
+    using System;
 
-      public static IngredientUsageCreator Create
-      {
-         get
-         {
-            return new IngredientUsageCreator(new IngredientUsage());
-         }
-      }
+    using KitchenPC.Fluent.Recipes;
 
-      public IngredientUsage(Ingredient ingredient, IngredientForm form, Amount amount, String prepnote)
-      {
-         Ingredient = ingredient;
-         Form = form;
-         Amount = amount;
-         PrepNote = prepnote;
-      }
+    public class IngredientUsage
+    {
+        public IngredientUsage(Ingredient ingredient, IngredientForm form, Amount amount, string preparationNote)
+        {
+            this.Ingredient = ingredient;
+            this.Form = form;
+            this.Amount = amount;
+            this.PreparationNote = preparationNote;
+        }
 
-      public IngredientUsage()
-      {
-      }
+        public IngredientUsage()
+        {
+        }
 
-      /// <summary>Renders Ingredient Usage, using ingredientTemplate for the ingredient name.</summary>
-      /// <param name="ingredientTemplate">A string template for the ingredient name, {0} will be the Ingredient Id and {1} will be the ingredient name.</param>
-      /// <param name="amountTemplate">Optional string template for displaying amounts.  {0} will be numeric value, {1} will be unit.</param>
-      /// <param name="multiplier">Number to multiply amount by, used to adjust recipe servings.</param>
-      /// <returns>Ingredient Name (form): Amount (prep note)</returns>
-      public string ToString(string ingredientTemplate, string amountTemplate, float multiplier)
-      {
-         var ingname = String.IsNullOrEmpty(ingredientTemplate) ? Ingredient.Name : String.Format(ingredientTemplate, Ingredient.Id, Ingredient.Name);
-         var prep = String.Empty;
-         string amount;
+        public static IngredientUsageCreator Create
+        {
+            get
+            {
+                return new IngredientUsageCreator(new IngredientUsage());
+            }
+        }
 
-         if (!String.IsNullOrEmpty(PrepNote))
-         {
-            prep = String.Format(" ({0})", PrepNote);
-         }
+        public Ingredient Ingredient { get; set; }
 
-         if (Amount == null) //Just display ingredient and prep
-         {
-            return String.Format("{0}{1}", ingname, prep);
-         }
+        public IngredientForm Form { get; set; }
 
-         //Normalize amount and form
-         var normalizedAmt = (Amount == null ? null : Amount.Normalize(Amount, multiplier));
-         if (Form.FormUnitType != Units.Unit && !String.IsNullOrEmpty(Form.FormDisplayName))
-         {
-            ingname += String.Format(" ({0})", Form.FormDisplayName);
-         }
+        public Amount Amount { get; set; }
 
-         var unitType = Unit.GetConvType(Form.FormUnitType);
+        public string PreparationNote { get; set; }
 
-         if (unitType == UnitType.Unit && !String.IsNullOrEmpty(Form.FormUnitName))
-         {
-            var names = Form.FormUnitName.Split('/');
-            var unitName = (normalizedAmt.SizeLow.HasValue || normalizedAmt.SizeHigh > 1) ? names[1] : names[0];
-            amount = normalizedAmt.ToString(unitName);
-         }
-         else
-         {
-            amount = normalizedAmt.ToString();
-         }
+        public string Section { get; set; }
 
-         var amt = String.Format(String.IsNullOrEmpty(amountTemplate) ? "{0}{1}" : amountTemplate, amount, prep);
-         return String.Format("{0}: {1}", ingname, amt);
-      }
+        /// <summary>Renders Ingredient Usage, using ingredientTemplate for the ingredient name.</summary>
+        /// <param name="ingredientTemplate">A string template for the ingredient name, {0} will be the Ingredient Id and {1} will be the ingredient name.</param>
+        /// <param name="amountTemplate">Optional string template for displaying amounts.  {0} will be numeric value, {1} will be unit.</param>
+        /// <param name="multiplier">Number to multiply amount by, used to adjust recipe servings.</param>
+        /// <returns>Ingredient Name (form): Amount (preparation note)</returns>
+        public string ToString(string ingredientTemplate, string amountTemplate, float multiplier)
+        {
+            string ingredientName = 
+                string.IsNullOrEmpty(ingredientTemplate) ? 
+                this.Ingredient.Name :
+                string.Format(ingredientTemplate, this.Ingredient.Id, this.Ingredient.Name);
+            string preparation = string.Empty;
+            string amount;
 
-      public string ToString(float multiplier)
-      {
-         return ToString(null, null, multiplier);
-      }
+            if (!string.IsNullOrEmpty(this.PreparationNote))
+            {
+                preparation = string.Format(" ({0})", this.PreparationNote);
+            }
 
-      public override string ToString()
-      {
-         return ToString(null, null, 1);
-      }
-   }
+            if (this.Amount == null) 
+            {
+                return string.Format("{0}{1}", ingredientName, preparation);
+            }
+
+            // Normalize amount and form
+            var normalizedAmount = this.Amount == null ? null : Amount.Normalize(this.Amount, multiplier);
+            if (this.Form.FormUnitType != Units.Unit && !string.IsNullOrEmpty(this.Form.FormDisplayName))
+            {
+                ingredientName += string.Format(" ({0})", this.Form.FormDisplayName);
+            }
+
+            var unitType = Unit.GetConvType(this.Form.FormUnitType);
+
+            if (unitType == UnitType.Unit && !string.IsNullOrEmpty(this.Form.FormUnitName))
+            {
+                string[] names = this.Form.FormUnitName.Split('/');
+                string unitName = (normalizedAmount.SizeLow.HasValue || normalizedAmount.SizeHigh > 1) ? names[1] : names[0];
+                amount = normalizedAmount.ToString(unitName);
+            }
+            else
+            {
+                amount = normalizedAmount.ToString();
+            }
+
+            string amt = string.Format(string.IsNullOrEmpty(amountTemplate) ? "{0}{1}" : amountTemplate, amount, preparation);
+            return string.Format("{0}: {1}", ingredientName, amt);
+        }
+
+        public string ToString(float multiplier)
+        {
+            return this.ToString(null, null, multiplier);
+        }
+
+        public override string ToString()
+        {
+            return this.ToString(null, null, 1);
+        }
+    }
 }

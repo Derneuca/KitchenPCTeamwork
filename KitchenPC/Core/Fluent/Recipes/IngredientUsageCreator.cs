@@ -37,7 +37,7 @@
 
         public IngredientUsageCreator WithPrepNote(string prepNote)
         {
-            this.Usage.PrepNote = prepNote;
+            this.Usage.PreparationNote = prepNote;
             return this;
         }
 

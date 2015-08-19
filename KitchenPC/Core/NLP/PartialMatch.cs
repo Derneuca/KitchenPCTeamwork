@@ -21,13 +21,13 @@
 
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(this.usage.PrepNote))
+            if (string.IsNullOrEmpty(this.usage.PreparationNote))
             {
                 return string.Format("[PartialMatch] Ingredient: {0}", this.usage.Ingredient.Name);
             }
             else
             {
-                return string.Format("[PartialMatch] Ingredient: {0} ({1})", this.usage.Ingredient.Name, this.usage.PrepNote);
+                return string.Format("[PartialMatch] Ingredient: {0} ({1})", this.usage.Ingredient.Name, this.usage.PreparationNote);
             }
         }
     }

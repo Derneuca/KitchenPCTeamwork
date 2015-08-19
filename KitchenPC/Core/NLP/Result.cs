@@ -36,7 +36,7 @@ namespace KitchenPC.NLP
             result.Ingredient.ConversionType = matchdata.Ingredient.ConversionType;
             result.Ingredient.UnitWeight = matchdata.Ingredient.UnitWeight;
             result.Amount = matchdata.Amount;
-            result.PrepNote = matchdata.Preps.HasValue ? matchdata.Preps.ToString() : template.DefaultPrep;
+            result.PreparationNote = matchdata.Preps.HasValue ? matchdata.Preps.ToString() : template.DefaultPrep;
             var pairings = matchdata.Ingredient.Pairings;
 
             NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] Ingredient: {0}", matchdata.Ingredient.IngredientName);
@@ -47,7 +47,7 @@ namespace KitchenPC.NLP
 
             if (template.AllowPartial && matchdata.Amount == null)
             {
-                return new PartialMatch(input, result.Ingredient, result.PrepNote);
+                return new PartialMatch(input, result.Ingredient, result.PreparationNote);
             }
 
             if (matchdata.Unit is CustomUnitNode)
@@ -145,7 +145,7 @@ namespace KitchenPC.NLP
                     if (parsedType == Unit.GetConvType(result.Form.FormUnitType))
                     {
                         NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] SUCCESS: Found matching volumetric form, allowing prep to form fall-through.");
-                        result.PrepNote = matchdata.Preps.ToString();
+                        result.PreparationNote = matchdata.Preps.ToString();
                         return new AnomalousMatch(input, AnomalousResult.Fallthrough, result);
                     }
                     else
@@ -167,7 +167,7 @@ namespace KitchenPC.NLP
                 if (parsedType == UnitType.Weight && formType == UnitType.Volume && pairings.HasWeight)
                 {
                     NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] SUCCESS: Converting to default weight pairing, and setting prep note to: {0}", result.Form.FormDisplayName);
-                    result.PrepNote = result.Form.FormDisplayName;
+                    result.PreparationNote = result.Form.FormDisplayName;
                     result.Form = pairings.Weight;
                     return new AnomalousMatch(input, AnomalousResult.AutoConvert, result);
                 }
@@ -176,7 +176,7 @@ namespace KitchenPC.NLP
                     if (pairings.HasUnit && (matchdata.Unit == null || string.IsNullOrEmpty(matchdata.Unit.Name)))
                     {
                         NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] SUCCESS: Converting to default unit pairing, and setting prep note to: {0}", result.Form.FormDisplayName);
-                        result.PrepNote = result.Form.FormDisplayName;
+                        result.PreparationNote = result.Form.FormDisplayName;
                         result.Form = pairings.Unit;
                         return new AnomalousMatch(input, AnomalousResult.AutoConvert, result);
                     }
@@ -188,7 +188,7 @@ namespace KitchenPC.NLP
                         if (UnitSynonyms.TryGetFormForIngredient(matchdata.Unit.Name, matchdata.Ingredient.Id, out form))
                         {
                             NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] SUCCESS: Converting to custom unit pairing, and setting prep note to: {0}", result.Form.FormDisplayName);
-                            result.PrepNote = result.Form.FormDisplayName;
+                            result.PreparationNote = result.Form.FormDisplayName;
                             result.Form = form;
                             return new AnomalousMatch(input, AnomalousResult.AutoConvert, result);
                         }

@@ -239,7 +239,7 @@ namespace KitchenPC.Context
             recipe.Ingredients = riIndex[r.RecipeId].Select(i => new IngredientUsage
             {
                Amount = i.Qty.HasValue ? new Amount(i.Qty.Value, i.Unit) : null,
-               PrepNote = i.PrepNote,
+               PreparationNote = i.PrepNote,
                Section = i.Section,
                Form = i.IngredientFormId.HasValue ? IngredientForms.ToIngredientForm(formIndex[i.IngredientFormId.Value]) : null,
                Ingredient = Data.DTO.Ingredients.ToIngredient(ingIndex[i.IngredientId], imetaIndex[i.IngredientId])
