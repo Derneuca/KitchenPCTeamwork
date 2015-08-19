@@ -1,84 +1,93 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using KitchenPC.Data;
-using KitchenPC.Data.DTO;
-using KitchenPC.Modeler;
-using KitchenPC.ShoppingLists;
-
 namespace KitchenPC.Context
 {
-   public class StaticModelerLoader : IModelerLoader
-   {
-      readonly DataStore store;
-      IEnumerable<RecipeBinding> recipedata;
-      IEnumerable<IngredientBinding> ingredientdata;
-      IEnumerable<RatingBinding> ratingdata;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-      public StaticModelerLoader(DataStore store)
-      {
-         this.store = store;
-      }
+    using KitchenPC.Data;
+    using KitchenPC.Data.DTO;
+    using KitchenPC.Modeler;
+    using KitchenPC.ShoppingLists;
 
-      public IEnumerable<RecipeBinding> LoadRecipeGraph()
-      {
-         if (recipedata != null)
-            return recipedata;
+    public class StaticModelerLoader : IModelerLoader
+    {
+        private readonly DataStore store;
+        private IEnumerable<RecipeBinding> recipeData;
+        private IEnumerable<IngredientBinding> ingredientData;
+        private IEnumerable<RatingBinding> ratingData;
 
-         // Initialize Recipe Graph
-         var metadata = store.GetIndexedRecipeMetadata();
-         var graph = (from r in store.Recipes
-            join m in metadata on r.RecipeId equals m.Key
-            select new RecipeBinding
+        public StaticModelerLoader(DataStore store)
+        {
+            this.store = store;
+        }
+
+        public IEnumerable<RecipeBinding> LoadRecipeGraph()
+        {
+            if (this.recipeData != null)
             {
-               Id = r.RecipeId,
-               Rating = Convert.ToByte(r.Rating),
-               Tags = RecipeMetadata.ToRecipeTags(m.Value)
-            });
+                return this.recipeData;
+            }
 
-         return (recipedata = graph);
-      }
+            // Initialize Recipe Graph
+            var metadata = this.store.GetIndexedRecipeMetadata();
+            var graph = from recipe in this.store.Recipes
+                        join m in metadata on recipe.RecipeId equals m.Key
+                        select new RecipeBinding
+                        {
+                            Id = recipe.RecipeId,
+                            Rating = Convert.ToByte(recipe.Rating),
+                            Tags = RecipeMetadata.ToRecipeTags(m.Value)
+                        };
 
-      public IEnumerable<IngredientBinding> LoadIngredientGraph()
-      {
-         if (ingredientdata != null)
-            return ingredientdata;
+            this.recipeData = graph;
+            return this.recipeData;
+        }
 
-         var forms = store.GetIndexedIngredientForms();
-         var ingredients = store.GetIndexedIngredients();
-         var graph = (from ri in store.RecipeIngredients
-            join f in forms on ri.IngredientFormId equals f.Key
-            join i in ingredients on ri.IngredientId equals i.Key
-            where i.Key != ShoppingList.GuidWater
-            select IngredientBinding.Create(
-               i.Key,
-               ri.RecipeId,
-               ri.Qty,
-               ri.Unit,
-               i.Value.ConversionType,
-               i.Value.UnitWeight,
-               f.Value.UnitType,
-               f.Value.FormAmount,
-               f.Value.FormUnit
-               ));
-
-         return (ingredientdata = graph);
-      }
-
-      public IEnumerable<RatingBinding> LoadRatingGraph()
-      {
-         if (ratingdata != null)
-            return ratingdata;
-
-         var graph = (from r in store.RecipeRatings
-            select new RatingBinding
+        public IEnumerable<IngredientBinding> LoadIngredientGraph()
+        {
+            if (this.ingredientData != null)
             {
-               RecipeId = r.RecipeId,
-               UserId = r.UserId,
-               Rating = r.Rating
-            });
+                return this.ingredientData;
+            }
 
-         return (ratingdata = graph);
-      }
-   }
+            var forms = this.store.GetIndexedIngredientForms();
+            var ingredients = this.store.GetIndexedIngredients();
+            var graph = from recipeIngredient in this.store.RecipeIngredients
+                        join form in forms on recipeIngredient.IngredientFormId equals form.Key
+                        join ingredient in ingredients on recipeIngredient.IngredientId equals ingredient.Key
+                        where ingredient.Key != ShoppingList.GuidWater
+                        select IngredientBinding.Create(
+                           ingredient.Key,
+                           recipeIngredient.RecipeId,
+                           recipeIngredient.Qty,
+                           recipeIngredient.Unit,
+                           ingredient.Value.ConversionType,
+                           ingredient.Value.UnitWeight,
+                           form.Value.UnitType,
+                           form.Value.FormAmount,
+                           form.Value.FormUnit);
+
+            this.ingredientData = graph;
+            return this.ingredientData;
+        }
+
+        public IEnumerable<RatingBinding> LoadRatingGraph()
+        {
+            if (this.ratingData != null)
+            {
+                return this.ratingData;
+            }
+
+            var graph = from r in this.store.RecipeRatings
+                        select new RatingBinding
+                        {
+                            RecipeId = r.RecipeId,
+                            UserId = r.UserId,
+                            Rating = r.Rating
+                        };
+
+            this.ratingData = graph;
+            return this.ratingData;
+        }
+    }
 }
