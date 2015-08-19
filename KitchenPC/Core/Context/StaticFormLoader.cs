@@ -1,58 +1,60 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using KitchenPC.Data;
-using KitchenPC.Ingredients;
-using KitchenPC.NLP;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class StaticFormLoader : ISynonymLoader<FormNode>
-   {
-      readonly DataStore store;
+    using System.Collections.Generic;
+    using System.Linq;
 
-      public StaticFormLoader(DataStore store)
-      {
-         this.store = store;
-      }
+    using KitchenPC.Data;
+    using KitchenPC.Ingredients;
+    using KitchenPC.NLP;
 
-      public IEnumerable<FormNode> LoadSynonyms()
-      {
-         var formSyn = store.NlpFormSynonyms
-            .OrderBy(p => p.Name)
-            .Select(s => s.Name)
-            .Distinct()
-            .ToList();
+    public class StaticFormLoader : ISynonymLoader<FormNode>
+    {
+        private readonly DataStore store;
 
-         return new List<FormNode>(formSyn.Select(s => new FormNode(s)));
-      }
+        public StaticFormLoader(DataStore store)
+        {
+            this.store = store;
+        }
 
-      public Pairings LoadFormPairings()
-      {
-         var forms = store.GetIndexedIngredientForms();
-         var formSyn = store.NlpFormSynonyms;
-         var pairings = new Pairings();
+        public IEnumerable<FormNode> LoadSynonyms()
+        {
+            var formSynonyms = this.store.NlpFormSynonyms
+               .OrderBy(p => p.Name)
+               .Select(s => s.Name)
+               .Distinct()
+               .ToList();
 
-         foreach (var syn in formSyn)
-         {
-            var f = forms[syn.FormId];
+            var result = new List<FormNode>(formSynonyms.Select(s => new FormNode(s)));
+            return result;
+        }
 
-            var name = syn.Name;
-            var ing = syn.IngredientId;
-            var form = f.IngredientFormId;
-            var convType = f.UnitType;
-            var displayName = f.FormDisplayName;
-            var unitName = f.UnitName;
-            int convMultiplier = f.ConversionMultiplier;
-            var formAmt = f.FormAmount;
-            var formUnit = f.FormUnit;
-            var amount = new Amount(formAmt, formUnit);
+        public Pairings LoadFormPairings()
+        {
+            var forms = this.store.GetIndexedIngredientForms();
+            var formSynonyms = this.store.NlpFormSynonyms;
+            var pairings = new Pairings();
 
-            pairings.Add(
-               new NameIngredientPair(name, ing),
-               new IngredientForm(form, ing, convType, displayName, unitName, convMultiplier, amount));
-         }
+            foreach (var synonym in formSynonyms)
+            {
+                var ingredientForm = forms[synonym.FormId];
 
-         return pairings;
-      }
-   }
+                string name = synonym.Name;
+                var ingredientId = synonym.IngredientId;
+                var form = ingredientForm.IngredientFormId;
+                var convertionType = ingredientForm.UnitType;
+                string displayName = ingredientForm.FormDisplayName;
+                string unitName = ingredientForm.UnitName;
+                int convertionMultiplier = ingredientForm.ConversionMultiplier;
+                float formAmount = ingredientForm.FormAmount;
+                var formUnit = ingredientForm.FormUnit;
+                var amount = new Amount(formAmount, formUnit);
+
+                pairings.Add(
+                   new NameIngredientPair(name, ingredientId),
+                   new IngredientForm(form, ingredientId, convertionType, displayName, unitName, convertionMultiplier, amount));
+            }
+
+            return pairings;
+        }
+    }
 }
