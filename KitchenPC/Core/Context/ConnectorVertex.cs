@@ -1,33 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class ConnectorVertex
-   {
-      readonly List<IngredientNode> connections;
+    using System.Collections.Generic;
+    using System.Linq;
 
-      public ConnectorVertex()
-      {
-         connections = new List<IngredientNode>();
-      }
+    public class ConnectorVertex
+    {
+        private readonly List<IngredientNode> connections;
 
-      public IEnumerable<IngredientNode> Connections
-      {
-         get
-         {
-            return connections.AsEnumerable();
-         }
-      }
+        public ConnectorVertex()
+        {
+            this.connections = new List<IngredientNode>();
+        }
 
-      public void AddConnection(IngredientNode node)
-      {
-         connections.Add(node);
-      }
+        public IEnumerable<IngredientNode> Connections
+        {
+            get
+            {
+                return this.connections.AsEnumerable();
+            }
+        }
 
-      public bool HasConnection(IngredientNode node)
-      {
-         return connections.Contains<IngredientNode>(node);
-      }
-   }
+        public void AddConnection(IngredientNode node)
+        {
+            this.connections.Add(node);
+        }
+
+        public bool HasConnection(IngredientNode node)
+        {
+            return this.connections.Contains<IngredientNode>(node);
+        }
+    }
 }
