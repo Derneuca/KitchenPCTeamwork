@@ -1,37 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using KitchenPC.Data;
-using KitchenPC.NLP;
-
-namespace KitchenPC.Context
+﻿namespace KitchenPC.Context
 {
-   public class StaticPrepLoader : ISynonymLoader<PrepNode>
-   {
-      readonly DataStore store;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-      public StaticPrepLoader(DataStore store)
-      {
-         this.store = store;
-      }
+    using KitchenPC.Data;
+    using KitchenPC.NLP;
 
-      public IEnumerable<PrepNode> LoadSynonyms()
-      {
-         var forms = store.NlpFormSynonyms.Select(p => p.Name);
-         var preps = store.NlpPrepNotes.Select(p => p.Name);
+    public class StaticPrepLoader : ISynonymLoader<PrepNode>
+    {
+        private readonly DataStore store;
 
-         var ret = forms
-            .Concat(preps)
-            .Distinct()
-            .Select(p => new PrepNode(p))
-            .ToList();
+        public StaticPrepLoader(DataStore store)
+        {
+            this.store = store;
+        }
 
-         return ret;
-      }
+        public IEnumerable<PrepNode> LoadSynonyms()
+        {
+            var forms = this.store.NlpFormSynonyms.Select(p => p.Name);
+            var preps = this.store.NlpPrepNotes.Select(p => p.Name);
 
-      public Pairings LoadFormPairings()
-      {
-         throw new NotImplementedException();
-      }
-   }
+            var result = forms
+               .Concat(preps)
+               .Distinct()
+               .Select(p => new PrepNode(p))
+               .ToList();
+
+            return result;
+        }
+
+        public Pairings LoadFormPairings()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
