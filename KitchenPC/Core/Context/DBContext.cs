@@ -644,6 +644,7 @@
         protected virtual void LoadTemplates()
         {
             this.parser.LoadTemplates(
+
                 // Allow partial ingredient parsing (such as "eggs")
                 new Template("[ING]") 
                 { 

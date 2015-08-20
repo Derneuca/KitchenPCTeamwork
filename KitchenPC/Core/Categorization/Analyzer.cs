@@ -87,7 +87,12 @@
             var sortedMealsByScore = meals.OrderByDescending(meal => meal.Score).ToArray();
             var firstPlace = sortedMealsByScore[0];
             var secondPlace = (sortedMealsByScore[1].Score / sortedMealsByScore[0].Score > 0.8f) ? sortedMealsByScore[1] : null;
-            var result = new AnalyzerResult(firstPlace.Type, (secondPlace != null ? secondPlace.Type : Category.None));
+            var result = 
+                new AnalyzerResult(
+                    firstPlace.Type, 
+                    secondPlace != null 
+                    ? secondPlace.Type 
+                    : Category.None);
             return result;
         }
 

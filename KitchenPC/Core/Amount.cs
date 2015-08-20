@@ -264,7 +264,5 @@ namespace KitchenPC
         {
             return this.SizeLow.GetHashCode() ^ this.SizeHigh.GetHashCode();
         }
-
-        
     }
 }

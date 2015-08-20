@@ -18,8 +18,8 @@
             var tokens = new List<IToken>();
             tokens.AddRange(ParseText(recipe.Title ?? string.Empty));
             tokens.AddRange(ParseText(recipe.Description ?? string.Empty));
-            //tokens.AddRange(ParseText(recipe.Method ?? string.Empty));
-            //tokens.Add(new TimeToken(recipe.CookTime.GetValueOrDefault() + recipe.PrepTime.GetValueOrDefault()));
+            // tokens.AddRange(ParseText(recipe.Method ?? string.Empty));
+            // tokens.Add(new TimeToken(recipe.CookTime.GetValueOrDefault() + recipe.PrepTime.GetValueOrDefault()));
             tokens.AddRange(
                 from i in recipe.Ingredients.NeverNull()
                 select new IngredientToken(i.Ingredient) as IToken);

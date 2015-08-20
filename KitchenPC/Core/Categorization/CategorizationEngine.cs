@@ -98,15 +98,17 @@
             // First, convert every ingredient to weight
             foreach (var usage in recipe.Ingredients)
             {
-                if (usage.Amount == null) // No amount specified for this ingredient (TODO: Any way to estimate this?)
+                if (usage.Amount == null) 
                 {
+                    // No amount specified for this ingredient (TODO: Any way to estimate this?)
                     noMatch = true;
                     continue;
                 }
 
                 var meta = usage.Ingredient.Metadata;
-                if (meta == null) // TODO: Log if ingredient has no metadata
+                if (meta == null) 
                 {
+                    // TODO: Log if ingredient has no metadata
                     noMatch = true;
                     continue;
                 }
@@ -187,6 +189,7 @@
                 {
                     continue; // No amount specified for this ingredient (TODO: Any way to estimate this?)
                 }
+
                 if (usage.Ingredient.Metadata == null)
                 {
                     continue; // TODO: Log if ingredient has no metadata

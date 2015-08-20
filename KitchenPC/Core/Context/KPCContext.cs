@@ -1,8 +1,8 @@
 ﻿namespace KitchenPC.Context
 {
-    using log4net;
-
     using KitchenPC.Context.Interfaces;
+
+    using log4net;
 
     public static class KPCContext
     {

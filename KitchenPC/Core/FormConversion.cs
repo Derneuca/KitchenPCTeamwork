@@ -89,6 +89,7 @@ namespace KitchenPC
 
                         break;
                     }
+
                 case UnitType.Weight:
                     {
                         amount.Unit = Units.Gram;
@@ -112,6 +113,7 @@ namespace KitchenPC
 
                         break;
                     }
+
                 case UnitType.Volume:
                     {
                         amount.Unit = Units.Teaspoon;
