@@ -1,6 +1,8 @@
 namespace KitchenPC
 {
     using System;
+
+    using KitchenPC.Exceptions;
     using KitchenPC.Ingredients;
 
     public static class FormConversion
@@ -135,8 +137,7 @@ namespace KitchenPC
                     }
             }
 
-            //throw new IngredientAggregationDatabaseException("Cannot convert an IngredientUsage into its native form.", ingredient, usage);
-            throw new Exception("Cannot convert an IngredientUsage into its native form.");
+            throw new IngredientAggregationDatabaseException(string.Format("Cannot convert an IngredientUsage into its native form.", ingredient, usage));
         }
     }
 }
