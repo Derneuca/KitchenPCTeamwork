@@ -1,222 +1,261 @@
-using System;
-
 namespace KitchenPC
 {
-   public class Amount : IEquatable<Amount>
-   {
-      public Single? SizeLow;
-      public Single SizeHigh;
-      public Units Unit;
+    using System;
 
-      /// <summary>Attempts to find a more suitable unit for this amount.</summary>
-      public static Amount Normalize(Amount amount, float multiplier)
-      {
-         var ret = new Amount(amount)*multiplier;
-         var low = ret.SizeLow.GetValueOrDefault();
-         var hi = ret.SizeHigh;
+    public class Amount : IEquatable<Amount>
+    {
+        public Amount(float size, Units unit)
+        {
+            this.SizeHigh = size;
+            this.Unit = unit;
+        }
 
-         if (KitchenPC.Unit.GetConvType(ret.Unit) == UnitType.Weight)
-         {
-            if (ret.Unit == Units.Ounce && (low%16 + hi%16) == 0)
+        public Amount()
+            : this(0, Units.Unit)
+        {
+        }
+
+        public Amount(float? fromUnit, float toUnit, Units unit)
+        {
+            this.SizeLow = fromUnit;
+            this.SizeHigh = toUnit;
+            this.Unit = unit;
+        }
+
+        public Amount(Amount amount)
+            : this(amount.SizeLow, amount.SizeHigh, amount.Unit)
+        {
+        }
+
+        public float? SizeLow { get; set; }
+
+        public float SizeHigh { get; set; }
+
+        public Units Unit { get; set; }
+
+        public static Amount operator *(Amount amount, float coefficient)
+        {
+            var result = new Amount(amount.SizeLow * coefficient, amount.SizeHigh * coefficient, amount.Unit);
+            return result;
+        }
+
+        public static Amount operator /(Amount amount, float denominator)
+        {
+            var result = new Amount(amount.SizeLow / denominator, amount.SizeHigh / denominator, amount.Unit);
+            return result;
+        }
+
+        public static Amount operator +(Amount amount, float addition)
+        {
+            var result = new Amount(amount.SizeLow + addition, amount.SizeHigh + addition, amount.Unit);
+            return result;
+        }
+
+        public static Amount operator -(Amount amount, float subtrahend)
+        {
+            var result = new Amount(amount.SizeLow - subtrahend, amount.SizeHigh - subtrahend, amount.Unit);
+            return result;
+        }
+
+        public static Amount operator +(Amount firstAmount, Amount secondAmount)
+        {
+            if (firstAmount.Unit == secondAmount.Unit)
             {
-               ret /= 16;
-               ret.Unit = Units.Pound;
-            }
-         }
+                if (firstAmount.SizeLow.HasValue && secondAmount.SizeLow.HasValue)
+                {
+                    var result = 
+                        new Amount(
+                            firstAmount.SizeLow + secondAmount.SizeLow, 
+                            firstAmount.SizeHigh + secondAmount.SizeHigh, 
+                            firstAmount.Unit);
+                    return result;
+                }
 
-         if (KitchenPC.Unit.GetConvType(ret.Unit) == UnitType.Volume)
-         {
-            //If teaspoons, convert to Tlb (3tsp in 1Tbl)
-            if (ret.Unit == Units.Teaspoon && (low%3 + hi%3) == 0)
+                if (firstAmount.SizeLow.HasValue)
+                {
+                    var result = 
+                        new Amount(
+                            firstAmount.SizeLow + secondAmount.SizeHigh, 
+                            firstAmount.SizeHigh + secondAmount.SizeHigh, 
+                            firstAmount.Unit);
+                    return result;
+                }
+
+                if (secondAmount.SizeLow.HasValue)
+                {
+                    var result = 
+                        new Amount(
+                            firstAmount.SizeHigh + secondAmount.SizeLow, 
+                            firstAmount.SizeHigh + secondAmount.SizeHigh, 
+                            firstAmount.Unit);
+                    return result;
+                }
+                
+                var resultAmount = 
+                    new Amount(
+                        firstAmount.SizeHigh + secondAmount.SizeHigh, 
+                        firstAmount.Unit);
+                return resultAmount;
+            }
+
+            if (UnitConverter.CanConvert(firstAmount.Unit, secondAmount.Unit))
             {
-               ret /= 3;
-               ret.Unit = Units.Tablespoon;
+                // TODO: Handle range + nonrange
+                var newLow = 
+                    secondAmount.SizeLow.HasValue 
+                    ? (float?)UnitConverter.Convert(secondAmount.SizeLow.Value, secondAmount.Unit, firstAmount.Unit) 
+                    : null;
+                var newHigh = firstAmount.SizeHigh + UnitConverter.Convert(secondAmount.SizeHigh, secondAmount.Unit, firstAmount.Unit);
+                var result = new Amount(newLow, newHigh, firstAmount.Unit);
+                return result;
             }
 
-            //If Fl Oz, convert to cup (8 fl oz in 1 cup)
-            if (ret.Unit == Units.FluidOunce && (low%8 + hi%8) == 0)
+            throw new IncompatibleAmountException();
+        }
+
+        public static bool operator ==(Amount firstAmount, Amount secondAmount)
+        {
+            return firstAmount.Equals(secondAmount);
+        }
+
+        public static bool operator !=(Amount firstAmount, Amount secondAmount)
+        {
+            return firstAmount.Equals(secondAmount);
+        }
+
+        /// <summary>Attempts to find a more suitable unit for this amount.</summary>
+        public static Amount Normalize(Amount amount, float multiplier)
+        {
+            var result = new Amount(amount) * multiplier;
+            float lowSize = result.SizeLow.GetValueOrDefault();
+            float highSize = result.SizeHigh;
+
+            if (KitchenPC.Unit.GetConvertionType(result.Unit) == UnitType.Weight)
             {
-               ret /= 8;
-               ret.Unit = Units.Cup;
+                if (result.Unit == Units.Ounce &&
+                    lowSize % 16 + highSize % 16 == 0)
+                {
+                    result /= 16;
+                    result.Unit = Units.Pound;
+                }
             }
 
-            //If pints, convert to quarts (2 pints in a quart)
-            if (ret.Unit == Units.Pint && (low%2 + hi%2) == 0)
+            if (KitchenPC.Unit.GetConvertionType(result.Unit) == UnitType.Volume)
             {
-               ret /= 2;
-               ret.Unit = Units.Quart;
+                // If teaspoons, convert to Tlb (3tsp in 1Tbl)
+                if (result.Unit == Units.Teaspoon &&
+                    lowSize % 3 + highSize % 3 == 0)
+                {
+                    result /= 3;
+                    result.Unit = Units.Tablespoon;
+                }
+
+                // If Fl Oz, convert to cup (8 fl oz in 1 cup)
+                if (result.Unit == Units.FluidOunce &&
+                    lowSize % 8 + highSize % 8 == 0)
+                {
+                    result /= 8;
+                    result.Unit = Units.Cup;
+                }
+
+                // If pints, convert to quarts (2 pints in a quart)
+                if (result.Unit == Units.Pint &&
+                    lowSize % 2 + highSize % 2 == 0)
+                {
+                    result /= 2;
+                    result.Unit = Units.Quart;
+                }
+
+                // If quarts, convert to gallons (4 quarts in a gallon)
+                if (result.Unit == Units.Quart &&
+                    lowSize % 4 + highSize % 4 == 0)
+                {
+                    result /= 4;
+                    result.Unit = Units.Gallon;
+                }
             }
 
-             //If quarts, convert to gallons (4 quarts in a gallon)
-             if (ret.Unit == Units.Quart && (low % 4 + hi % 4) == 0)
-             {
-                 ret /= 4;
-               ret.Unit = Units.Gallon;
+            return result;
+        }
+
+        public Amount Round(int decimalPlaces)
+        {
+            var result = new Amount(this);
+            result.SizeLow =
+                this.SizeLow.HasValue
+                ? (float?)Math.Round(this.SizeLow.Value, decimalPlaces)
+                : null;
+            result.SizeHigh = (float)Math.Round(this.SizeHigh, decimalPlaces);
+            return result;
+        }
+
+        public Amount RoundUp(float nearestMultiple)
+        {
+            var result = new Amount(this);
+            result.SizeLow =
+                this.SizeLow.HasValue
+                ? (float?)(Math.Ceiling(this.SizeLow.Value / nearestMultiple) * nearestMultiple)
+                : null;
+            result.SizeHigh = (float)Math.Ceiling(this.SizeHigh / nearestMultiple) * nearestMultiple;
+            return result;
+        }
+
+        public string ToString(string unit)
+        {
+            string highSize;
+            string lowSize;
+
+            if (KitchenPC.Unit.GetConvertionType(this.Unit) == UnitType.Weight)
+            {
+                // Render in decimal
+                highSize = Math.Round(this.SizeHigh, 2).ToString();
+                lowSize = this.SizeLow.HasValue ? Math.Round(this.SizeLow.Value, 2).ToString() : null;
             }
-         }
+            else
+            {
+                // Render in fractions
+                highSize = Fractions.FromDecimal((decimal)this.SizeHigh);
+                lowSize = this.SizeLow.HasValue ? Fractions.FromDecimal((decimal)this.SizeLow.Value) : null;
+            }
 
-         return ret;
-      }
+            var amount =
+                lowSize != null
+                ? string.Format("{0} - {1}", lowSize, highSize)
+                : highSize;
+            return string.Format("{0} {1}", amount, unit).Trim();
+        }
 
-      public Amount(Single size, Units unit)
-      {
-         SizeHigh = size;
-         Unit = unit;
-      }
+        public override string ToString()
+        {
+            return this.ToString(
+                this.SizeLow.HasValue || this.SizeHigh > 1
+                ? KitchenPC.Unit.GetPlural(this.Unit) 
+                : KitchenPC.Unit.GetSingular(this.Unit));
+        }
 
-      public Amount(Single? from, Single to, Units unit)
-      {
-         SizeLow = from;
-         SizeHigh = to;
-         Unit = unit;
-      }
+        public override bool Equals(object obj)
+        {
+            var other = obj as Amount;
+            if (object.ReferenceEquals(other, null) ||
+                object.ReferenceEquals(this, null))
+            {
+                return false;
+            }
 
-      public Amount(Amount amount)
-      {
-         SizeLow = amount.SizeLow;
-         SizeHigh = amount.SizeHigh;
-         Unit = amount.Unit;
-      }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
 
-      public Amount() : this(0, Units.Unit)
-      {
-      }
+            return 
+                other.SizeLow == this.SizeLow && 
+                other.SizeHigh == this.SizeHigh && 
+                other.Unit == this.Unit;
+        }
 
-      public static Amount operator *(Amount amt, float coef)
-      {
-         return new Amount(amt.SizeLow*coef, amt.SizeHigh*coef, amt.Unit);
-      }
-
-      public static Amount operator /(Amount amt, float den)
-      {
-         return new Amount(amt.SizeLow/den, amt.SizeHigh/den, amt.Unit);
-      }
-
-      public static Amount operator +(Amount amt, float oper)
-      {
-         return new Amount(amt.SizeLow + oper, amt.SizeHigh + oper, amt.Unit);
-      }
-
-      public static Amount operator -(Amount amt, float oper)
-      {
-         return new Amount(amt.SizeLow - oper, amt.SizeHigh - oper, amt.Unit);
-      }
-
-      public static Amount operator +(Amount a1, Amount a2)
-      {
-         if (a1.Unit == a2.Unit) //Just add
-         {
-            if (a1.SizeLow.HasValue && a2.SizeLow.HasValue) //Combine the lows, combine the highs
-               return new Amount(a1.SizeLow + a2.SizeLow, a1.SizeHigh + a2.SizeHigh, a1.Unit);
-
-            if (a1.SizeLow.HasValue) //(1-2) + 1 = (2-3)
-               return new Amount(a1.SizeLow + a2.SizeHigh, a1.SizeHigh + a2.SizeHigh, a1.Unit);
-
-            if (a2.SizeLow.HasValue) //1 + (1-2) = (2-3)
-               return new Amount(a1.SizeHigh + a2.SizeLow, a1.SizeHigh + a2.SizeHigh, a1.Unit);
-
-            //just combine the highs
-            return new Amount(a1.SizeHigh + a2.SizeHigh, a1.Unit);
-         }
-
-         if (UnitConverter.CanConvert(a1.Unit, a2.Unit))
-         {
-            //TODO: Handle range + nonrange
-            var newLow = a2.SizeLow.HasValue ? (float?) UnitConverter.Convert(a2.SizeLow.Value, a2.Unit, a1.Unit) : null;
-            var newHigh = a1.SizeHigh + UnitConverter.Convert(a2.SizeHigh, a2.Unit, a1.Unit);
-            return new Amount(newLow, newHigh, a1.Unit);
-         }
-
-         throw new IncompatibleAmountException();
-      }
-
-      public Amount Round(int decimalPlaces)
-      {
-         var ret = new Amount(this);
-
-         ret.SizeLow = SizeLow.HasValue ? (float?) Math.Round(SizeLow.Value, decimalPlaces) : null;
-         ret.SizeHigh = (float) Math.Round(SizeHigh, decimalPlaces);
-
-         return ret;
-      }
-
-      public Amount RoundUp(Single nearestMultiple)
-      {
-         var ret = new Amount(this);
-         ret.SizeLow = SizeLow.HasValue ? (float?) (Math.Ceiling(SizeLow.Value/nearestMultiple)*nearestMultiple) : null;
-         ret.SizeHigh = (float) Math.Ceiling(SizeHigh/nearestMultiple)*nearestMultiple;
-
-         return ret;
-      }
-
-      public override string ToString()
-      {
-         return ToString((SizeLow.HasValue || SizeHigh > 1) ? KitchenPC.Unit.GetPlural(Unit) : KitchenPC.Unit.GetSingular(Unit));
-      }
-
-      public string ToString(string unit)
-      {
-         string hi;
-         string low;
-
-         if (KitchenPC.Unit.GetConvType(Unit) == UnitType.Weight) //Render in decimal
-         {
-            hi = Math.Round(SizeHigh, 2).ToString();
-            low = SizeLow.HasValue ? Math.Round(SizeLow.Value, 2).ToString() : null;
-         }
-         else //Render in fractions
-         {
-            hi = Fractions.FromDecimal((decimal) SizeHigh);
-            low = SizeLow.HasValue ? Fractions.FromDecimal((decimal) SizeLow.Value) : null;
-         }
-
-         var amt = (low != null) ? String.Format("{0} - {1}", low, hi) : hi;
-         return String.Format("{0} {1}", amt, unit).Trim();
-      }
-
-      public bool Equals(Amount other)
-      {
-         if (other is Amount) //Check for null
-         {
-            return (other.SizeLow == SizeLow && other.SizeHigh == SizeHigh && other.Unit == Unit);
-         }
-
-         return false;
-      }
-
-      public override bool Equals(object obj)
-      {
-         if (obj is Amount)
-         {
-            return this.Equals((Amount) obj);
-         }
-
-         return false;
-      }
-
-      public static bool operator ==(Amount x, Amount y)
-      {
-         if (x is Amount)
-         {
-            return x.Equals(y);
-         }
-
-         return !(y is Amount);
-      }
-
-      public static bool operator !=(Amount x, Amount y)
-      {
-         if (x is Amount)
-         {
-            return !x.Equals(y);
-         }
-
-         return (y is Amount);
-      }
-
-      public override int GetHashCode()
-      {
-         return SizeLow.GetHashCode() ^ SizeHigh.GetHashCode();
-      }
-   }
+        public override int GetHashCode()
+        {
+            return this.SizeLow.GetHashCode() ^ this.SizeHigh.GetHashCode();
+        }
+    }
 }

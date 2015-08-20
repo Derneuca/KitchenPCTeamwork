@@ -97,7 +97,7 @@ namespace KitchenPC.NLP
                 }
                 else
                 {
-                    switch (Unit.GetConvType(matchdata.Unit.Unit))
+                    switch (Unit.GetConvertionType(matchdata.Unit.Unit))
                     {
                         case UnitType.Volume:
                             result.Form = pairings.Volume;
@@ -123,8 +123,8 @@ namespace KitchenPC.NLP
                 }
             }
 
-            var parsedType = Unit.GetConvType(result.Amount.Unit);
-            if (result.Form != null && parsedType == Unit.GetConvType(result.Form.FormUnitType))
+            var parsedType = Unit.GetConvertionType(result.Amount.Unit);
+            if (result.Form != null && parsedType == Unit.GetConvertionType(result.Form.FormUnitType))
             {
                 NlpTracer.Trace(TraceLevel.Info, "[BuildResult] SUCCESS: Linked form is compatible with usage reference.");
                 return new Match(input, result);
@@ -142,7 +142,7 @@ namespace KitchenPC.NLP
                 {
                     result.Form = form;
 
-                    if (parsedType == Unit.GetConvType(result.Form.FormUnitType))
+                    if (parsedType == Unit.GetConvertionType(result.Form.FormUnitType))
                     {
                         NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] SUCCESS: Found matching volumetric form, allowing prep to form fall-through.");
                         result.PreparationNote = matchdata.Preps.ToString();
@@ -162,7 +162,7 @@ namespace KitchenPC.NLP
             if (result.Form != null)
             {
                 NlpTracer.Trace(TraceLevel.Debug, "[BuildResult] Form and unit incompatible - attempting to auto-convert form {0}", result.Form);
-                var formType = Unit.GetConvType(result.Form.FormUnitType);
+                var formType = Unit.GetConvertionType(result.Form.FormUnitType);
 
                 if (parsedType == UnitType.Weight && formType == UnitType.Volume && pairings.HasWeight)
                 {

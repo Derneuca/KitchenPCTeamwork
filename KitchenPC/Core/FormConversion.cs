@@ -7,7 +7,7 @@ namespace KitchenPC
    {
       public static Amount GetWeightForUsage(IngredientUsage usage)
       {
-         if (Unit.GetConvType(usage.Form.FormUnitType) == UnitType.Weight) //Already there, just convert to grams
+         if (Unit.GetConvertionType(usage.Form.FormUnitType) == UnitType.Weight) //Already there, just convert to grams
          {
             return UnitConverter.Convert(usage.Amount, Units.Gram);
          }
@@ -27,7 +27,7 @@ namespace KitchenPC
             return amt;
          }
 
-         if (Unit.GetConvType(usage.Form.FormAmount.Unit) == UnitType.Weight && usage.Form.FormAmount.SizeHigh > 0) //This form has a gram weight
+         if (Unit.GetConvertionType(usage.Form.FormAmount.Unit) == UnitType.Weight && usage.Form.FormAmount.SizeHigh > 0) //This form has a gram weight
          {
             var amt = UnitConverter.Convert(usage.Amount, usage.Form.FormUnitType);
             return new Amount(amt.SizeHigh*usage.Form.FormAmount.SizeHigh, Units.Gram);
@@ -39,7 +39,7 @@ namespace KitchenPC
       public static Amount GetNativeAmountForUsage(Ingredient ingredient, IngredientUsage usage)
       {
          var amount = new Amount();
-         var usageConvType = Unit.GetConvType(usage.Form.FormUnitType);
+         var usageConvType = Unit.GetConvertionType(usage.Form.FormUnitType);
 
          switch (ingredient.ConversionType) //This is the type we must convert to
          {

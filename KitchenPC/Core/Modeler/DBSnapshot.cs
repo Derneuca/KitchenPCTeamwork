@@ -191,7 +191,7 @@
                     var ingredientId = o.IngredientId;
                     var qty = o.Qty;
                     var unit = o.Unit;
-                    var convType = Unit.GetConvType(unit);
+                    var convType = Unit.GetConvertionType(unit);
 
                     List<RecipeNode>[] nodes;
                     IngredientNode ingredientNode;

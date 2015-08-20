@@ -44,7 +44,7 @@ namespace KitchenPC
          return Plural[(int) unitType];
       }
 
-      public static UnitType GetConvType(Units unitType)
+      public static UnitType GetConvertionType(Units unitType)
       {
          switch (unitType)
          {

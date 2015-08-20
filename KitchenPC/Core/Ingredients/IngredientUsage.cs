@@ -67,7 +67,7 @@
                 ingredientName += string.Format(" ({0})", this.Form.FormDisplayName);
             }
 
-            var unitType = Unit.GetConvType(this.Form.FormUnitType);
+            var unitType = Unit.GetConvertionType(this.Form.FormUnitType);
 
             if (unitType == UnitType.Unit && !string.IsNullOrEmpty(this.Form.FormUnitName))
             {
