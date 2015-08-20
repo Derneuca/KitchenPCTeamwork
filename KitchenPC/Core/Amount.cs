@@ -225,6 +225,11 @@ namespace KitchenPC
             return string.Format("{0} {1}", amount, unit).Trim();
         }
 
+        public bool Equals(Amount other)
+        {
+            return this.Equals((object)other);
+        }
+
         public override string ToString()
         {
             return this.ToString(
@@ -257,5 +262,7 @@ namespace KitchenPC
         {
             return this.SizeLow.GetHashCode() ^ this.SizeHigh.GetHashCode();
         }
+
+        
     }
 }

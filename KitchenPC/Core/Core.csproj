@@ -170,7 +170,7 @@
     <Compile Include="Context\StaticPrepLoader.cs" />
     <Compile Include="Context\StaticSearch.cs" />
     <Compile Include="Context\StaticUnitLoader.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="UnitType.cs" />
     <Compile Include="Fluent\Menus\MenuAction.cs" />
     <Compile Include="Fluent\Menus\MenuCreator.cs" />
     <Compile Include="Fluent\Menus\MenuDeleter.cs" />
@@ -343,6 +343,7 @@
     <Compile Include="ShoppingLists\ShoppingListUpdateType.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="UnitConverter.cs" />
+    <Compile Include="Units.cs" />
     <Compile Include="Weight.cs" />
   </ItemGroup>
   <ItemGroup>
