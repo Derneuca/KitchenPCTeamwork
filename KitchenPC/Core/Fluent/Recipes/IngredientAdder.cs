@@ -4,6 +4,7 @@
     using System.Linq;
 
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.Ingredients;
     using KitchenPC.NLP;
     using KitchenPC.Recipes;

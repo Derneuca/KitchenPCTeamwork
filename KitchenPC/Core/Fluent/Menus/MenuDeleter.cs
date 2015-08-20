@@ -4,6 +4,7 @@
     using System.Linq;
 
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.Menus;
 
     /// <summary>Represents one or more menus to be deleted.</summary>

@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using KitchenPC.Exceptions;
+
     public class IngredientParser
     {
         private const int MinimumSubstring = 3;

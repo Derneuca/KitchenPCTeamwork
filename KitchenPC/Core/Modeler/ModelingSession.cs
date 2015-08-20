@@ -6,6 +6,7 @@ namespace KitchenPC.Modeler
     using System.Linq;
 
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.Recipes;
     using log4net;
 

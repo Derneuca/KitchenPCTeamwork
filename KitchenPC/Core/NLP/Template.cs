@@ -6,6 +6,7 @@ namespace KitchenPC.NLP
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Exceptions;
     using Enums;
     using Tokens;
 

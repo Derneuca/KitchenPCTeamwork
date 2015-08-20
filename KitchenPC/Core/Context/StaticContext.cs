@@ -10,6 +10,7 @@
     using KitchenPC.Context.Interfaces;
     using KitchenPC.Data;
     using KitchenPC.Data.DTO;
+    using KitchenPC.Exceptions;
     using KitchenPC.Fluent.Menus;
     using KitchenPC.Fluent.Modeler;
     using KitchenPC.Fluent.Queue;

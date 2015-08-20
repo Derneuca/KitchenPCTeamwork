@@ -5,6 +5,7 @@
     using System.Linq;
 
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.ShoppingLists;
 
     public class ShoppingListUpdater

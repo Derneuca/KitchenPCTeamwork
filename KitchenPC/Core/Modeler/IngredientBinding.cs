@@ -1,6 +1,8 @@
 namespace KitchenPC.Modeler
 {
     using System;
+
+    using KitchenPC.Exceptions;
     using KitchenPC.Ingredients;
 
     public struct IngredientBinding

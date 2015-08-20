@@ -7,6 +7,7 @@
     using Context.Interfaces;
     using Context;
     using Data;
+    using Exceptions;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using FluentNHibernate.Conventions;

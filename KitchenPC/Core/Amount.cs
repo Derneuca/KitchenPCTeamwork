@@ -2,6 +2,8 @@ namespace KitchenPC
 {
     using System;
 
+    using KitchenPC.Exceptions;
+
     public class Amount : IEquatable<Amount>
     {
         public Amount(float size, Units unit)

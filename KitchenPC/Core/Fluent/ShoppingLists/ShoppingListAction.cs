@@ -1,6 +1,7 @@
 ﻿namespace KitchenPC.Fluent.ShoppingLists
 {
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.ShoppingLists;
 
     /// <summary>Provides the ability to fluently express shopping list related actions, such as loading, creating or updating lists.</summary>

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using KitchenPC.Context.Interfaces;
+    using KitchenPC.Exceptions;
     using KitchenPC.ShoppingLists;
 
     public class ShoppingListLoader

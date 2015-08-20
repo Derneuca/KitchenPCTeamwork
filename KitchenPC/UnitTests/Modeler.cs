@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using KitchenPC.Exceptions;
 using KitchenPC.Context;
 using KitchenPC.Context.Interfaces;
 using KPCServer.UnitTests;

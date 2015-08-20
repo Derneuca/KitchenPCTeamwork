@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
+    using KitchenPC.Exceptions;
     using KitchenPC.Ingredients;
     using KitchenPC.Recipes.Enums;
 
