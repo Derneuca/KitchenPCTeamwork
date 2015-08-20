@@ -1,92 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-
-namespace KitchenPC
+﻿namespace KitchenPC
 {
-   public static class Extensions
-   {
-      public struct ReadLockHelper : IDisposable
-      {
-         readonly ReaderWriterLockSlim readerWriterLock;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
 
-         public ReadLockHelper(ReaderWriterLockSlim readerWriterLock)
-         {
-            readerWriterLock.EnterReadLock();
-            this.readerWriterLock = readerWriterLock;
-         }
+    public static class Extensions
+    {
+        public static string Truncate(this string value, int maxLength)
+        {
+            string result =
+                string.IsNullOrEmpty(value)
+                ? value
+                : value.Substring(0, Math.Min(value.Length, maxLength));
+            return result;
+        }
 
-         public void Dispose()
-         {
-            this.readerWriterLock.ExitReadLock();
-         }
-      }
+        /// <summary>Returns an enumeration, or an empty list if the value is null.</summary>
+        public static IEnumerable<T> NeverNull<T>(this IEnumerable<T> value)
+        {
+            return value ?? Enumerable.Empty<T>();
+        }
 
-      public struct UpgradeableReadLockHelper : IDisposable
-      {
-         readonly ReaderWriterLockSlim readerWriterLock;
+        public static void ForEach<T>(this IEnumerable<T> query, Action<T> method)
+        {
+            foreach (var i in query)
+            {
+                method(i);
+            }
+        }
 
-         public UpgradeableReadLockHelper(ReaderWriterLockSlim readerWriterLock)
-         {
-            readerWriterLock.EnterUpgradeableReadLock();
-            this.readerWriterLock = readerWriterLock;
-         }
+        public static ReadLockHelper ReadLock(this ReaderWriterLockSlim readerWriterLock)
+        {
+            return new ReadLockHelper(readerWriterLock);
+        }
 
-         public void Dispose()
-         {
-            this.readerWriterLock.ExitUpgradeableReadLock();
-         }
-      }
+        public static UpgradeableReadLockHelper UpgradableReadLock(this ReaderWriterLockSlim readerWriterLock)
+        {
+            return new UpgradeableReadLockHelper(readerWriterLock);
+        }
 
-      public struct WriteLockHelper : IDisposable
-      {
-         readonly ReaderWriterLockSlim readerWriterLock;
+        public static WriteLockHelper WriteLock(this ReaderWriterLockSlim readerWriterLock)
+        {
+            return new WriteLockHelper(readerWriterLock);
+        }
 
-         public WriteLockHelper(ReaderWriterLockSlim readerWriterLock)
-         {
-            readerWriterLock.EnterWriteLock();
-            this.readerWriterLock = readerWriterLock;
-         }
+        public struct ReadLockHelper : IDisposable
+        {
+            private readonly ReaderWriterLockSlim readerWriterLock;
 
-         public void Dispose()
-         {
-            this.readerWriterLock.ExitWriteLock();
-         }
-      }
+            public ReadLockHelper(ReaderWriterLockSlim readerWriterLock)
+            {
+                this.readerWriterLock = readerWriterLock;
+                this.readerWriterLock.EnterReadLock();
+            }
 
-      public static string Truncate(this string value, int maxLength)
-      {
-         return String.IsNullOrEmpty(value) ? value : value.Substring(0, Math.Min(value.Length, maxLength));
-      }
+            public void Dispose()
+            {
+                this.readerWriterLock.ExitReadLock();
+            }
+        }
 
-      /// <summary>Returns an enumeration, or an empty list if the value is null.</summary>
-      public static IEnumerable<T> NeverNull<T>(this IEnumerable<T> value)
-      {
-         return value ?? Enumerable.Empty<T>();
-      }
+        public struct UpgradeableReadLockHelper : IDisposable
+        {
+            private readonly ReaderWriterLockSlim readerWriterLock;
 
-      public static void ForEach<T>(this IEnumerable<T> query, Action<T> method)
-      {
-         foreach (var i in query)
-         {
-            method(i);
-         }
-      }
+            public UpgradeableReadLockHelper(ReaderWriterLockSlim readerWriterLock)
+            {
+                this.readerWriterLock = readerWriterLock;
+                this.readerWriterLock.EnterUpgradeableReadLock();
+            }
 
-      public static ReadLockHelper ReadLock(this ReaderWriterLockSlim readerWriterLock)
-      {
-         return new ReadLockHelper(readerWriterLock);
-      }
+            public void Dispose()
+            {
+                this.readerWriterLock.ExitUpgradeableReadLock();
+            }
+        }
 
-      public static UpgradeableReadLockHelper UpgradableReadLock(this ReaderWriterLockSlim readerWriterLock)
-      {
-         return new UpgradeableReadLockHelper(readerWriterLock);
-      }
+        public struct WriteLockHelper : IDisposable
+        {
+            private readonly ReaderWriterLockSlim readerWriterLock;
 
-      public static WriteLockHelper WriteLock(this ReaderWriterLockSlim readerWriterLock)
-      {
-         return new WriteLockHelper(readerWriterLock);
-      }
-   }
+            public WriteLockHelper(ReaderWriterLockSlim readerWriterLock)
+            {
+                this.readerWriterLock = readerWriterLock;
+                this.readerWriterLock.EnterWriteLock();
+            }
+
+            public void Dispose()
+            {
+                this.readerWriterLock.ExitWriteLock();
+            }
+        }
+    }
 }

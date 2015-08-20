@@ -84,7 +84,7 @@ namespace KitchenPC
             }
             else if (obj is Weight)
             {
-                return this == obj;
+                return this == (Weight)obj;
             }
             else
             {
