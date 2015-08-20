@@ -1,112 +1,126 @@
-using System;
-
 namespace KitchenPC
 {
-   public class Weight : IComparable, IFormattable, IComparable<int>, IEquatable<int>
-   {
-      public int Value;
+    using System;
 
-      public Weight()
-      {
-         Value = 0;
-      }
+    public class Weight : IComparable, IFormattable, IComparable<int>, IEquatable<int>
+    {
+        public Weight()
+            : this(0)
+        {
+        }
 
-      public Weight(int grams)
-      {
-          // Just added + 1000 grams so that some tests fail :D
-         Value = grams + 1000;
-      }
+        public Weight(int grams)
+        {
+            this.Value = grams;
+        }
 
-      public static implicit operator Weight(int grams)
-      {
-         return new Weight(grams);
-      }
+        public int Value { get; set; }
 
-      public static implicit operator int(Weight weight)
-      {
-         if ((object) weight == null)
-         {
-            return 0;
-         }
-         else
-         {
-            return weight.Value;
-         }
-      }
+        public static implicit operator Weight(int grams)
+        {
+            return new Weight(grams);
+        }
 
-      public static bool operator ==(Weight x, Weight y)
-      {
-         if (ReferenceEquals(x, y))
-         {
-            return true;
-         }
+        public static implicit operator int(Weight weight)
+        {
+            if ((object)weight == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return weight.Value;
+            }
+        }
 
-         if ((object) x == null || ((object) y == null))
-         {
-            return false;
-         }
+        public static bool operator ==(Weight firstWeight, Weight secondWeight)
+        {
+            if (ReferenceEquals(firstWeight, secondWeight))
+            {
+                return true;
+            }
 
-         return x.Value == y.Value;
-      }
+            if (ReferenceEquals(firstWeight, null) ||
+                ReferenceEquals(secondWeight, null))
+            {
+                return false;
+            }
 
-      public static bool operator !=(Weight x, Weight y)
-      {
-         return !(x == y);
-      }
+            return firstWeight.Value == secondWeight.Value;
+        }
 
-      public int CompareTo(object obj)
-      {
-         if (obj is Weight)
-         {
-            return this.Value.CompareTo(((Weight) obj).Value);
-         }
-         else
-         {
-            return this.Value.CompareTo(obj);
-         }
-      }
+        public static bool operator !=(Weight firstWeight, Weight secondWeight)
+        {
+            return !(firstWeight == secondWeight);
+        }
 
-      public int CompareTo(int other)
-      {
-         return this.Value.CompareTo(other);
-      }
+        public int CompareTo(object obj)
+        {
+            if (obj is Weight)
+            {
+                return this.Value.CompareTo(((Weight)obj).Value);
+            }
+            else
+            {
+                return this.Value.CompareTo(obj);
+            }
+        }
 
-      public bool Equals(int other)
-      {
-         return this.Value.Equals(other);
-      }
+        public int CompareTo(int other)
+        {
+            return this.Value.CompareTo(other);
+        }
 
-      public override bool Equals(object o)
-      {
-         if (o is Int32)
-            return (this.Value == (Int32) o);
-         else if (o is Weight)
-            return (this.Value == ((Weight) o).Value);
-         else return false;
-      }
+        public bool Equals(int other)
+        {
+            return this.Value.Equals(other);
+        }
 
-      public override string ToString()
-      {
-         return String.Format("{0:f} g.", Value);
-      }
+        public override bool Equals(object obj)
+        {
+            if (obj is int)
+            {
+                return this.Value == (int)obj;
+            }
+            else if (obj is Weight)
+            {
+                return this == obj;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-      public string ToString(string format, IFormatProvider formatProvider)
-      {
-         return ToString();
-      }
+        public override string ToString()
+        {
+            return string.Format("{0:f} g.", this.Value);
+        }
 
-      public override int GetHashCode()
-      {
-         return Value.GetHashCode();
-      }
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return this.ToString();
+        }
 
-      public new bool Equals(object x, object y)
-      {
-         if (ReferenceEquals(x, y)) return true;
+        public override int GetHashCode()
+        {
+            return this.Value.GetHashCode();
+        }
 
-         if (x == null || y == null) return false;
+        public new bool Equals(object firstWeight, object secondWeight)
+        {
+            if (ReferenceEquals(firstWeight, secondWeight))
+            {
+                return true;
+            }
 
-         return x.Equals(y);
-      }
-   }
+            if (ReferenceEquals(firstWeight, null) ||
+                ReferenceEquals(secondWeight, null))
+            {
+                return false;
+            }
+
+            return firstWeight.Equals(secondWeight);
+        }
+    }
 }
